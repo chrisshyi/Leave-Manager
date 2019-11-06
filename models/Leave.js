@@ -1,14 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const leaveTypes = [
-    '慰假',
-    '預假',
-    '補假',
-    '例假',
-    '公假',
-    '外散',
-    '外宿'
-];
+const leaveTypes = ["慰假", "預假", "補假", "例假", "公假", "外散", "外宿"];
 
 const LeaveSchema = new mongoose.Schema({
     leaveType: {
@@ -18,12 +10,12 @@ const LeaveSchema = new mongoose.Schema({
     },
     personnel: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Personnel',
+        ref: "Personnel",
         required: true
     },
     scheduled: {
         type: Boolean,
-        required: true
+        default: false
     },
     originalDate: {
         type: Date
@@ -40,4 +32,5 @@ const LeaveSchema = new mongoose.Schema({
     }
 });
 
-module.exports = Leave = mongoose.model('Leave', LeaveSchema);
+module.exports.Leave = mongoose.model("Leave", LeaveSchema);
+module.exports.leaveTypes = leaveTypes;

@@ -21,8 +21,8 @@ const PersonnelSchema = new mongoose.Schema({
     role: {
         type: String,
         required: true,
-        enum: ['site-admin', 'HR-admin'],
-        default: 'HR-admin'
+        enum: ['site-admin', 'HR-admin', 'reg-user'],
+        default: 'reg-user'
     },
     org: {
         type: mongoose.Schema.Types.ObjectId,
