@@ -1,0 +1,31 @@
+{
+  "name": "leave_management",
+  "version": "1.0.0",
+  "description": "A leave management system for HR",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrisshyi/leave_management.git"
+  },
+  "author": "Chris Shyi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chrisshyi/leave_management/issues"
+  },
+  "homepage": "https://github.com/chrisshyi/leave_management#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "config": "^3.2.4",
+    "express": "^4.17.1",
+    "express-validator": "^6.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.7.7"
+  },
+  "devDependencies": {
+    "concurrently": "^5.0.0",
+    "nodemon": "^1.19.4"
+  }
+}
