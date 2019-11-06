@@ -12,8 +12,8 @@ app.get('/', (req, res) => {
 });
 app.use(express.json()); // Body parser for JSON data
 
-// app.use('/api/users', require('./routes/api/users'));
-// app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/personnel', require('./routes/api/personnel'));
+app.use('/api/auth', require('./routes/api/auth'));
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
