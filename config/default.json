@@ -1,3 +1,4 @@
 {
-    "mongoURI": "mongodb+srv://chris:nash1234@cluster0-63l6h.gcp.mongodb.net/leaveManagement?retryWrites=true&w=majority"
+    "mongoURI": "mongodb+srv://chris:nash1234@cluster0-63l6h.gcp.mongodb.net/leaveManagement?retryWrites=true&w=majority",
+    "jwtSecret": "horsebattery13"
 }
