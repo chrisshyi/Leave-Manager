@@ -63,6 +63,7 @@ router.post('/',  [
             const payload = {
                 personnel: {
                     id: personnel.id,
+                    orgId: personnel.org // include org id for org_auth middleware
                 }
             };
 
