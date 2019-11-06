@@ -26,7 +26,8 @@ const PersonnelSchema = new mongoose.Schema({
     },
     org: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Org'
+        ref: 'Org',
+        required: true
     }
 });
 

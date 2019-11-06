@@ -20,6 +20,7 @@ router.post('/',  [
     check('title', 'Title is required').not().isEmpty(),
     check('role', 'Role is required').not().isEmpty(),
     check('role', 'Role must be either HR-admin or site-admin or reg-user').isIn(['HR-admin', 'site-admin', 'reg-user']),
+    check('org', 'The personnel\'s organization must be specified').not().isEmpty()
 ],
     async (req, res) => {
         const errors = validationResult(req);
