@@ -5,11 +5,15 @@ const Personnel = require('../../models/Personnel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const { adminAuth } = require('../../middleware/admin_auth');
+const auth = require('../../middleware/token_auth');
 
 // @route  POST api/personnel
 // @desc   Register new personnel
-// @access Public
+// @access site-admin only
 router.post('/',  [
+    auth,
+    adminAuth,
     check('name', 'Name is required').not().isEmpty(),
     check('email', 'please enter a proper email').isEmail(),
     check('password', 'please enter a password with 6 or more characters').isLength({min: 6}),

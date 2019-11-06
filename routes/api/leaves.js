@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../../middleware/auth");
+const tokenAuth = require("../../middleware/token_auth");
 const { leaveAddAuth, leaveModAuth } = require('../../middleware/leave_auth');
 const { Leave, leaveTypes } = require("../../models/Leave");
 const { check, validationResult } = require("express-validator");
+const { adminAuth } = require('../../middleware/admin_auth');
 
 // @route POST /api/leaves
 // @desc  Adds a new leave
@@ -11,8 +12,8 @@ const { check, validationResult } = require("express-validator");
 router.post(
     "/",
     [
-        auth,
-        leaveAddAuth,
+        tokenAuth,
+        adminAuth,
         check("leaveType", "Leave type must be provided")
             .not()
             .isEmpty(),
