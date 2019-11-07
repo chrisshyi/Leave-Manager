@@ -4,8 +4,9 @@
   "description": "A leave management system for HR",
   "main": "server.js",
   "scripts": {
-      "server": "nodemon server.js",
-      "start": "node server.js"
+    "server": "nodemon server.js",
+    "start": "node server.js",
+    "test": "jest --detectOpenHandles"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,14 @@
   },
   "devDependencies": {
     "concurrently": "^5.0.0",
-    "nodemon": "^1.19.4"
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.4",
+    "supertest": "^4.0.2"
+  },
+   "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   }
 }

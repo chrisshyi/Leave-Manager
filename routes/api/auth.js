@@ -7,19 +7,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 
-// @route  GET api/auth
-// @desc   Test route
-// @access Public
-router.get('/', auth, async (req, res) => {
-    try {
-        const user = await Personnel.findById(req.user.id).select('-password');
-        res.json(user);
-    } catch (err) {
-        console.log(err);
-        res.status(500).send('Server error');
-    }
-});
-
 // @route  POST api/auth
 // @desc   Authenticate a user 
 // @access Public
