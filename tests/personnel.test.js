@@ -7,7 +7,8 @@ const { dropTestDB } = require('../config/db');
 const http = require('http');
 const server = http.createServer(app);
 
-const PORT = 5000;
+const PORT = 4000;
+
 beforeAll(async () => {
     let org = new Org({
         name: "成功嶺"
@@ -34,12 +35,13 @@ beforeAll(async () => {
     hrUser.password = await bcrypt.hash("123456", salt);
 
     await Promise.all([adminUser.save(), hrUser.save()]);
+    console.log(`Test server started on port ${PORT}`);
     server.listen(PORT);
 });
 
 describe("Personnel API endpoints", () => {
     it("Test personnel login", async () => {
-        const res = await request(app).post('/api/auth/')
+        const res = await request(server).post('/api/auth/')
                                       .send({
                                           email: "brad-trav@gmail.com",
                                           password: "123456"
@@ -51,4 +53,5 @@ describe("Personnel API endpoints", () => {
 
 afterAll(async () => {
     await dropTestDB();    
+    await server.close();
 })
