@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const tokenAuth = require("../../middleware/token_auth");
-const { leaveAddAuth, leaveModAuth } = require('../../middleware/leave_auth');
+const { leaveAddAuth, leaveModAuth } = require("../../middleware/leave_auth");
 const { Leave, leaveTypes } = require("../../models/Leave");
 const { check, validationResult } = require("express-validator");
-const { hrAdminAuth } = require('../../middleware/hr_auth');
+const { hrAdminAuth } = require("../../middleware/hr_auth");
+const { getLeaveInfoAuth } = require("../../middleware/leave_auth");
 
 // @route POST /api/leaves
 // @desc  Adds a new leave
@@ -21,7 +22,9 @@ router.post(
         check("personnel", "Personnel id must be provided")
             .not()
             .isEmpty(),
-        check("scheduled", "'scheduled' must be a boolean").optional().isBoolean(),
+        check("scheduled", "'scheduled' must be a boolean")
+            .optional()
+            .isBoolean(),
         check("duration", "Duration must be provided")
             .not()
             .isEmpty(),
@@ -45,14 +48,14 @@ router.post(
             });
         }
         const {
-        leaveType,
+            leaveType,
             personnel,
             scheduled,
             originalDate,
             scheduledDate,
             duration
         } = req.body;
-            
+
         const leaveFields = {};
         leaveFields.leaveType = leaveType;
         leaveFields.personnel = personnel;
@@ -60,7 +63,7 @@ router.post(
         if (originalDate) leaveFields.originalDate = originalDate;
         if (scheduledDate) leaveFields.scheduledDate = scheduledDate;
         if (scheduled) leaveFields.scheduled = scheduled;
-        try {    
+        try {
             let newLeave = new Leave(leaveFields);
             await newLeave.save();
             return res.json(newLeave);
@@ -70,5 +73,13 @@ router.post(
         }
     }
 );
+
+// @route GET /api/leaves/{leave_id}
+// @desc  Retrives information about an existing leave
+// @access private to site-admin, the personnel to which the leave belongs, and the HR-admin of the same organization
+router.get("/:leaveId", [tokenAuth, getLeaveInfoAuth], async (req, res) => {
+    const leave = await Leave.findById(req.params.leaveId);
+    return res.json(leave);
+});
 
 module.exports = router;

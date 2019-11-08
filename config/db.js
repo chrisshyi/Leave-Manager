@@ -36,6 +36,7 @@ const dropTestDB = async () => {
         await Promise.all([
             conn.dropCollection('personnels'),
             conn.dropCollection('orgs'),
+            conn.dropCollection('leaves')
         ]);
     } catch (error) {
         console.log(error);
