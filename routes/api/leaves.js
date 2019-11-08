@@ -4,7 +4,7 @@ const tokenAuth = require("../../middleware/token_auth");
 const { leaveAddAuth, leaveModAuth } = require('../../middleware/leave_auth');
 const { Leave, leaveTypes } = require("../../models/Leave");
 const { check, validationResult } = require("express-validator");
-const { adminAuth } = require('../../middleware/admin_auth');
+const { hrAdminAuth } = require('../../middleware/hr_auth');
 
 // @route POST /api/leaves
 // @desc  Adds a new leave
@@ -13,7 +13,7 @@ router.post(
     "/",
     [
         tokenAuth,
-        adminAuth,
+        hrAdminAuth,
         check("leaveType", "Leave type must be provided")
             .not()
             .isEmpty(),
