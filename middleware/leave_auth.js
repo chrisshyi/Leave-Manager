@@ -47,7 +47,7 @@ module.exports.getLeaveInfoAuth = async function(req, res, next) {
             });
         }
 
-        if (leave.personnel.org.toString() !== req.personnel.orgId) {
+        if (leave.personnel.org.toString() !== req.personnel.orgId && req.personnel.role !== 'site-admin') {
             return res.status(403).json({
                 msg: "You are not authorized"
             });

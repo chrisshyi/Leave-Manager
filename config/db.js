@@ -33,14 +33,9 @@ const connectTestDB = async () => {
 const dropTestDB = async () => {
     try {
         const conn = mongoose.createConnection(testDBURI); 
-        await Promise.all([
-            conn.dropCollection('personnels'),
-            conn.dropCollection('orgs'),
-            conn.dropCollection('leaves')
-        ]);
+        await conn.dropDatabase();
     } catch (error) {
         console.log(error);
-        process.exit(1);
     }
 }
 
