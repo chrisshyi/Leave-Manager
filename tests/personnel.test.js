@@ -49,6 +49,50 @@ describe("Personnel API endpoints", () => {
         expect(res.statusCode).toEqual(200);
         expect(res.body.hasOwnProperty('token'));
     });
+    it("Test: site-admin can create personnel", async () => {
+        let res = await request(server).post('/api/auth/')
+                                      .send({
+                                          email: "chrisshyi13@gmail.com",
+                                          password: "Nash1234@"
+                                      });
+        const token = res.body.token;
+        const org = await Org.findOne({ name: "成功嶺" });
+        res = await request(server).post('/api/personnel')
+                                         .set('x-auth-token', token)
+                                         .send({
+                                             name: "test user2",
+                                             email: "test2@gmail.com",
+                                             password: "123456",
+                                             title: "勤務",
+                                             role: "reg-user",
+                                             org: org.id
+                                         });
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.hasOwnProperty('token'));
+    });
+
+    it("Test: HR-admin cannot create personnel", async () => {
+        let res = await request(server).post('/api/auth/')
+                                      .send({
+                                          email: "brad-trav@gmail.com",
+                                          password: "123456"
+                                      });
+        const token = res.body.token;
+        const org = await Org.findOne({ name: "成功嶺" });
+        res = await request(server).post('/api/personnel')
+                                         .set('x-auth-token', token)
+                                         .send({
+                                             name: "test user",
+                                             email: "test@gmail.com",
+                                             password: "123456",
+                                             title: "勤務",
+                                             role: "reg-user",
+                                             org: org.id
+                                         });
+        expect(res.statusCode).toEqual(401);
+        expect(res.body.hasOwnProperty('msg'));
+        expect(res.body.msg).toEqual("You are not authorized");
+    });
 }) 
 
 afterAll(async () => {

@@ -29,7 +29,7 @@ router.post('/',  [
                 errors: errors.array()
             })
         }
-        const { name, email, password, title, role } = req.body;
+        const { name, email, password, title, role, org } = req.body;
         try {
             let personnel = await Personnel.findOne({
                 email
@@ -49,7 +49,8 @@ router.post('/',  [
                 name,
                 password,
                 role,
-                title
+                title,
+                org
             });
             const salt = await bcrypt.genSalt(10);
             personnel.password = await bcrypt.hash(password, salt);

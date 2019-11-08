@@ -59,6 +59,7 @@ router.post(
         leaveFields.duration = duration;
         if (originalDate) leaveFields.originalDate = originalDate;
         if (scheduledDate) leaveFields.scheduledDate = scheduledDate;
+        if (scheduled) leaveFields.scheduled = scheduled;
         try {    
             let newLeave = new Leave(leaveFields);
             await newLeave.save();
