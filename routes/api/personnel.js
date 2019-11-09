@@ -83,12 +83,32 @@ router.post('/',  [
 // @desc   Get personnel information
 // @access Private to site-admin, the personnel in question, and HR-admins of the same organization
 router.get('/:personnelId', [auth, getPersonnelAuth], async (req, res) => {
+    const personnel = res.data.personnel;
+    const personnelData = {
+        email: personnel.email,
+        name: personnel.name,
+        title: personnel.title,
+        role: personnel.role,
+        org: personnel.org.toString()
+    };
     const ObjectId = mongoose.Types.ObjectId;
     const personnelLeaves = await Leave.find({
         personnel: new ObjectId(req.params.personnelId)
     });
-    res.data['personnel']['leaves'] = personnelLeaves;
-    res.json(res.data);
+    let personnelLeaveData = personnelLeaves.map((leave) => {
+        leave['leaveURL'] = `/api/leaves${leave.id}`;
+        return {
+            leaveType: leave.leaveType,
+            leaveURL: `/api/leaves${leave.id}`,
+            personnel: leave.personnel.toString(),
+            scheduled: leave.scheduled,
+            originalDate: leave.originalDate,
+            scheduledDate: leave.scheduledDate,
+            duration: leave.duration
+        };
+    });
+    personnelData.leaves = personnelLeaveData;
+    res.json({ personnel: personnelData });
 });
 
 module.exports = router;

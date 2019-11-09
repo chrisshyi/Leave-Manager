@@ -3,6 +3,7 @@ const router = express.Router();
 const { adminAuth } = require("../../middleware/admin_auth");
 const { check, validationResult } = require("express-validator");
 const Org = require('../../models/Org');
+const tokenAuth = require('../../middleware/token_auth');
 
 //@route  POST /api/orgs
 //@desc   Adds a new organization
@@ -10,6 +11,7 @@ const Org = require('../../models/Org');
 router.post(
     "/",
     [
+        tokenAuth,
         adminAuth,
         check("name", "Organization must have a name")
             .not()
@@ -35,3 +37,5 @@ router.post(
         }
     }
 );
+
+module.exports = router;

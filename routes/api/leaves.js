@@ -66,7 +66,7 @@ router.post(
         try {
             let newLeave = new Leave(leaveFields);
             await newLeave.save();
-            return res.json(newLeave);
+            return res.json(leaveFields);
         } catch (error) {
             console.log(error);
             return res.status(500).send("Server error");
@@ -79,7 +79,15 @@ router.post(
 // @access private to site-admin, the personnel to which the leave belongs, and the HR-admin of the same organization
 router.get("/:leaveId", [tokenAuth, getLeaveInfoAuth], async (req, res) => {
     const leave = await Leave.findById(req.params.leaveId);
-    return res.json(leave);
+    const {leaveType, personnel, scheduled, originalDate, scheduledDate, duration} = leave;
+    return res.json({
+        leaveType,
+        personnel,
+        scheduled,
+        originalDate,
+        scheduledDate,
+        duration
+    });
 });
 
 module.exports = router;

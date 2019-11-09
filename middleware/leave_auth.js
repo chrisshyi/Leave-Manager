@@ -37,10 +37,6 @@ module.exports.getLeaveInfoAuth = async function(req, res, next) {
     try {
         const leave = await Leave.findById(req.params.leaveId)
                                  .populate('personnel');
-
-        //console.log("Inside leave auth");
-        //console.log(`Request personnel org id ${req.personnel.orgId}`);
-        //console.log(`Leave personnel org id: ${leave.personnel.org}`);
         if (!leave) {
             return res.status(400).json({
                 msg: "Resource doesn't exist"

@@ -20,6 +20,7 @@ app.use(express.json()); // Body parser for JSON data
 app.use('/api/personnel', require('./routes/api/personnel'));
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/leaves', require('./routes/api/leaves'));
+app.use('/api/orgs', require('./routes/api/orgs'));
 
 if (!testing) {
     const server = app.listen(PORT, function() {

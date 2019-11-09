@@ -1,11 +1,13 @@
 const { app } = require('../server');
 const Personnel = require('../models/Personnel');
 const request = require('supertest');
+const mongoose = require('mongoose');
 const Org = require('../models/Org');
 const bcrypt = require('bcryptjs');
 const { dropTestDB } = require('../config/db');
 const http = require('http');
 const server = http.createServer(app);
+const { Leave } = require('../models/Leave');
 
 const PORT = 4000;
 
@@ -113,6 +115,36 @@ describe("Personnel API endpoints", () => {
     });
 
     describe("Test personnel information retrieval", () => {
+        beforeAll(async () => {
+            const ObjectId = mongoose.Types.ObjectId;
+            const regUser1 = await Personnel.findOne({
+                name: "regUser"
+            });
+            const regUser2 = await Personnel.findOne({
+                name: "regUser2"
+            });
+            
+            const regUser1LeavesPromises = [];
+            for (let i = 0; i < 5; i++) {
+                let newLeave = new Leave({
+                    leaveType: "慰假",
+                    personnel: regUser1._id,
+                    duration: 12
+                });
+                regUser1LeavesPromises.push(newLeave.save());
+            }
+            const regUser2LeavesPromises = [];
+            for (let i = 0; i < 4; i++) {
+                let newLeave = new Leave({
+                    leaveType: "慰假",
+                    personnel: regUser2._id,
+                    duration: 12
+                });
+                regUser2LeavesPromises.push(newLeave.save());
+            }
+            await Promise.all(regUser1LeavesPromises);
+            await Promise.all(regUser2LeavesPromises);
+        });
         it("site-admin can retrieve information of personnel in same organization", async () => {
             let res = await request(server)
                 .post("/api/auth/")
@@ -130,7 +162,7 @@ describe("Personnel API endpoints", () => {
                                        .set('x-auth-token', token);
             expect(res.statusCode).toEqual(200);
             expect(res.body.hasOwnProperty("personnel"));
-                                        
+            expect(res.body['personnel']['leaves'].length).toBe(5);
         });
         it("site-admin can retrieve information of personnel in different organization", async () => {
             let res = await request(server)
@@ -148,6 +180,7 @@ describe("Personnel API endpoints", () => {
                                        .set('x-auth-token', token);
             expect(res.statusCode).toEqual(200);
             expect(res.body.hasOwnProperty("personnel"));
+            expect(res.body['personnel']['leaves'].length).toBe(4);
         });
         it("HR-admin can retrieve information of personnel in same organization", async () => {
             let res = await request(server)
@@ -165,7 +198,8 @@ describe("Personnel API endpoints", () => {
             res = await request(server).get(`/api/personnel/${regUser.id}`)
                                        .set('x-auth-token', token);
             expect(res.statusCode).toEqual(200);
-            expect(res.body.hasOwnProperty("personnel"));                                        
+            expect(res.body.hasOwnProperty("personnel"));
+            expect(res.body['personnel']['leaves'].length).toBe(5);
         });
         it("HR-admin cannot retrieve information of personnel in different organization", async () => {
             let res = await request(server)
@@ -199,6 +233,7 @@ describe("Personnel API endpoints", () => {
                                        .set('x-auth-token', token);
             expect(res.statusCode).toEqual(200);
             expect(res.body.hasOwnProperty("personnel"));
+            expect(res.body['personnel']['leaves'].length).toBe(5);
         });
         it("Regular user cannot retreive others' information", async () => {
             let res = await request(server)
