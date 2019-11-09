@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const { connectDB, connectTestDB } = require('./config/db');
 const config = require('config');
-const http = require('http');
 const PORT = process.env.PORT || 5000;
 const testing = config.get("testing"); 
 

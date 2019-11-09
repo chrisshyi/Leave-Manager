@@ -14,11 +14,10 @@ beforeAll(async () => {
     let org1 = new Org({
         name: "成功嶺"
     });
-    await org1.save();
     let org2 = new Org({
         name: "台糖公司"
     });
-    await org2.save();
+    await Promise.all([org1.save(), org2.save()]);
     const salt = await bcrypt.genSalt(10);
 
     let adminUser = new Personnel({
@@ -69,7 +68,6 @@ describe("Leave API endpoints", () => {
                     password: "Nash1234@"
                 });
             const token = res.body.token;
-            const org = await Org.findOne({ name: "成功嶺" });
             const personnel = await Personnel.findOne({
                 name: "regUser"
             });
@@ -252,6 +250,6 @@ describe("Leave API endpoints", () => {
 });
 
 afterAll(async () => {
-    await dropTestDB();
-    await server.close();
+    await dropTestDB(); 
+    server.close();
 });

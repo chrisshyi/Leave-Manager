@@ -1,12 +1,15 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const { check, validationResult } = require('express-validator');
 const Personnel = require('../../models/Personnel');
+const { Leave } = require('../../models/Leave');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const { adminAuth } = require('../../middleware/admin_auth');
 const auth = require('../../middleware/token_auth');
+const getPersonnelAuth = require('../../middleware/personnel_auth');
 
 // @route  POST api/personnel
 // @desc   Register new personnel
@@ -76,5 +79,16 @@ router.post('/',  [
             res.status(500).send('server error');
         }
     });
+// @route  GET api/personnel/{personnelId}
+// @desc   Get personnel information
+// @access Private to site-admin, the personnel in question, and HR-admins of the same organization
+router.get('/:personnelId', [auth, getPersonnelAuth], async (req, res) => {
+    const ObjectId = mongoose.Types.ObjectId;
+    const personnelLeaves = await Leave.find({
+        personnel: new ObjectId(req.params.personnelId)
+    });
+    res.data['personnel']['leaves'] = personnelLeaves;
+    res.json(res.data);
+});
 
 module.exports = router;

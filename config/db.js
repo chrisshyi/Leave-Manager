@@ -34,6 +34,7 @@ const dropTestDB = async () => {
     try {
         const conn = mongoose.createConnection(testDBURI); 
         await conn.dropDatabase();
+        await conn.close();
     } catch (error) {
         console.log(error);
     }
