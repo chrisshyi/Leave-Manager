@@ -51,7 +51,8 @@ router.post('/',  [
                 personnel: {
                     id: personnel.id,
                     orgId: personnel.org, // include org id for org_auth middleware
-                    role: personnel.role
+                    role: personnel.role,
+                    name: personnel.name
                 }
             };
 
