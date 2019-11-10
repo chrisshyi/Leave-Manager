@@ -40,6 +40,17 @@ const dropTestDB = async () => {
     }
 }
 
+const dropTestLeaves = async () => {
+    try {
+        const conn = mongoose.createConnection(testDBURI);
+        await conn.dropCollection("leaves");
+        await conn.close();
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 module.exports.connectDB = connectDB;
 module.exports.connectTestDB = connectTestDB;
 module.exports.dropTestDB = dropTestDB;
+module.exports.dropTestLeaves = dropTestLeaves;

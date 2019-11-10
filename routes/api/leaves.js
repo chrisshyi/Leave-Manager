@@ -88,6 +88,7 @@ router.put(
         tokenAuth,
         leaveModDeleteAuth,
         check("leaveType", "Leave type not allowed").optional().isIn(leaveTypes),
+        check("personnel", "Cannot modify the personnel").not().exists(),
         check("scheduled", "'scheduled' must be a boolean")
             .optional()
             .isBoolean(),
@@ -131,8 +132,14 @@ router.put(
                 new: true,
                 runValidators: true
             });
-            leaveFields.personnel = modifiedLeave.personnel.toString(); // Add the personnel id to return to requester
-            return res.json(leaveFields);
+            return res.json({
+                leaveType: modifiedLeave.leaveType,
+                duration: modifiedLeave.duration,
+                originalDate: modifiedLeave.originalDate,
+                scheduledDate: modifiedLeave.scheduledDate,
+                scheduled: modifiedLeave.scheduled,
+                personnel: modifiedLeave.personnel.toString()
+            });
         } catch (error) {
             console.log(error);
             return res.status(500).send("Server error");

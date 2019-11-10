@@ -6,7 +6,7 @@ const Personnel = require('../models/Personnel');
  * a new leave
  */
 module.exports.leaveAddAuth = async function(req, res, next) {
-    console.log(`Personnel role ${req.personnel.role}`);
+    // console.log(`Personnel role ${req.personnel.role}`);
     if (req.personnel.role === 'reg-user') {
         return res.status(401).json({
             msg: "You are not authorized"

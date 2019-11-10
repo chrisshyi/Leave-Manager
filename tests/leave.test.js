@@ -4,7 +4,7 @@ const request = require("supertest");
 const { Leave } = require("../models/Leave");
 const Org = require("../models/Org");
 const bcrypt = require("bcryptjs");
-const { dropTestDB } = require("../config/db");
+const { dropTestDB, dropTestLeaves } = require("../config/db");
 const http = require("http");
 const server = http.createServer(app);
 
@@ -289,6 +289,170 @@ describe("Leave API endpoints", () => {
             res = await request(server)
                 .get(`/api/leaves/${leaveId2}`)
                 .set("x-auth-token", token);
+            expect(res.statusCode).toBe(403);
+        });
+
+    });
+
+    describe("Leave modification tests", () => {
+        let leave1Id, leave2Id;
+        beforeEach(async () => {
+            const regUser = await Personnel.findOne({
+                name: "regUser"
+            });
+
+            const regUser2 = await Personnel.findOne({
+                name: "regUser2"
+            });
+
+            let newLeave = new Leave({
+                leaveType: "慰假",
+                personnel: regUser.id,
+                scheduledDate: new Date("2019-11-02"),
+                scheduled: true,
+                duration: 12
+            });
+            let newLeave2 = new Leave({
+                leaveType: "慰假",
+                personnel: regUser2.id,
+                scheduledDate: new Date("2019-11-03"),
+                scheduled: true,
+                duration: 12
+            })
+            await Promise.all([newLeave.save(), newLeave2.save()]);
+            leave1Id = newLeave.id;
+            leave2Id = newLeave2.id;
+        });
+
+        afterEach(() => dropTestLeaves);
+
+        it("Site admin can modify leave from same organization", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "chrisshyi13@gmail.com",
+                    password: "Nash1234@"
+                });
+            const token = res.body.token;
+
+            res = await request(server).put(`/api/leaves/${leave1Id}`)
+                                       .set('x-auth-token', token)
+                                       .send({
+                                            leaveType: "慰假",
+                                            scheduledDate: "2019-11-05"
+                                       });
+            const personnel = await Personnel.findOne({
+                email: "reguser@gmail.com"
+            });
+            expect(res.statusCode).toBe(200);
+            expect(res.body.personnel).toEqual(personnel.id);
+            const newScheduledDate = new Date(res.body.scheduledDate);
+            expect(newScheduledDate.getFullYear()).toBe(2019);
+            expect(newScheduledDate.getMonth()).toBe(10);
+            expect(newScheduledDate.getDate()).toBe(5);
+            expect(res.body.leaveType).toEqual("慰假");
+        });
+        it("Site admin can modify leave from different organization", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "chrisshyi13@gmail.com",
+                    password: "Nash1234@"
+                });
+            const token = res.body.token;
+
+            res = await request(server).put(`/api/leaves/${leave2Id}`)
+                                       .set('x-auth-token', token)
+                                       .send({
+                                            leaveType: "慰假",
+                                            scheduledDate: "2019-11-05"
+                                       });
+            const personnel = await Personnel.findOne({
+                email: "reguser2@gmail.com"
+            });
+            expect(res.statusCode).toBe(200);
+            expect(res.body.personnel).toEqual(personnel.id);
+            const newScheduledDate = new Date(res.body.scheduledDate);
+            expect(newScheduledDate.getFullYear()).toBe(2019);
+            expect(newScheduledDate.getMonth()).toBe(10);
+            expect(newScheduledDate.getDate()).toBe(5);
+            expect(res.body.leaveType).toEqual("慰假");
+        });
+        it("HR-admin can modify leave from same organization", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "brad-trav@gmail.com",
+                    password: "123456"
+                });
+            const token = res.body.token;
+
+            res = await request(server).put(`/api/leaves/${leave1Id}`)
+                                       .set('x-auth-token', token)
+                                       .send({
+                                            leaveType: "慰假",
+                                            scheduledDate: "2019-11-05"
+                                       });
+            const personnel = await Personnel.findOne({
+                email: "reguser@gmail.com"
+            });
+            expect(res.statusCode).toBe(200);
+            expect(res.body.personnel).toEqual(personnel.id);
+            const newScheduledDate = new Date(res.body.scheduledDate);
+            expect(newScheduledDate.getFullYear()).toBe(2019);
+            expect(newScheduledDate.getMonth()).toBe(10);
+            expect(newScheduledDate.getDate()).toBe(5);
+            expect(res.body.leaveType).toEqual("慰假");
+        });
+        it("HR-admin cannot modify leave from different organization", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "brad-trav@gmail.com",
+                    password: "123456"
+                });
+            const token = res.body.token;
+
+            res = await request(server).put(`/api/leaves/${leave2Id}`)
+                                       .set('x-auth-token', token)
+                                       .send({
+                                            leaveType: "慰假",
+                                            scheduledDate: "2019-11-05"
+                                       });
+            expect(res.statusCode).toBe(403);
+        });
+        it("Regular user cannot modify own leave", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "reguser@gmail.com",
+                    password: "123456"
+                });
+            const token = res.body.token;
+
+            res = await request(server).put(`/api/leaves/${leave1Id}`)
+                                       .set('x-auth-token', token)
+                                       .send({
+                                            leaveType: "慰假",
+                                            scheduledDate: "2019-11-05"
+                                       });
+            expect(res.statusCode).toBe(403);
+        });
+        it("Regular user cannot others' leave", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "reguser@gmail.com",
+                    password: "123456"
+                });
+            const token = res.body.token;
+
+            res = await request(server).put(`/api/leaves/${leave2Id}`)
+                                       .set('x-auth-token', token)
+                                       .send({
+                                            leaveType: "慰假",
+                                            scheduledDate: "2019-11-05"
+                                       });
             expect(res.statusCode).toBe(403);
         });
 
