@@ -91,14 +91,16 @@ router.get(
     async (req, res) => {
         let baseSet;
         if (req.personnel.role === 'reg-user') {
-            baseSet = Leave.find({
+            baseSet = await Leave.find({
                 personnel: req.personnel.id
             });
         } else if (req.personnel.role === 'HR-admin') {
-            baseSet = Leave.find().populate('personnel')
+            baseSet = await Leave.find({
+                org: req.personnel.orgId
+            });
         }
         const queries = req.query;
-        let startDate, endDate, personnel, orgId;
+        let startDate, endDate;
         if (Object.keys(queries).length !== 0) {
             if (queries.year) {
                 startDate = new Date(queries.year, 0);
@@ -108,10 +110,26 @@ router.get(
                     endDate.setMonth(queries.month + 2);
                 }
             }
-            if (queries.personnel && req.personnel.role !== 'reg-user') {
-                filters['personnel'] = null; 
-            }
         }
+        const queryResult = baseSet;
+        if (startDate && endDate) {
+            queryResult = baseSet.or(
+                [
+                    {
+                        scheduledDate: {
+                            $exists: false
+                        }
+                    },
+                    {
+                        scheduledDate: {
+                            $lt: endDate,
+                            $gte: startDate
+                        }
+                    }
+                ]
+            );
+        }
+        res.json({ leaves: queryResult });
     }
 );
 // @route PUT /api/leaves
