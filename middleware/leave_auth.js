@@ -26,7 +26,7 @@ module.exports.leaveAddAuth = async function(req, res, next) {
  * Checks whether or not the user is authorized to modify
  * an existing leave
  */
-module.exports.leaveModAuth = async function(req, res, next) {
+module.exports.leaveModDeleteAuth = async function(req, res, next) {
     try {
         const leave = await Leave.findById(req.params.leaveId)
                                  .populate('personnel');
@@ -48,6 +48,7 @@ module.exports.leaveModAuth = async function(req, res, next) {
                     msg: "You are not authorized"
                 });
         }
+        req.leaveObj = leave;
         next();        
     } catch (error) {
         console.log(error);
