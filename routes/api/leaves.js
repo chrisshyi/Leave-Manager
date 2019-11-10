@@ -173,10 +173,10 @@ router.get("/:leaveId", [tokenAuth, getLeaveInfoAuth], async (req, res) => {
 //@desc Deletes an existing leave
 //@access Private to site admins and HR-admins of the same organization
 router.delete(
-    ":/leaveId",
+    "/:leaveId",
     [tokenAuth, leaveModDeleteAuth],
     async (req, res) => {
-        const leave = Leave.findByIdAndDelete(req.params.leaveId);
+        const leave = await Leave.findByIdAndDelete(req.params.leaveId);
         const {
             leaveType,
             personnel,
