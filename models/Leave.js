@@ -3,6 +3,11 @@ const mongoose = require("mongoose");
 const leaveTypes = ["慰假", "預假", "補假", "例假", "公假", "外散", "外宿"];
 
 const LeaveSchema = new mongoose.Schema({
+    org: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Org",
+        required: true
+    },
     leaveType: {
         type: String,
         required: true,

@@ -123,10 +123,17 @@ describe("Personnel API endpoints", () => {
             const regUser2 = await Personnel.findOne({
                 name: "regUser2"
             });
+            const org1 = await Org.findOne({
+                name: "成功嶺"
+            });
+            const org2 = await Org.findOne({
+                name: "台糖公司"
+            });
             
             const regUser1LeavesPromises = [];
             for (let i = 0; i < 5; i++) {
                 let newLeave = new Leave({
+                    org: org1.id,
                     leaveType: "慰假",
                     personnel: regUser1._id,
                     duration: 12
@@ -136,6 +143,7 @@ describe("Personnel API endpoints", () => {
             const regUser2LeavesPromises = [];
             for (let i = 0; i < 4; i++) {
                 let newLeave = new Leave({
+                    org: org2.id,
                     leaveType: "慰假",
                     personnel: regUser2._id,
                     duration: 12

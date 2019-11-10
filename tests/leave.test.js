@@ -71,10 +71,14 @@ describe("Leave API endpoints", () => {
             const personnel = await Personnel.findOne({
                 name: "regUser"
             });
+            const org = await Org.findOne({
+                name: "成功嶺"
+            });
             res = await request(server)
                 .post("/api/leaves")
                 .set("x-auth-token", token)
                 .send({
+                    org: org.id,
                     leaveType: "例假",
                     personnel: personnel.id,
                     scheduled: false,
@@ -94,10 +98,14 @@ describe("Leave API endpoints", () => {
             const personnel = await Personnel.findOne({
                 email: "reguser2@gmail.com"
             });
+            const org = await Org.findOne({
+                name: "台糖公司"
+            });
             res = await request(server)
                 .post("/api/leaves")
                 .set("x-auth-token", token)
                 .send({
+                    org: org.id,
                     leaveType: "例假",
                     personnel: personnel.id,
                     scheduled: false,
@@ -118,10 +126,14 @@ describe("Leave API endpoints", () => {
             const personnel = await Personnel.findOne({
                 email: "reguser@gmail.com"
             });
+            const org = await Org.findOne({
+                name: "成功嶺"
+            });
             res = await request(server)
                 .post("/api/leaves")
                 .set("x-auth-token", token)
                 .send({
+                    org: org.id,
                     leaveType: "例假",
                     personnel: personnel.id,
                     scheduled: false,
@@ -142,10 +154,14 @@ describe("Leave API endpoints", () => {
             const personnel = await Personnel.findOne({
                 email: "reguser2@gmail.com"
             });
+            const org = await Org.findOne({
+                name: "台糖公司"
+            });
             res = await request(server)
                 .post("/api/leaves")
                 .set("x-auth-token", token)
                 .send({
+                    org: org.id,
                     leaveType: "例假",
                     personnel: personnel.id,
                     scheduled: false,
@@ -186,17 +202,24 @@ describe("Leave API endpoints", () => {
             const regUser = await Personnel.findOne({
                 name: "regUser"
             });
-
             const regUser2 = await Personnel.findOne({
                 name: "regUser2"
             });
+            const org1 = await Org.findOne({
+                name: "成功嶺"
+            });
+            const org2 = await Org.findOne({
+                name: "台糖公司"
+            });
 
             let newLeave = new Leave({
+                org: org1.id,
                 leaveType: "慰假",
                 personnel: regUser.id,
                 duration: 12
             });
             let newLeave2 = new Leave({
+                org: org2.id,
                 leaveType: "慰假",
                 personnel: regUser2.id,
                 duration: 12
@@ -304,8 +327,15 @@ describe("Leave API endpoints", () => {
             const regUser2 = await Personnel.findOne({
                 name: "regUser2"
             });
+            const org1 = await Org.findOne({
+                name: "成功嶺"
+            });
+            const org2 = await Org.findOne({
+                name: "台糖公司"
+            });
 
             let newLeave = new Leave({
+                org: org1.id,
                 leaveType: "慰假",
                 personnel: regUser.id,
                 scheduledDate: new Date("2019-11-02"),
@@ -313,6 +343,7 @@ describe("Leave API endpoints", () => {
                 duration: 12
             });
             let newLeave2 = new Leave({
+                org: org2.id,
                 leaveType: "慰假",
                 personnel: regUser2.id,
                 scheduledDate: new Date("2019-11-03"),
@@ -467,8 +498,15 @@ describe("Leave API endpoints", () => {
             const regUser2 = await Personnel.findOne({
                 name: "regUser2"
             });
+            const org1 = await Org.findOne({
+                name: "成功嶺"
+            });
+            const org2 = await Org.findOne({
+                name: "台糖公司"
+            });
 
             let newLeave = new Leave({
+                org: org1.id,
                 leaveType: "例假",
                 personnel: regUser.id,
                 scheduledDate: new Date("2019-11-02"),
@@ -476,6 +514,7 @@ describe("Leave API endpoints", () => {
                 duration: 12
             });
             let newLeave2 = new Leave({
+                org: org2.id,
                 leaveType: "例假",
                 personnel: regUser2.id,
                 scheduledDate: new Date("2019-11-03"),

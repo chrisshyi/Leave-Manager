@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require;
+const mongoose = require('mongoose');
 const tokenAuth = require("../../middleware/token_auth");
 const {
     leaveAddAuth,
@@ -19,6 +19,7 @@ router.post(
     [
         tokenAuth,
         leaveAddAuth,
+        check("org", "Org id must be provided").not().isEmpty(),
         check("leaveType", "Leave type must be provided")
             .not()
             .isEmpty(),
@@ -57,12 +58,14 @@ router.post(
             scheduled,
             originalDate,
             scheduledDate,
-            duration
+            duration,
+            org
         } = req.body;
 
         const leaveFields = {};
         leaveFields.leaveType = leaveType;
         leaveFields.personnel = personnel;
+        leaveFields.org = org;
         leaveFields.duration = duration;
         if (originalDate) leaveFields.originalDate = originalDate;
         if (scheduledDate) leaveFields.scheduledDate = scheduledDate;
@@ -78,6 +81,39 @@ router.post(
     }
 );
 
+// @route GET /api/leaves?year={year}&month={month}
+// @desc  Gets leaves with optional filters. 
+// @access Public. Regular users will only see their own leaves. HR-admins see the leaves of their 
+//         organization. Site-admins see all leaves.
+router.get(
+    "/",
+    tokenAuth,
+    async (req, res) => {
+        let baseSet;
+        if (req.personnel.role === 'reg-user') {
+            baseSet = Leave.find({
+                personnel: req.personnel.id
+            });
+        } else if (req.personnel.role === 'HR-admin') {
+            baseSet = Leave.find().populate('personnel')
+        }
+        const queries = req.query;
+        let startDate, endDate, personnel, orgId;
+        if (Object.keys(queries).length !== 0) {
+            if (queries.year) {
+                startDate = new Date(queries.year, 0);
+                endDate = new Date(queries.year + 1, 0);
+                if (queries.month) {
+                    startDate.setMonth(queries.month + 1);
+                    endDate.setMonth(queries.month + 2);
+                }
+            }
+            if (queries.personnel && req.personnel.role !== 'reg-user') {
+                filters['personnel'] = null; 
+            }
+        }
+    }
+);
 // @route PUT /api/leaves
 // @desc  Modifies an existing leave
 // @access Accessible to site-admins, and HR-admins of the same organization as the personnel
