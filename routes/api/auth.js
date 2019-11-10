@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 
 // @route  POST api/auth
-// @desc   Authenticate a user 
+// @desc   Authenticates a user 
 // @access Public
 router.post('/',  [
     check('email', 'please enter a proper email').isEmail(),

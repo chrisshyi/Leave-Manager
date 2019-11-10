@@ -60,7 +60,7 @@ beforeAll(async () => {
 
 describe("Leave API endpoints", () => {
     describe("Leave addition tests", () => {
-        it("Test: site-admin can add leave", async () => {
+        it("Test: site-admin can add leave for personnel of same organization", async () => {
             let res = await request(server)
                 .post("/api/auth/")
                 .send({
@@ -83,17 +83,16 @@ describe("Leave API endpoints", () => {
             expect(res.statusCode).toEqual(200);
             expect(res.body.hasOwnProperty("leaveType"));
         });
-        it("Test: HR-admin can add leave", async () => {
+        it("Test: site-admin can add leave for personnel of different organization", async () => {
             let res = await request(server)
                 .post("/api/auth/")
                 .send({
-                    email: "brad-trav@gmail.com",
-                    password: "123456"
+                    email: "chrisshyi13@gmail.com",
+                    password: "Nash1234@"
                 });
             const token = res.body.token;
-            const org = await Org.findOne({ name: "成功嶺" });
             const personnel = await Personnel.findOne({
-                name: "regUser"
+                email: "reguser2@gmail.com"
             });
             res = await request(server)
                 .post("/api/leaves")
@@ -106,6 +105,53 @@ describe("Leave API endpoints", () => {
                 });
             expect(res.statusCode).toEqual(200);
             expect(res.body.hasOwnProperty("leaveType"));
+            expect(res.body['leaveType']).toBe("例假");
+        });
+        it("Test: HR-admin can add leave for personnel of same organization", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "brad-trav@gmail.com",
+                    password: "123456"
+                });
+            const token = res.body.token;
+            const personnel = await Personnel.findOne({
+                email: "reguser@gmail.com"
+            });
+            res = await request(server)
+                .post("/api/leaves")
+                .set("x-auth-token", token)
+                .send({
+                    leaveType: "例假",
+                    personnel: personnel.id,
+                    scheduled: false,
+                    duration: 24
+                });
+            expect(res.statusCode).toEqual(200);
+            expect(res.body.hasOwnProperty("leaveType"));
+            expect(res.body['leaveType']).toBe("例假");
+        });
+        it("Test: HR-admin cannot add leave for personnel of different organization", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "brad-trav@gmail.com",
+                    password: "123456"
+                });
+            const token = res.body.token;
+            const personnel = await Personnel.findOne({
+                email: "reguser2@gmail.com"
+            });
+            res = await request(server)
+                .post("/api/leaves")
+                .set("x-auth-token", token)
+                .send({
+                    leaveType: "例假",
+                    personnel: personnel.id,
+                    scheduled: false,
+                    duration: 24
+                });
+            expect(res.statusCode).toEqual(401);
         });
 
         it("Test: regular user cannot add leave", async () => {

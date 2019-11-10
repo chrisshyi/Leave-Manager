@@ -45,6 +45,10 @@ router.post(
     }
 );
 
+//@route GET /api/orgs/{orgId}
+//@desc Retrieves organzation information
+//@access HR-admins may only access their own organization's information. Site-admins 
+//        have access to all organization information. Forbidden to regular users
 router.get('/:orgId', [tokenAuth, orgAuth], async (req, res) => {
     const org = await Org.findById(req.params.orgId);
     const orgPersonnel = await Personnel.find({

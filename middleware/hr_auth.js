@@ -1,3 +1,7 @@
+
+/**
+ * Checks whether or not the user is an HR-admin
+ */
 module.exports.hrAdminAuth = function(req, res, next) {
     // We want site-admins to have at least the same privileges as hr-admin, with 
     // additional privileges

@@ -1,5 +1,9 @@
 const Personnel = require('../models/Personnel');
 
+/**
+ * Checks whether or not the user has authorization to
+ * access personnel information
+ */
 module.exports = getPersonnelAuth = async function(req, res, next) {
 
     const personnel = await Personnel.findById(req.params.personnelId);

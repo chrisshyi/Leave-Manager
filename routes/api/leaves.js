@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require
 const tokenAuth = require("../../middleware/token_auth");
 const { leaveAddAuth, leaveModAuth } = require("../../middleware/leave_auth");
 const { Leave, leaveTypes } = require("../../models/Leave");
@@ -9,12 +10,13 @@ const { getLeaveInfoAuth } = require("../../middleware/leave_auth");
 
 // @route POST /api/leaves
 // @desc  Adds a new leave
-// @access private
+// @access Accessible to site-admins, and HR-admins of the same organization as the personnel
+//         the leave pertains to
 router.post(
     "/",
     [
         tokenAuth,
-        hrAdminAuth,
+        leaveAddAuth,
         check("leaveType", "Leave type must be provided")
             .not()
             .isEmpty(),

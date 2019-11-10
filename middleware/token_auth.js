@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
 const config = require('config');
 
+/**
+ * Authenticates a user and adds an access token to the request
+ */
 module.exports = function(req, res, next) {
     // Get token from header
     const token = req.header('x-auth-token');
