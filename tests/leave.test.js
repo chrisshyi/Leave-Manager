@@ -60,7 +60,7 @@ beforeAll(async () => {
 
 describe("Leave API endpoints", () => {
     describe("Leave addition tests", () => {
-        afterEach(() => await Leave.remove({}));
+        afterEach(async () => await Leave.deleteMany({}));
         it("Test: site-admin can add leave for personnel of same organization", async () => {
             let res = await request(server)
                 .post("/api/auth/")
@@ -229,7 +229,7 @@ describe("Leave API endpoints", () => {
             leaveId = newLeave.id;
             leaveId2 = newLeave2.id;
         });
-        afterAll(() => await Leave.remove({}));
+        afterAll(async () => await Leave.deleteMany({}));
         it("Test: site-admin can retrieve leave info of personnel from same org", async () => {
             const regUser = await Personnel.findOne({
                 name: "regUser"
@@ -356,7 +356,7 @@ describe("Leave API endpoints", () => {
             leave2Id = newLeave2.id;
         });
 
-        afterEach(() => await Leave.remove({}));
+        afterEach(async () => await Leave.deleteMany({}));
 
         it("Site admin can modify leave from same organization", async () => {
             let res = await request(server)
@@ -527,7 +527,7 @@ describe("Leave API endpoints", () => {
             leave2Id = newLeave2.id;
         });
 
-        afterEach(() => await Leave.remove({}));
+        afterEach(async () => await Leave.deleteMany({}));
 
         it("Site admin can delete leave from same organization", async () => {
             let res = await request(server)
@@ -637,7 +637,7 @@ describe("Leave API endpoints", () => {
 
     describe("Leave query tests", () => {
         beforeAll(async () => {
-            await Leave.remove({});
+            await Leave.deleteMany({});
             const regUser = await Personnel.findOne({
                 name: "regUser"
             });
