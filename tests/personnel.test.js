@@ -4,7 +4,7 @@ const request = require('supertest');
 const mongoose = require('mongoose');
 const Org = require('../models/Org');
 const bcrypt = require('bcryptjs');
-const { dropTestDB } = require('../config/db');
+const { dropTestDB, dropTestLeaves } = require('../config/db');
 const http = require('http');
 const server = http.createServer(app);
 const { Leave } = require('../models/Leave');
@@ -153,6 +153,7 @@ describe("Personnel API endpoints", () => {
             await Promise.all(regUser1LeavesPromises);
             await Promise.all(regUser2LeavesPromises);
         });
+        afterAll(() => dropTestLeaves);
         it("site-admin can retrieve information of personnel in same organization", async () => {
             let res = await request(server)
                 .post("/api/auth/")

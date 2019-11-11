@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const config = require('config');
+const Leave = require('../models/Leave');
 
 const dbURI = config.get('mongoURI');
 const testDBURI = config.get('testDBURI');
@@ -16,7 +17,7 @@ const connectDB = async () => {
         console.error(err.message);
         process.exit(1); // exit with an error code
     }
-}
+};
 
 const connectTestDB = async () => {
     try {
@@ -32,25 +33,14 @@ const connectTestDB = async () => {
 
 const dropTestDB = async () => {
     try {
-        const conn = mongoose.createConnection(testDBURI); 
+        const conn = await mongoose.createConnection(testDBURI);
         await conn.dropDatabase();
         await conn.close();
     } catch (error) {
         console.log(error);
     }
-}
-
-const dropTestLeaves = async () => {
-    try {
-        const conn = mongoose.createConnection(testDBURI);
-        await conn.dropCollection("leaves");
-        await conn.close();
-    } catch (err) {
-        console.log(err);
-    }
-}
+};
 
 module.exports.connectDB = connectDB;
 module.exports.connectTestDB = connectTestDB;
 module.exports.dropTestDB = dropTestDB;
-module.exports.dropTestLeaves = dropTestLeaves;

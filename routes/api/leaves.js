@@ -98,6 +98,8 @@ router.get(
             baseSet = await Leave.find({
                 org: req.personnel.orgId
             });
+        } else {
+            baseSet = await Leave.find();
         }
         const queries = req.query;
         let startDate, endDate;
@@ -111,7 +113,7 @@ router.get(
                 }
             }
         }
-        const queryResult = baseSet;
+        let queryResult = baseSet;
         if (startDate && endDate) {
             queryResult = baseSet.or(
                 [
@@ -122,8 +124,8 @@ router.get(
                     },
                     {
                         scheduledDate: {
-                            $lt: endDate,
-                            $gte: startDate
+                            $gte: startDate,
+                            $lt: endDate
                         }
                     }
                 ]

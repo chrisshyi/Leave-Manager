@@ -4,7 +4,7 @@ const request = require("supertest");
 const { Leave } = require("../models/Leave");
 const Org = require("../models/Org");
 const bcrypt = require("bcryptjs");
-const { dropTestDB, dropTestLeaves } = require("../config/db");
+const { dropTestDB } = require("../config/db");
 const http = require("http");
 const server = http.createServer(app);
 
@@ -60,6 +60,7 @@ beforeAll(async () => {
 
 describe("Leave API endpoints", () => {
     describe("Leave addition tests", () => {
+        afterEach(() => await Leave.remove({}));
         it("Test: site-admin can add leave for personnel of same organization", async () => {
             let res = await request(server)
                 .post("/api/auth/")
@@ -228,7 +229,7 @@ describe("Leave API endpoints", () => {
             leaveId = newLeave.id;
             leaveId2 = newLeave2.id;
         });
-
+        afterAll(() => await Leave.remove({}));
         it("Test: site-admin can retrieve leave info of personnel from same org", async () => {
             const regUser = await Personnel.findOne({
                 name: "regUser"
@@ -355,7 +356,7 @@ describe("Leave API endpoints", () => {
             leave2Id = newLeave2.id;
         });
 
-        afterEach(() => dropTestLeaves);
+        afterEach(() => await Leave.remove({}));
 
         it("Site admin can modify leave from same organization", async () => {
             let res = await request(server)
@@ -526,7 +527,7 @@ describe("Leave API endpoints", () => {
             leave2Id = newLeave2.id;
         });
 
-        afterEach(() => dropTestLeaves);
+        afterEach(() => await Leave.remove({}));
 
         it("Site admin can delete leave from same organization", async () => {
             let res = await request(server)
@@ -632,7 +633,89 @@ describe("Leave API endpoints", () => {
                                        .set('x-auth-token', token)
             expect(res.statusCode).toBe(403);
         });
+    });
 
+    describe("Leave query tests", () => {
+        beforeAll(async () => {
+            await Leave.remove({});
+            const regUser = await Personnel.findOne({
+                name: "regUser"
+            });
+
+            const regUser2 = await Personnel.findOne({
+                name: "regUser2"
+            });
+            const org1 = await Org.findOne({
+                name: "成功嶺"
+            });
+            const org2 = await Org.findOne({
+                name: "台糖公司"
+            });
+            let newLeavePromises = []; 
+            for (let i = 0; i < 3; i++) {
+                let newLeave = new Leave({
+                    org: org1.id,
+                    leaveType: "例假",
+                    personnel: regUser.id,
+                    scheduled: false,
+                    duration: 12
+                });
+                newLeavePromises.push(newLeave.save());
+            }
+            // 3 leaves in org 1 without scheduled dates
+            for (let i = 0; i < 4; i++) {
+                let newLeave = new Leave({
+                    org: org1.id,
+                    leaveType: "例假",
+                    personnel: regUser.id,
+                    scheduled: true,
+                    scheduledDate: new Date("2019-03-15"),
+                    duration: 12
+                });
+                newLeavePromises.push(newLeave.save());
+            }
+            // 4 leaves in org 1 scheduled in March 2019
+            for (let i = 0; i < 6; i++) {
+                let newLeave = new Leave({
+                    org: org1.id,
+                    leaveType: "例假",
+                    personnel: regUser.id,
+                    scheduled: true,
+                    scheduledDate: new Date("2018-04-15"),
+                    duration: 12
+                });
+                newLeavePromises.push(newLeave.save());
+            }
+            // 6 leaves in org 1 scheduled in April 2018
+            for (let i = 0; i < 6; i++) {
+                let newLeave = new Leave({
+                    org: org2.id,
+                    leaveType: "例假",
+                    personnel: regUser2.id,
+                    scheduled: true,
+                    scheduledDate: new Date("2018-04-15"),
+                    duration: 12
+                });
+                newLeavePromises.push(newLeave.save());
+            }
+            // 6 leaves in org 2 (regUser2) scheduled in April 2018
+            await Promise.all(newLeavePromises);
+        });
+
+        it("Site-admin can get all leaves", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "chrisshyi13@gmail.com",
+                    password: "Nash1234@"
+                });
+            const token = res.body.token;
+            res = await request(server).get('/api/leaves')
+                                       .set('x-auth-token', token); 
+            expect(res.statusCode).toBe(200);
+            expect(res.body.leaves.length).toBe(19);
+        });
+        // it("Site-admin can filter by year", async)
     });
 });
 
