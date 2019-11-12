@@ -89,48 +89,50 @@ router.get(
     "/",
     tokenAuth,
     async (req, res) => {
-        let baseSet;
+        let baseQuery;
         if (req.personnel.role === 'reg-user') {
-            baseSet = await Leave.find({
+            baseQuery = Leave.find({
                 personnel: req.personnel.id
             });
         } else if (req.personnel.role === 'HR-admin') {
-            baseSet = await Leave.find({
+            baseQuery = Leave.find({
                 org: req.personnel.orgId
             });
         } else {
-            baseSet = await Leave.find();
+            baseQuery = Leave.find();
         }
         const queries = req.query;
         let startDate, endDate;
         if (Object.keys(queries).length !== 0) {
-            if (queries.year) {
-                startDate = new Date(queries.year, 0);
-                endDate = new Date(queries.year + 1, 0);
+            if (queries.year) {// queries.year is a string!
+                const year = parseInt(queries.year);
+                startDate = new Date(year, 0, 1);
+                endDate = new Date(year+ 1, 0, 1);
                 if (queries.month) {
-                    startDate.setMonth(queries.month + 1);
-                    endDate.setMonth(queries.month + 2);
+                    const month = parseInt(queries.month);
+                    startDate.setMonth(month - 1);
+                    endDate.setMonth(month);
+                    endDate.setFullYear(year);
                 }
             }
         }
-        let queryResult = baseSet;
+        let finalQuery = baseQuery;
         if (startDate && endDate) {
-            queryResult = baseSet.or(
-                [
-                    {
-                        scheduledDate: {
-                            $exists: false
-                        }
-                    },
-                    {
-                        scheduledDate: {
-                            $gte: startDate,
-                            $lt: endDate
-                        }
+            finalQuery = baseQuery.and([
+                {
+                    scheduledDate: {
+                        $exists: true
                     }
-                ]
-            );
+                },
+                {
+                    scheduledDate: {
+                        $gte: startDate,
+                        $lt: endDate
+                    }
+                }
+            ]);
         }
+        const queryResult = await finalQuery;
         res.json({ leaves: queryResult });
     }
 );

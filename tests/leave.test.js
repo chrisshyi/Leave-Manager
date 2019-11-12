@@ -698,7 +698,7 @@ describe("Leave API endpoints", () => {
                 });
                 newLeavePromises.push(newLeave.save());
             }
-            // 6 leaves in org 2 (regUser2) scheduled in April 2018
+            // 6 leaves in org 2 (regUser2) scheduled in May 2018
             await Promise.all(newLeavePromises);
         });
 
@@ -713,9 +713,233 @@ describe("Leave API endpoints", () => {
             res = await request(server).get('/api/leaves')
                                        .set('x-auth-token', token); 
             expect(res.statusCode).toBe(200);
-            expect(res.body.leaves.length).toBe(19);
+            let allLeaves = await Leave.find({});
+            expect(res.body.leaves.length).toBe(allLeaves.length);
         });
-        // it("Site-admin can filter by year", async)
+
+        it("Site-admin can filter by year", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "chrisshyi13@gmail.com",
+                    password: "Nash1234@"
+                });
+            const token = res.body.token;
+            res = await request(server).get('/api/leaves?year=2018')
+                                       .set('x-auth-token', token); 
+            expect(res.statusCode).toBe(200);
+
+            expect(res.statusCode).toBe(200);
+            for (let leave of res.body.leaves) {
+                const scheduledDate = new Date(leave.scheduledDate);
+                expect(scheduledDate.getFullYear()).toBe(2018);
+            }
+        });
+        it("Site-admin can filter by year and month", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "chrisshyi13@gmail.com",
+                    password: "Nash1234@"
+                });
+            const token = res.body.token;
+            res = await request(server).get('/api/leaves?year=2018&month=5')
+                                       .set('x-auth-token', token); 
+            expect(res.statusCode).toBe(200);
+
+            expect(res.statusCode).toBe(200);
+            for (let leave of res.body.leaves) {
+                const scheduledDate = new Date(leave.scheduledDate);
+                expect(scheduledDate.getFullYear()).toBe(2018);
+                expect(scheduledDate.getMonth()).toBe(4);
+            }
+        });
+        it("Site-admin can filter by year and month", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "chrisshyi13@gmail.com",
+                    password: "Nash1234@"
+                });
+            const token = res.body.token;
+            res = await request(server).get('/api/leaves?year=2018&month=5')
+                                       .set('x-auth-token', token); 
+            expect(res.statusCode).toBe(200);
+
+            expect(res.statusCode).toBe(200);
+            for (let leave of res.body.leaves) {
+                const scheduledDate = new Date(leave.scheduledDate);
+                expect(scheduledDate.getFullYear()).toBe(2018);
+                expect(scheduledDate.getMonth()).toBe(4);
+            }
+        });
+        it("HR-admin can get all leaves of org", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "brad-trav@gmail.com",
+                    password: "123456"
+                });
+            const token = res.body.token;
+            res = await request(server).get('/api/leaves')
+                                       .set('x-auth-token', token); 
+            expect(res.statusCode).toBe(200);
+
+            let org = await Org.findOne({
+                name: "成功嶺"
+            });
+            
+            let orgLeaves = await Leave.find({
+                org: org.id,
+            });
+
+            expect(res.statusCode).toBe(200);
+            expect(res.body.leaves.length).toBe(orgLeaves.length);
+        });
+        it("HR-admin can filter by year", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "brad-trav@gmail.com",
+                    password: "123456"
+                });
+            const token = res.body.token;
+            res = await request(server).get('/api/leaves?year=2018')
+                                       .set('x-auth-token', token); 
+            expect(res.statusCode).toBe(200);
+
+            let org = await Org.findOne({
+                name: "成功嶺"
+            });
+
+            expect(res.statusCode).toBe(200);
+            for (let leave of res.body.leaves) {
+                const scheduledDate = new Date(leave.scheduledDate);
+                expect(scheduledDate.getFullYear()).toBe(2018);
+                expect(leave.org).toEqual(org.id.toString());
+            }
+        });
+        it("HR-admin can filter by year and month", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "brad-trav@gmail.com",
+                    password: "123456"
+                });
+            const token = res.body.token;
+            res = await request(server).get('/api/leaves?year=2018&month=5')
+                                       .set('x-auth-token', token); 
+            expect(res.statusCode).toBe(200);
+
+            let org = await Org.find({
+                name: "成功嶺"
+            });
+
+            expect(res.statusCode).toBe(200);
+            for (let leave of res.body.leaves) {
+                const scheduledDate = new Date(leave.scheduledDate);
+                expect(scheduledDate.getFullYear()).toBe(2018);
+                expect(scheduledDate.getMonth()).toBe(4);
+                expect(leave.org).toEqual(org.id.toString());
+            }
+        });
+        it("Regular user can get their own leaves", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "reguser@gmail.com",
+                    password: "123456"
+                });
+            const token = res.body.token;
+            res = await request(server).get('/api/leaves')
+                                       .set('x-auth-token', token); 
+            expect(res.statusCode).toBe(200);
+
+            let personnel = await Personnel.findOne({
+                email: "reguser@gmail.com"
+            });
+
+            let userLeaves = await Leave.find({
+                personnel: personnel.id
+            });
+
+            expect(res.statusCode).toBe(200);
+            expect(res.body.leaves.length).toBe(userLeaves.length);
+        });
+        it("Regular user can filter by year", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "reguser@gmail.com",
+                    password: "123456"
+                });
+            const token = res.body.token;
+            res = await request(server).get('/api/leaves?year=2018')
+                                       .set('x-auth-token', token); 
+            expect(res.statusCode).toBe(200);
+
+            let personnel = await Personnel.findOne({
+                email: "reguser@gmail.com"
+            });
+
+            expect(res.statusCode).toBe(200);
+            for (let leave of res.body.leaves) {
+                const scheduledDate = new Date(leave.scheduledDate);
+                expect(scheduledDate.getFullYear()).toBe(2018);
+                expect(leave.personnel).toEqual(personnel.id.toString());
+            }
+        });
+        it("Regular user can filter by year", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "reguser@gmail.com",
+                    password: "123456"
+                });
+            const token = res.body.token;
+            res = await request(server).get('/api/leaves?year=2018')
+                                       .set('x-auth-token', token); 
+            expect(res.statusCode).toBe(200);
+
+            let personnel = await Personnel.findOne({
+                email: "reguser@gmail.com"
+            });
+
+            expect(res.statusCode).toBe(200);
+            for (let leave of res.body.leaves) {
+                const scheduledDate = new Date(leave.scheduledDate);
+                expect(scheduledDate.getFullYear()).toBe(2018);
+                expect(leave.personnel).toEqual(personnel.id.toString());
+            }
+        });
+        it("Regular user can filter by year and month", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "brad-trav@gmail.com",
+                    password: "123456"
+                });
+            const token = res.body.token;
+            res = await request(server).get('/api/leaves?year=2018&month=5')
+                                       .set('x-auth-token', token); 
+            expect(res.statusCode).toBe(200);
+
+            let org = await Org.find({
+                name: "成功嶺"
+            });
+            let personnel = await Personnel.find({
+                email: "reguser@gmail.com"
+            });
+
+
+            expect(res.statusCode).toBe(200);
+            for (let leave of res.body.leaves) {
+                const scheduledDate = new Date(leave.scheduledDate);
+                expect(scheduledDate.getFullYear()).toBe(2018);
+                expect(scheduledDate.getMonth()).toBe(4);
+                expect(leave.personnel).toEqual(personnel.id.toString());
+            }
+        });
     });
 });
 
