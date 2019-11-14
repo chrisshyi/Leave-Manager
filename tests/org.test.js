@@ -94,6 +94,39 @@ beforeAll(async () => {
 });
 
 describe("Org API endpoints", () => {
+    describe("Org creation tests", () => {
+
+        it("Site-admin can create new organization", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "chrisshyi13@gmail.com",
+                    password: "Nash1234@"
+                });
+            const token = res.body.token;
+            res = await request(server).post('/api/orgs').set('x-auth-token', token)
+                                       .send({
+                                           name: "成功之路"
+                                       }); 
+            expect(res.statusCode).toBe(200);
+            expect(res.body.org.name).toBe("成功之路");
+        });
+        it("Creating an org with a name results in an error", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "chrisshyi13@gmail.com",
+                    password: "Nash1234@"
+                });
+            const token = res.body.token;
+            res = await request(server).post('/api/orgs').set('x-auth-token', token)
+                                       .send({
+                                           foo: "成功之路"
+                                       }); 
+            expect(res.statusCode).toBe(400);
+            expect(res.body.hasOwnProperty("errors"));
+        });
+    });
     describe("Test org information retrieval", () => {
         it("site-admin can retrieve same org information", async () => {
             let res = await request(server)

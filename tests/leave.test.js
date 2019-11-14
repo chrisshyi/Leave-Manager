@@ -144,6 +144,40 @@ describe("Leave API endpoints", () => {
             expect(res.body.hasOwnProperty("leaveType"));
             expect(res.body['leaveType']).toBe("例假");
         });
+        it("Test leave addition with scheduled and original dates", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "brad-trav@gmail.com",
+                    password: "123456"
+                });
+            const token = res.body.token;
+            const personnel = await Personnel.findOne({
+                email: "reguser@gmail.com"
+            });
+            const org = await Org.findOne({
+                name: "成功嶺"
+            });
+            const scheduledDate = new Date(2019, 4, 30);
+            const originalDate = new Date(2019, 0, 2);
+            res = await request(server)
+                .post("/api/leaves")
+                .set("x-auth-token", token)
+                .send({
+                    org: org.id,
+                    leaveType: "例假",
+                    personnel: personnel.id,
+                    scheduled: true,
+                    duration: 24,
+                    scheduledDate: scheduledDate,
+                    originalDate: originalDate
+                });
+            expect(res.statusCode).toEqual(200);
+            expect(res.body.hasOwnProperty("leaveType"));
+            expect(res.body['leaveType']).toBe("例假");
+            expect(res.body.scheduledDate).toBe(scheduledDate.toJSON());
+            expect(res.body.originalDate).toBe(originalDate.toJSON());
+        });
         it("Test: HR-admin cannot add leave for personnel of different organization", async () => {
             let res = await request(server)
                 .post("/api/auth/")
@@ -247,7 +281,7 @@ describe("Leave API endpoints", () => {
             expect(res.statusCode).toBe(200);
             expect(res.body.hasOwnProperty("leaveType"));
         });
-        it("Test: site-admin can retrieve leave info of personnel from different org", async () => {
+        it("site-admin can retrieve leave info of personnel from different org", async () => {
             let res = await request(server)
                 .post("/api/auth/")
                 .send({
@@ -260,6 +294,20 @@ describe("Leave API endpoints", () => {
                 .set("x-auth-token", token);
             expect(res.statusCode).toBe(200);
             expect(res.body.hasOwnProperty("leaveType"));
+        });
+        it("Attempting to retrieve non-existant leave results in an error", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "chrisshyi13@gmail.com",
+                    password: "Nash1234@"
+                });
+            const token = res.body.token;
+            res = await request(server)
+                .get('/api/leaves/507f191e810c19729de860ea')
+                .set("x-auth-token", token);
+            expect(res.statusCode).toBe(400);
+            expect(res.body.msg).toBe("Resource doesn't exist");
         });
         it("Test: HR-admin can retrieve leave info of personnel from same org", async () => {
             let res = await request(server)
