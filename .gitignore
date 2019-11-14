@@ -3,3 +3,4 @@ personnel.txt
 .vscode/
 *.xml
 *.iml
+coverage_data/
