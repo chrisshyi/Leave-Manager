@@ -6,7 +6,9 @@
   "scripts": {
     "server": "nodemon server.js",
     "start": "node server.js",
-    "test": "jest --detectOpenHandles"
+    "test": "jest --detectOpenHandles",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
@@ -32,7 +34,7 @@
     "nodemon": "^1.19.4",
     "supertest": "^4.0.2"
   },
-   "jest": {
+  "jest": {
     "testEnvironment": "node",
     "coveragePathIgnorePatterns": [
       "/node_modules/"

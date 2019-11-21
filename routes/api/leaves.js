@@ -136,7 +136,7 @@ router.get(
         res.json({ leaves: queryResult });
     }
 );
-// @route PUT /api/leaves
+// @route PUT /api/leaves/:leaveId
 // @desc  Modifies an existing leave
 // @access Accessible to site-admins, and HR-admins of the same organization as the personnel
 //         the leave pertains to
