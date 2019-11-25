@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOGIN_SUCCESS, LOAD_PERSONNEL, LOGIN_FAILURE, AUTH_FAILURE } from "./types";
+import { LOGOUT, LOGIN_SUCCESS, LOAD_PERSONNEL, LOGIN_FAILURE, AUTH_FAILURE } from "./types";
 import setAuthToken from "../utils/setAuthToken";
 
 const loadPersonnel = () => async dispatch => {
@@ -9,7 +9,6 @@ const loadPersonnel = () => async dispatch => {
     }
     try {
         const res = await axios.get("/api/auth");
-        console.log(`Res data: ${res.data}`);
         dispatch({
             type: LOAD_PERSONNEL,
             payload: res.data
@@ -41,3 +40,9 @@ export const login = (email, password) => async dispatch => {
         });
     }
 };
+
+export const logout = () => async dispatch => {
+    dispatch({
+        type: LOGOUT
+    })
+}

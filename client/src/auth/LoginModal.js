@@ -25,6 +25,8 @@ const LoginModal = props => {
         password: ""
     });
 
+    const [errorMsg, setErrorMsg] = useState('');
+
     const toggle = () => setModal(!modal);
 
     const onChange = e => {
