@@ -15,7 +15,7 @@ const Summary = props => {
     }
     return (
         <Container>
-            <Row>
+            <Row className="mt-5">
                 <Col sm="4"></Col>
                 <Col sm="4">
                     <h1>Welcome {personnel.name}</h1>

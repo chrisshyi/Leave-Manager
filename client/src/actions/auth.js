@@ -4,7 +4,7 @@ import setAuthToken from "../utils/setAuthToken";
 
 const ERR_MSG_DURATION = 3000;
 
-const loadPersonnel = () => async dispatch => {
+export const loadPersonnel = () => async dispatch => {
     const token = localStorage.getItem("token");
     if (token) {
         setAuthToken(token);

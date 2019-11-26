@@ -43,7 +43,8 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 loading: false,
-                personnel: payload
+                personnel: payload,
+                isAuthenticated: true
             };
         case AUTH_FAILURE:
             return resetState(state, 'Authentication failure');

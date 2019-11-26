@@ -1,12 +1,16 @@
-import React, { useState, Fragment } from "react";
+import React, { useEffect, Fragment } from "react";
 import { Provider } from "react-redux";
 import store from "./store";
 import CustomNavbar from "./components/layouts/CustomNavbar";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Landing from './components/Landing';
 import Summary from './components/Summary';
+import { loadPersonnel } from './actions/auth';
 
-const App = props => {
+const App = () => {
+    useEffect(() => {
+        store.dispatch(loadPersonnel());
+    }, [loadPersonnel]);
     return (
         <Provider store={store}>
             <BrowserRouter>
