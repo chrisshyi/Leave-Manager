@@ -9,14 +9,14 @@ import {
     Form,
     FormGroup,
     Label,
-    Input
+    Input,
+    Alert
 } from "reactstrap";
 import { login } from '../actions/auth';
 import { connect } from 'react-redux';
 const LoginModal = props => {
 
-    const { login } = props;
-    const { buttonLabel } = props;
+    const { auth, login, buttonLabel } = props;
 
     const [modal, setModal] = useState(false);
 
@@ -24,8 +24,6 @@ const LoginModal = props => {
         email: "",
         password: ""
     });
-
-    const [errorMsg, setErrorMsg] = useState('');
 
     const toggle = () => setModal(!modal);
 
@@ -59,6 +57,7 @@ const LoginModal = props => {
             <Modal isOpen={modal} toggle={toggle}>
                 <ModalHeader toggle={toggle}>Login</ModalHeader>
                 <ModalBody>
+                    { auth.errorMsg !== '' ? <Alert color="danger">{auth.errorMsg}</Alert> : ''}
                     <Form>
                         <FormGroup>
                             <Label for="email">Email</Label>
@@ -96,7 +95,12 @@ const LoginModal = props => {
 };
 
 LoginModal.propTypes = {
-    buttonLabel: PropTypes.string.isRequired
+    buttonLabel: PropTypes.string.isRequired,
+    auth: PropTypes.object.isRequired,
 };
 
-export default connect(null, { login })(LoginModal);
+const mapStateToProps = state => ({
+    auth: state.auth
+})
+
+export default connect(mapStateToProps, { login })(LoginModal);

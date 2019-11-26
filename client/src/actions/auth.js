@@ -1,6 +1,8 @@
 import axios from "axios";
-import { LOGOUT, LOGIN_SUCCESS, LOAD_PERSONNEL, LOGIN_FAILURE, AUTH_FAILURE } from "./types";
+import { CLEAR_ERR_MSG ,LOGOUT, LOGIN_SUCCESS, LOAD_PERSONNEL, LOGIN_FAILURE, AUTH_FAILURE } from "./types";
 import setAuthToken from "../utils/setAuthToken";
+
+const ERR_MSG_DURATION = 3000;
 
 const loadPersonnel = () => async dispatch => {
     const token = localStorage.getItem("token");
@@ -17,6 +19,9 @@ const loadPersonnel = () => async dispatch => {
         dispatch({
             type: AUTH_FAILURE
         });
+        setTimeout(() => dispatch({
+            type: CLEAR_ERR_MSG
+        }), ERR_MSG_DURATION);
     }
 };
 
@@ -38,6 +43,9 @@ export const login = (email, password) => async dispatch => {
         dispatch({
             type: LOGIN_FAILURE
         });
+        setTimeout(() => dispatch({
+            type: CLEAR_ERR_MSG
+        }), ERR_MSG_DURATION);
     }
 };
 
