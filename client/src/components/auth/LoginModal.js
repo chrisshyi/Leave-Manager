@@ -12,7 +12,7 @@ import {
     Input,
     Alert
 } from "reactstrap";
-import { login } from '../actions/auth';
+import { login } from '../../actions/auth';
 import { connect } from 'react-redux';
 const LoginModal = props => {
 

@@ -1,25 +1,27 @@
 import React, { useState, Fragment } from "react";
-import { Container, Row, Col } from "reactstrap";
-import LoginModal from "./auth/LoginModal";
 import { Provider } from "react-redux";
 import store from "./store";
 import CustomNavbar from "./components/layouts/CustomNavbar";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import Landing from './components/Landing';
+import Summary from './components/Summary';
 
 const App = props => {
     return (
         <Provider store={store}>
-            <Fragment>
-                <CustomNavbar />
-                <Container className="mt-5">
-                    <Row className="align-items-center">
-                        <Col sm="4"></Col>
-                        <Col sm="4" xs="12">
-                            <LoginModal buttonLabel={"Login"} />
-                        </Col>
-                        <Col sm="4"></Col>
-                    </Row>
-                </Container>
-            </Fragment>
+            <BrowserRouter>
+                <Fragment>
+                    <CustomNavbar />
+                    <Switch>
+                        <Route exact path="/summary">
+                            <Summary />
+                        </Route>
+                        <Route exact path="/">
+                            <Landing />
+                        </Route>
+                    </Switch>
+                </Fragment>
+            </BrowserRouter>
         </Provider>
     );
 };
