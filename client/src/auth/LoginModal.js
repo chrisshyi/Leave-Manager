@@ -38,6 +38,7 @@ const LoginModal = props => {
         e.preventDefault();
         const { email, password } = formData;
         login(email, password);
+        toggle();
     }
 
     return (
@@ -58,7 +59,7 @@ const LoginModal = props => {
                 <ModalHeader toggle={toggle}>Login</ModalHeader>
                 <ModalBody>
                     { auth.errorMsg !== '' ? <Alert color="danger">{auth.errorMsg}</Alert> : ''}
-                    <Form id="login-form">
+                    <Form id="login-form" onSubmit={e => onSubmit(e)}>
                         <FormGroup>
                             <Label for="email">Email</Label>
                             <Input
@@ -82,7 +83,7 @@ const LoginModal = props => {
                     </Form>
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="primary" type="button" onClick={e => onSubmit(e)} form='login-form'>
+                    <Button color="primary" type="submit" form='login-form'>
                         Submit
                     </Button>
                     <Button color="secondary" onClick={toggle}>
