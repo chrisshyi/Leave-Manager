@@ -58,7 +58,7 @@ const LoginModal = props => {
                 <ModalHeader toggle={toggle}>Login</ModalHeader>
                 <ModalBody>
                     { auth.errorMsg !== '' ? <Alert color="danger">{auth.errorMsg}</Alert> : ''}
-                    <Form>
+                    <Form id="login-form">
                         <FormGroup>
                             <Label for="email">Email</Label>
                             <Input
@@ -80,11 +80,11 @@ const LoginModal = props => {
                             />
                         </FormGroup>
                     </Form>
-                    <Button color="primary" type="button" onClick={e => onSubmit(e)}>
-                        Submit
-                    </Button>
                 </ModalBody>
                 <ModalFooter>
+                    <Button color="primary" type="button" onClick={e => onSubmit(e)} form='login-form'>
+                        Submit
+                    </Button>
                     <Button color="secondary" onClick={toggle}>
                         Cancel
                     </Button>
