@@ -38,7 +38,9 @@ const LoginModal = props => {
         e.preventDefault();
         const { email, password } = formData;
         login(email, password);
-        toggle();
+        if (auth.isAuthenticated) {
+            toggle();
+        }
     }
 
     return (

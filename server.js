@@ -10,7 +10,7 @@ const local = config.get('local');
 if (testing) {
     connectTestDB(local);
 } else {
-    connectDB();
+    connectDB(local);
 }
 
 app.get('/', (req, res) => {

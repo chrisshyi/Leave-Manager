@@ -135,7 +135,9 @@ router.get(
                         $lt: endDate
                     }
                 }
-            ]);
+            ]).sort({
+                personnel: 'asc'
+            }).populate('personnel', 'name role');
         }
         const queryResult = await finalQuery;
         res.json({ leaves: queryResult });
