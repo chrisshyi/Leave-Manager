@@ -38,7 +38,8 @@
   "jest": {
     "testEnvironment": "node",
     "coveragePathIgnorePatterns": [
-      "/node_modules/"
+      "/node_modules/",
+      ""
     ],
     "collectCoverage": true,
     "coverageDirectory": "/home/chris/workspace/javascript/leave_management/coverage_data"

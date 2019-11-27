@@ -4,10 +4,11 @@ const { connectDB, connectTestDB } = require('./config/db');
 const config = require('config');
 const PORT = process.env.PORT || 5000;
 const testing = config.get("testing"); 
+const local = config.get('local');
 
 
 if (testing) {
-    connectTestDB();
+    connectTestDB(local);
 } else {
     connectDB();
 }

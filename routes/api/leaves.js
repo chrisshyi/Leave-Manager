@@ -81,7 +81,7 @@ router.post(
     }
 );
 
-// @route GET /api/leaves?year={year}&month={month}
+// @route GET /api/leaves?year={year}&month={month}&day={day}
 // @desc  Gets leaves with optional filters. 
 // @access Public. Regular users will only see their own leaves. HR-admins see the leaves of their 
 //         organization. Site-admins see all leaves.
@@ -99,7 +99,7 @@ router.get(
                 org: req.personnel.orgId
             });
         } else {
-            baseQuery = Leave.find();
+            baseQuery = Leave.find({});
         }
         const queries = req.query;
         let startDate, endDate;
@@ -113,6 +113,11 @@ router.get(
                     startDate.setMonth(month - 1);
                     endDate.setMonth(month);
                     endDate.setFullYear(year);
+                }
+                if (queries.day) {
+                    const day = parseInt(queries.day);
+                    startDate.setDate(day);
+                    endDate.setDate(day + 1);
                 }
             }
         }

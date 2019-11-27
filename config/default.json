@@ -2,5 +2,7 @@
     "mongoURI": "mongodb+srv://chris:nash1234@cluster0-63l6h.gcp.mongodb.net/leaveManagement?retryWrites=true&w=majority",
     "jwtSecret": "horsebattery13",
     "testDBURI": "mongodb+srv://chris:nash1234@cluster0-63l6h.gcp.mongodb.net/test?retryWrites=true&w=majority",
-    "testing": false
+    "localTestDBURI": "mongodb://localhost/test?retryWrites=true&w=majority",
+    "testing": true,
+    "local": true
 }

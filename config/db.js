@@ -1,11 +1,12 @@
-const mongoose = require('mongoose');
-const config = require('config');
-const Leave = require('../models/Leave');
+const mongoose = require("mongoose");
+const config = require("config");
 
-const dbURI = config.get('mongoURI');
-const testDBURI = config.get('testDBURI');
+const dbURI = config.get("mongoURI");
+const testDBURI = config.get("testDBURI");
+const localTestDBURI = config.get("localTestDBURI");
+const local = config.get('local');
 
-mongoose.set('useFindAndModify', false);
+mongoose.set("useFindAndModify", false);
 
 const connectDB = async () => {
     try {
@@ -19,21 +20,32 @@ const connectDB = async () => {
     }
 };
 
-const connectTestDB = async () => {
+const connectTestDB = async local => {
     try {
-        await mongoose.connect(testDBURI, {
-            useNewUrlParser: true
-        });
+        if (local) {
+            await mongoose.connect(localTestDBURI, {
+                useNewUrlParser: true
+            });
+        } else {
+            await mongoose.connect(testDBURI, {
+                useNewUrlParser: true
+            });
+        }
         console.log("Test database connected");
     } catch (error) {
         console.log(error);
         process.exit(1);
     }
-}
+};
 
 const dropTestDB = async () => {
     try {
-        const conn = await mongoose.createConnection(testDBURI);
+        let conn;
+        if (local) {
+            conn = await mongoose.createConnection(localTestDBURI);
+        } else {
+            conn = await mongoose.createConnection(testDBURI);
+        }
         await conn.dropDatabase();
         await conn.close();
     } catch (error) {
