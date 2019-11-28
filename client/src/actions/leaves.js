@@ -1,4 +1,4 @@
-import { GET_TODAY_LEAVES, LEAVE_ERROR } from "./types";
+import { GET_TODAY_LEAVES, LEAVE_ERROR, LOGOUT } from "./types";
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 

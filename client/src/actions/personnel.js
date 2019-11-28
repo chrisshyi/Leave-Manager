@@ -1,5 +1,6 @@
 import { LOGOUT, GET_ALL_PERSONNEL } from "./types";
 import axios from "axios";
+import setAuthToken from '../utils/setAuthToken';
 
 export const getAllPersonnel = () => async dispatch => {
     const config = {
