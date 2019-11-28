@@ -19,6 +19,11 @@ export const loadPersonnel = () => async dispatch => {
         });
     } catch (error) {
         console.log(error);
+        if (error.response.data.msg === "Token expired!") {
+            dispatch({
+                type: LOGOUT
+            });
+        }
     }
 };
 

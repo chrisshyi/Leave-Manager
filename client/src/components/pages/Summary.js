@@ -5,10 +5,12 @@ import Spinner from "../layouts/Spinner";
 import { Redirect, Link } from "react-router-dom";
 import { Container, Row, Col, Table } from "reactstrap";
 import { getTodayLeaves } from "../../actions/leaves";
+import setAuthToken from '../../utils/setAuthToken';
 
 const Summary = props => {
     
     useEffect(() => {
+        setAuthToken(localStorage.getItem('token'));
         props.getTodayLeaves();
     }, []); // for the initial render
      
