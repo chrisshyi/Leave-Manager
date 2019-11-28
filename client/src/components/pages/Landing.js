@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { Redirect } from 'react-router-dom'
 import PropTypes from "prop-types";
 import { Container, Row, Col } from "reactstrap";
-import LoginModal from './auth/LoginModal';
+import LoginModal from '../auth/LoginModal';
 import { connect } from 'react-redux';
 
 const Landing = props => {

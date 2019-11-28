@@ -8,6 +8,8 @@ export const loadPersonnel = () => async dispatch => {
     const token = localStorage.getItem("token");
     if (token) {
         setAuthToken(token);
+    } else {
+        return;
     }
     try {
         const res = await axios.get("/api/auth");
@@ -16,12 +18,7 @@ export const loadPersonnel = () => async dispatch => {
             payload: res.data
         });
     } catch (error) {
-        dispatch({
-            type: AUTH_FAILURE
-        });
-        setTimeout(() => dispatch({
-            type: CLEAR_ERR_MSG
-        }), ERR_MSG_DURATION);
+        console.log(error);
     }
 };
 
