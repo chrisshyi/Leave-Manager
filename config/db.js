@@ -118,7 +118,19 @@ async function seedLeaves() {
             scheduledDate: new Date(),
             duration: 24
         });
+        
+        let newLeave2 = new Leave({
+            org: org.id,
+            leaveType: "例假",
+            personnel: personnel._id,
+            scheduled: true,
+            originalDate: new Date(),
+            scheduledDate: new Date('2019-11-05'),
+            duration: 24
+
+        })
         newLeavePromises.push(newLeave.save());
+        newLeavePromises.push(newLeave2.save());
     }
     await Promise.all(newLeavePromises);
     await mongoose.disconnect();

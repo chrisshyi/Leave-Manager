@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
 const tokenAuth = require("../../middleware/token_auth");
 const {
     leaveAddAuth,
@@ -140,9 +139,29 @@ router.get("/", tokenAuth, async (req, res) => {
             .populate("personnel", "name role");
     }
     const queryResult = await finalQuery;
+    /*
     queryResult.sort(
-        (leave1, leave2) => leave1.personnel.name < leave2.personnel.name
+        (leave1, leave2) => {
+            const date1 = leave1.scheduledDate;
+            const date2 = leave2. scheduledDate;
+            if (date1 === date2) {
+                const name1 = leave1.personnel.name;
+                const name2 = leave2.personnel.name;
+                if (name1 < name2) {
+                    return -1;
+                } else if (name1 === name2) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            } else if (date1 < date2) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
     ); // sort by personnel name
+    */
     res.json({ leaves: queryResult });
 });
 // @route PUT /api/leaves/:leaveId

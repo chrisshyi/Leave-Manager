@@ -28,9 +28,10 @@ const Summary = props => {
         return <Redirect to="/" />;
     }
     if (!personnel) {
+        
         return <Spinner />;
     }
-    const { leaves } = props.leaves;
+    const todayLeaves = props.todayLeaves.leaves;
 
     return (
         <Container>
@@ -45,7 +46,7 @@ const Summary = props => {
             <Row>
                 <Col sm="4"></Col>
                 <Col sm="4">
-                    {leaves && (
+                    {todayLeaves && (
                         <Table striped>
                             <thead>
                                 <tr>
@@ -53,7 +54,7 @@ const Summary = props => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {leaves.map((leave, index) => (
+                                {todayLeaves.map((leave, index) => (
                                     <tr key={index}>
                                         <td>{leave.personnel.name}</td>
                                     </tr>
@@ -82,7 +83,7 @@ Summary.propTypes = {
 
 const mapStateToProps = state => ({
     auth: state.auth,
-    leaves: state.leaves.leaves
+    todayLeaves: state.leaves.todayLeaves
 });
 
 export default connect(mapStateToProps, { getTodayLeaves })(Summary);

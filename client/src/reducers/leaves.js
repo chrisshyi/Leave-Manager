@@ -1,7 +1,8 @@
-import { GET_TODAY_LEAVES, LEAVE_ERROR } from "../actions/types";
+import { GET_MONTHLY_LEAVES, GET_TODAY_LEAVES, LEAVE_ERROR } from "../actions/types";
 
 const initialState = {
-    leaves: []
+    todayLeaves: [],
+    monthlyLeaves: []
 };
 
 export default function(state = initialState, action) {
@@ -11,8 +12,13 @@ export default function(state = initialState, action) {
         case GET_TODAY_LEAVES:
             return {
                 ...state,
-                leaves: payload
+                todayLeaves: payload
             };
+        case GET_MONTHLY_LEAVES:
+            return {
+                ...state,
+                monthlyLeaves: payload
+            }
         default:
             return state;
     }
