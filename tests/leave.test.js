@@ -961,30 +961,7 @@ describe("Leave API endpoints", () => {
             for (let leave of res.body.leaves) {
                 const scheduledDate = new Date(leave.scheduledDate);
                 expect(scheduledDate.getFullYear()).toBe(2018);
-                expect(leave.personnel).toEqual(personnel.id.toString());
-            }
-        });
-        it("Regular user can filter by year", async () => {
-            let res = await request(server)
-                .post("/api/auth/")
-                .send({
-                    email: "reguser@gmail.com",
-                    password: "123456"
-                });
-            const token = res.body.token;
-            res = await request(server).get('/api/leaves?year=2018')
-                                       .set('x-auth-token', token); 
-            expect(res.statusCode).toBe(200);
-
-            let personnel = await Personnel.findOne({
-                email: "reguser@gmail.com"
-            });
-
-            expect(res.statusCode).toBe(200);
-            for (let leave of res.body.leaves) {
-                const scheduledDate = new Date(leave.scheduledDate);
-                expect(scheduledDate.getFullYear()).toBe(2018);
-                expect(leave.personnel).toEqual(personnel.id.toString());
+                expect(leave.personnel["_id"]).toEqual(personnel.id.toString());
             }
         });
         it("Regular user can filter by year and month", async () => {
@@ -1009,7 +986,7 @@ describe("Leave API endpoints", () => {
                 const scheduledDate = new Date(leave.scheduledDate);
                 expect(scheduledDate.getFullYear()).toBe(2018);
                 expect(scheduledDate.getMonth()).toBe(3);
-                expect(leave.personnel).toEqual(personnel.id.toString());
+                expect(leave.personnel["_id"]).toEqual(personnel.id.toString());
             }
         });
     });

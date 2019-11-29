@@ -114,7 +114,9 @@ router.get("/", auth, async (req, res) => {
     } else {
         query = Personnel.find({});
     }
-    const personnelArr = await query;
+    const personnelArr = await query.sort({
+        name: 'asc'
+    });
     res.json({ personnel: personnelArr });
 });
 // @route  GET api/personnel/{personnelId}

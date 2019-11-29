@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const tokenAuth = require("../../middleware/token_auth");
 const {
     leaveAddAuth,
@@ -19,7 +19,9 @@ router.post(
     [
         tokenAuth,
         leaveAddAuth,
-        check("org", "Org id must be provided").not().isEmpty(),
+        check("org", "Org id must be provided")
+            .not()
+            .isEmpty(),
         check("leaveType", "Leave type must be provided")
             .not()
             .isEmpty(),
@@ -82,48 +84,47 @@ router.post(
 );
 
 // @route GET /api/leaves?year={year}&month={month}&day={day}
-// @desc  Gets leaves with optional filters. 
-// @access Public. Regular users will only see their own leaves. HR-admins see the leaves of their 
+// @desc  Gets leaves with optional filters.
+// @access Public. Regular users will only see their own leaves. HR-admins see the leaves of their
 //         organization. Site-admins see all leaves.
-router.get(
-    "/",
-    tokenAuth,
-    async (req, res) => {
-        let baseQuery;
-        if (req.personnel.role === 'reg-user') {
-            baseQuery = Leave.find({
-                personnel: req.personnel.id
-            });
-        } else if (req.personnel.role === 'HR-admin') {
-            baseQuery = Leave.find({
-                org: req.personnel.orgId
-            });
-        } else {
-            baseQuery = Leave.find({});
-        }
-        const queries = req.query;
-        let startDate, endDate;
-        if (Object.keys(queries).length !== 0) {
-            if (queries.year) {// queries.year is a string!
-                const year = parseInt(queries.year);
-                startDate = new Date(year, 0, 1);
-                endDate = new Date(year+ 1, 0, 1);
-                if (queries.month) {
-                    const month = parseInt(queries.month);
-                    startDate.setMonth(month - 1);
-                    endDate.setMonth(month);
-                    endDate.setFullYear(year);
-                }
-                if (queries.day) {
-                    const day = parseInt(queries.day);
-                    startDate.setDate(day);
-                    endDate.setDate(day + 1);
-                }
+router.get("/", tokenAuth, async (req, res) => {
+    let baseQuery;
+    if (req.personnel.role === "reg-user") {
+        baseQuery = Leave.find({
+            personnel: req.personnel.id
+        });
+    } else if (req.personnel.role === "HR-admin") {
+        baseQuery = Leave.find({
+            org: req.personnel.orgId
+        });
+    } else {
+        baseQuery = Leave.find({});
+    }
+    const queries = req.query;
+    let startDate, endDate;
+    if (Object.keys(queries).length !== 0) {
+        if (queries.year) {
+            // queries.year is a string!
+            const year = parseInt(queries.year);
+            startDate = new Date(year, 0, 1);
+            endDate = new Date(year + 1, 0, 1);
+            if (queries.month) {
+                const month = parseInt(queries.month);
+                startDate.setMonth(month - 1);
+                endDate.setMonth(month);
+                endDate.setFullYear(year);
+            }
+            if (queries.day) {
+                const day = parseInt(queries.day);
+                startDate.setDate(day);
+                endDate.setDate(day + 1);
             }
         }
-        let finalQuery = baseQuery;
-        if (startDate && endDate) {
-            finalQuery = baseQuery.and([
+    }
+    let finalQuery = baseQuery;
+    if (startDate && endDate) {
+        finalQuery = baseQuery
+            .and([
                 {
                     scheduledDate: {
                         $exists: true
@@ -135,14 +136,15 @@ router.get(
                         $lt: endDate
                     }
                 }
-            ]).sort({
-                personnel: 'asc'
-            }).populate('personnel', 'name role');
-        }
-        const queryResult = await finalQuery;
-        res.json({ leaves: queryResult });
+            ])
+            .populate("personnel", "name role");
     }
-);
+    const queryResult = await finalQuery;
+    queryResult.sort(
+        (leave1, leave2) => leave1.personnel.name < leave2.personnel.name
+    ); // sort by personnel name
+    res.json({ leaves: queryResult });
+});
 // @route PUT /api/leaves/:leaveId
 // @desc  Modifies an existing leave
 // @access Accessible to site-admins, and HR-admins of the same organization as the personnel
@@ -152,8 +154,12 @@ router.put(
     [
         tokenAuth,
         leaveModDeleteAuth,
-        check("leaveType", "Leave type not allowed").optional().isIn(leaveTypes),
-        check("personnel", "Cannot modify the personnel").not().exists(),
+        check("leaveType", "Leave type not allowed")
+            .optional()
+            .isIn(leaveTypes),
+        check("personnel", "Cannot modify the personnel")
+            .not()
+            .exists(),
         check("scheduled", "'scheduled' must be a boolean")
             .optional()
             .isBoolean(),
@@ -193,10 +199,14 @@ router.put(
         if (scheduledDate) leaveFields.scheduledDate = scheduledDate;
         if (scheduled) leaveFields.scheduled = scheduled;
         try {
-            const modifiedLeave = await Leave.findByIdAndUpdate(req.params.leaveId, leaveFields, {
-                new: true,
-                runValidators: true
-            });
+            const modifiedLeave = await Leave.findByIdAndUpdate(
+                req.params.leaveId,
+                leaveFields,
+                {
+                    new: true,
+                    runValidators: true
+                }
+            );
             return res.json({
                 leaveType: modifiedLeave.leaveType,
                 duration: modifiedLeave.duration,
@@ -257,7 +267,7 @@ router.delete(
             originalDate,
             scheduledDate,
             duration
-        }
+        };
         res.json(leaveData);
     }
 );
