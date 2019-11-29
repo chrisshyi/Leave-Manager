@@ -62,7 +62,7 @@ const MonthlyView = props => {
             <tbody>
                 {daysArray.map(day => (
                     <tr>
-                        <td>{day.format("MM/DD")}</td>
+                        <td key={day.format("MM/DD")}>{day.format("MM/DD")}</td>
                         {// Due to the nature of useEffect(), personnel and monthlyLeaves
                         // may be undefined when the component is first rendered
                         // Thus a null/undefined check must be included
@@ -76,7 +76,7 @@ const MonthlyView = props => {
                                     const dateLeaveMap = leavesMap.get(person._id);
                                     if (dateLeaveMap.has(dateStr)) {
                                         const leaveOnDate = dateLeaveMap.get(dateStr);
-                                        return <td>{leaveOnDate.leaveType}</td>
+                                        return <td key={leaveOnDate._id}>{leaveOnDate.leaveType}</td>
                                     }
                                 }
                                 return <td>Empty</td>;
