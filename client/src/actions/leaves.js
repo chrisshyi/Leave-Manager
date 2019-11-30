@@ -36,7 +36,7 @@ export const getTodayLeaves = () => async dispatch => {
     }
 };
 
-export const getMonthlyLeaves = () => async dispatch => {
+export const getMonthlyLeaves = (year, month) => async dispatch => {
     try {
         const token = localStorage.getItem("token");
         console.log(`Token: ${token}`);
@@ -46,10 +46,9 @@ export const getMonthlyLeaves = () => async dispatch => {
         if (!axios.defaults.headers.common.hasOwnProperty("x-auth-token")) {
             setAuthToken(token);
         }
-        const today = new Date();
         const res = await axios.get(
-            `/api/leaves/?year=${today.getFullYear()}
-            &month=${today.getMonth() + 1}`
+            `/api/leaves/?year=${year}
+            &month=${month}`
         );
         console.log(res.data);
         dispatch({

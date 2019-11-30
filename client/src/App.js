@@ -21,8 +21,7 @@ const App = () => {
                         <Route exact path="/summary">
                             <Summary />
                         </Route>
-                        <Route exact path='/monthly-view'>
-                            <MonthlyView />
+                        <Route exact path='/monthly-view' component={MonthlyView}>
                         </Route>
                         <Route exact path="/">
                             <Landing />

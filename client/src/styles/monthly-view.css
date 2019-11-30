@@ -1,0 +1,9 @@
+.monthly-view-cell {
+    text-align: center;
+    border: 1px solid black;
+}
+
+.monthly-table .monthly-table-header {
+    text-align: center;
+    border: 1px solid black;
+}

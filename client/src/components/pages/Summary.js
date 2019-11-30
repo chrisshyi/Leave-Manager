@@ -5,22 +5,21 @@ import Spinner from "../layouts/Spinner";
 import { Redirect, Link } from "react-router-dom";
 import { Container, Row, Col, Table } from "reactstrap";
 import { getTodayLeaves } from "../../actions/leaves";
-import setAuthToken from '../../utils/setAuthToken';
+import setAuthToken from "../../utils/setAuthToken";
 
 const Summary = props => {
-    
     useEffect(() => {
-        setAuthToken(localStorage.getItem('token'));
+        setAuthToken(localStorage.getItem("token"));
         props.getTodayLeaves();
     }, []); // for the initial render
-     
+
     useEffect(() => {
         const interval = setInterval(() => {
             props.getTodayLeaves();
         }, 60000); // poll the server every minute to get the latest leaves
         return () => clearInterval(interval);
     });
-    
+
     const {
         auth: { personnel, isAuthenticated }
     } = props;
@@ -28,11 +27,10 @@ const Summary = props => {
         return <Redirect to="/" />;
     }
     if (!personnel) {
-        
         return <Spinner />;
     }
     const todayLeaves = props.todayLeaves.leaves;
-
+    const today = new Date();
     return (
         <Container>
             <Row className="mt-5">
@@ -68,7 +66,13 @@ const Summary = props => {
             <Row>
                 <Col sm="4"></Col>
                 <Col sm="4">
-                    <Link to="/monthly-view">View Month</Link>
+                    <Link
+                        to={`/monthly-view?year=${
+                            today.getFullYear()
+                        }&month=${today.getMonth() + 1}`}
+                    >
+                        View Month
+                    </Link>
                 </Col>
                 <Col sm="4"></Col>
             </Row>
