@@ -33,17 +33,22 @@ const MonthlyView = props => {
     month = Number.parseInt(month);
     useEffect(() => {
         props.getAllPersonnel();
-    }, [getAllPersonnel]);
+    }, [getAllPersonnel, month, year]);
     useEffect(() => {
         props.getMonthlyLeaves(year, month);
-    }, [getMonthlyLeaves]);
+    }, [getMonthlyLeaves, month, year]);
     const { personnel } = props.personnel;
     const moment = extendMoment(Moment);
 
-    // cannot reuse Moment objects as setting the year and month mutate the 
+    // cannot reuse Moment objects as setting the year and month mutate the
     // original object, instead of creating a new one
-    const startOfMonth = moment().year(year).month(month - 1).startOf("month");
-    const endOfMonth = moment().year(year).month(month - 1) 
+    const startOfMonth = moment()
+        .year(year)
+        .month(month - 1)
+        .startOf("month");
+    const endOfMonth = moment()
+        .year(year)
+        .month(month - 1)
         .startOf("month")
         .add(1, "months")
         .subtract(1, "days");
@@ -88,26 +93,26 @@ const MonthlyView = props => {
                         {// Due to the nature of useEffect(), personnel and monthlyLeaves
                         // may be undefined when the component is first rendered
                         // Thus a null/undefined check must be included
-                        personnel &&
-                            monthlyLeaves &&
+                            personnel &&
                             personnel.length > 0 &&
-                            monthlyLeaves.length > 0 &&
                             personnel.map(person => {
-                                const dateStr = day.format("MM/DD");
-                                if (leavesMap.has(person._id)) {
-                                    const dateLeaveMap = leavesMap.get(
-                                        person._id
-                                    );
-                                    if (dateLeaveMap.has(dateStr)) {
-                                        const leaveOnDate = dateLeaveMap.get(
-                                            dateStr
+                                if (monthlyLeaves && monthlyLeaves.length > 0) {
+                                    const dateStr = day.format("MM/DD");
+                                    if (leavesMap.has(person._id)) {
+                                        const dateLeaveMap = leavesMap.get(
+                                            person._id
                                         );
-                                        return (
-                                            <MonthlyViewTableCell
-                                                key={leaveOnDate._id}
-                                                leave={leaveOnDate}
-                                            />
-                                        );
+                                        if (dateLeaveMap.has(dateStr)) {
+                                            const leaveOnDate = dateLeaveMap.get(
+                                                dateStr
+                                            );
+                                            return (
+                                                <MonthlyViewTableCell
+                                                    key={leaveOnDate._id}
+                                                    leave={leaveOnDate}
+                                                />
+                                            );
+                                        }
                                     }
                                 }
                                 return <MonthlyViewTableCell leave={null} />;
