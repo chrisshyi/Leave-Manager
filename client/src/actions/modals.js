@@ -1,6 +1,6 @@
 import { SHOW_MODAL, HIDE_MODAL } from './types';
 
-export const toggleModal = (showModal, editLeaveDate, addLeave) => async dispatch => {
+export const toggleModal = (showModal, leaveToEdit, editLeaveDate, addLeave) => async dispatch => {
     // showModal is the current state of the modal
     if (!showModal) {
         dispatch({
@@ -11,7 +11,8 @@ export const toggleModal = (showModal, editLeaveDate, addLeave) => async dispatc
             type: SHOW_MODAL,
             payload: {
                 editLeaveDate,
-                addLeave
+                addLeave,
+                leaveToEdit
             }
         });
     }

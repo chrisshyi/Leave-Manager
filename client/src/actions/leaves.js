@@ -1,4 +1,10 @@
-import { GET_MONTHLY_LEAVES, GET_TODAY_LEAVES, LEAVE_ERROR, LOGOUT } from "./types";
+import {
+    GET_AVAILABLE_LEAVES,
+    GET_MONTHLY_LEAVES,
+    GET_TODAY_LEAVES,
+    LEAVE_ERROR,
+    LOGOUT
+} from "./types";
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 
@@ -52,7 +58,7 @@ export const getMonthlyLeaves = (year, month) => async dispatch => {
         );
         console.log(res.data);
         dispatch({
-            type: GET_MONTHLY_LEAVES, 
+            type: GET_MONTHLY_LEAVES,
             payload: res.data
         });
     } catch (error) {
@@ -66,5 +72,24 @@ export const getMonthlyLeaves = (year, month) => async dispatch => {
             });
         }
     }
+};
 
+export const getAvailableLeaves = personnel => async dispatch => {
+    try {
+        const res = await axios.get(`/api/leaves/available/${personnel._id}`);
+        dispatch({
+            type: GET_AVAILABLE_LEAVES,
+            payload: res.data
+        });
+    } catch (error) {
+        console.error(error.response);
+        dispatch({
+            type: LEAVE_ERROR
+        });
+    }
 }
+
+export const scheduleLeave = ({
+}) => async dispatch => {
+    
+};

@@ -8,6 +8,7 @@ const {
 const { Leave, leaveTypes } = require("../../models/Leave");
 const { check, validationResult } = require("express-validator");
 const { getLeaveInfoAuth } = require("../../middleware/leave_auth");
+const getPersonnelAuth = require('../../middleware/personnel_auth');
 
 // @route POST /api/leaves
 // @desc  Adds a new leave
@@ -260,6 +261,19 @@ router.get("/:leaveId", [tokenAuth, getLeaveInfoAuth], async (req, res) => {
         originalDate,
         scheduledDate,
         duration
+    });
+});
+// @route GET /api/leaves/available/{personnel_id}
+// @desc  Retrives unscheduled leaves for a given personnel
+// @access private to site-admins and HR-admins of the same organization
+router.get("/available/:personnelId", [tokenAuth, getPersonnelAuth], async (req, res) => {
+    const leaves = await Leave.find({
+        personnel: res.data['personnel'].id,
+        scheduled: false
+    });
+    return res.json({
+        personnel: res.data['personnel'],
+        leaves
     });
 });
 

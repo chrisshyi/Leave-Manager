@@ -3,6 +3,7 @@ import { SHOW_MODAL, HIDE_MODAL } from "../actions/types";
 const initialState = {
     showModal: false,
     editLeaveDate: null,
+    leaveToEdit: null,
     addLeave: false
 };
 
@@ -15,7 +16,8 @@ export default function(state = initialState, action) {
             return {
                 showModal: true,
                 editLeaveDate: action.payload.editLeaveDate,
-                addLeave: action.payload.addLeave
+                addLeave: action.payload.addLeave,
+                leaveToEdit: action.payload.leaveToEdit
             };
         case HIDE_MODAL:
             return initialState;

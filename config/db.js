@@ -118,17 +118,28 @@ async function seedLeaves() {
             scheduledDate: new Date(),
             duration: 24
         });
-        
+
         let newLeave2 = new Leave({
             org: org.id,
             leaveType: "例假",
             personnel: personnel._id,
             scheduled: true,
             originalDate: new Date(),
-            scheduledDate: new Date('2019-11-05'),
+            scheduledDate: new Date("2019-11-05"),
             duration: 24
-
-        })
+        });
+        // add 10 unscheduled leaves each
+        for (let j = 1; j < 11; j++) {
+            let newUnscheduledLeave = new Leave({
+                org: org.id,
+                leaveType: "例假",
+                personnel: personnel._id,
+                scheduled: false,
+                originalDate: new Date(2019, 11, j),
+                duration: 24
+            });
+            newLeavePromises.push(newUnscheduledLeave.save());
+        }
         newLeavePromises.push(newLeave.save());
         newLeavePromises.push(newLeave2.save());
     }

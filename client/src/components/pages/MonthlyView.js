@@ -11,7 +11,8 @@ import queryString from "query-string";
 import "../../styles/monthly-view.css";
 import { Button } from "reactstrap";
 import { Link } from "react-router-dom";
-import EditLeaveModal from './EditLeaveModal';
+import EditLeaveModal from "./EditLeaveModal";
+import uuidv4 from 'uuid';
 
 const hashLeaves = leavesArr => {
     let leavesMap = new Map();
@@ -93,7 +94,7 @@ const MonthlyView = props => {
                         {// Due to the nature of useEffect(), personnel and monthlyLeaves
                         // may be undefined when the component is first rendered
                         // Thus a null/undefined check must be included
-                            personnel &&
+                        personnel &&
                             personnel.length > 0 &&
                             personnel.map(person => {
                                 if (monthlyLeaves && monthlyLeaves.length > 0) {
@@ -108,15 +109,24 @@ const MonthlyView = props => {
                                             );
                                             return (
                                                 <MonthlyViewTableCell
-                                                    key={leaveOnDate._id}
+                                                    // key={leaveOnDate._id}
+                                                    key={uuidv4()}
                                                     leave={leaveOnDate}
                                                     date={day}
+                                                    personnel={person}
                                                 />
                                             );
                                         }
                                     }
                                 }
-                                return <MonthlyViewTableCell leave={null} date={day} />;
+                                return (
+                                    <MonthlyViewTableCell
+                                        key={uuidv4()}
+                                        leave={null}
+                                        date={day}
+                                        personnel={person}
+                                    />
+                                );
                             })}
                     </tr>
                 ))}

@@ -1,7 +1,5 @@
 import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import {
     Button,
     Form,
@@ -15,16 +13,19 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 import { toggleModal } from "../../actions/modals";
+import moment from 'moment';
+
 const EditLeaveModal = props => {
-    const { toggleModal, showModal, editLeaveDate, addLeave } = props;
+    const {
+        toggleModal,
+        showModal,
+        leaveToEdit,
+        editLeaveDate,
+        addLeave,
+        availableLeaves
+    } = props;
     const toggle = () => toggleModal(!showModal, null, null);
-    const [formData, setFormData] = useState({
-        leaveType: "",
-        scheduled: false,
-        originalDate: "",
-        scheduledDate: "",
-        duration: 0
-    });
+    const [leaveToSchedule, setLeaveToSchedule] = useState({});
 
     let modalBody;
     if (!addLeave) {
@@ -32,72 +33,52 @@ const EditLeaveModal = props => {
             <ModalBody>
                 <p>
                     Are you sure you want to unschedule the leave on{" "}
-                    {editLeaveDate && editLeaveDate.format("MM/DD")}?
+                    {leaveToEdit && moment(leaveToEdit.scheduledDate).format("MM/DD")}?
                 </p>
             </ModalBody>
         );
     } else {
-        const { leaveType, originalDate, duration } = formData;
-        const onChange = e => {
-            e.preventDefault();
-            setFormData({
-                ...formData,
-                [e.target.name]: e.target.value
-            });
+        const getLeaveStr = (leave, date) => {
+            const leaveOriginalDate = moment(leave.originalDate);
+            if (date.isBefore(leaveOriginalDate)) {
+                return `預${leaveOriginalDate.format("MM/DD")}`;
+            } else if (date.isAfter(leaveOriginalDate)) {
+                return `補${leaveOriginalDate.format("MM/DD")}`;
+            } else {
+                return "例假";
+            }
         };
-
+        
         modalBody = (
             <ModalBody>
                 <Form>
                     <FormGroup>
-                        <Label for="leave-type-select">Select</Label>
+                        <Label for="available-leave-select">
+                            Available Leaves
+                        </Label>
                         <Input
-                            onChange={e => onChange(e)}
-                            value={leaveType}
+                            onChange={e => {
+                                e.preventDefault();
+                                setLeaveToSchedule(e.target.value);
+                            }}
+                            value={leaveToSchedule}
                             type="select"
-                            name="leaveType"
-                            id="leave-type-select"
+                            name="availableLeave"
+                            id="available-leave-select"
                         >
-                            <option>慰假</option>
-                            <option>榮譽假</option>
-                            <option>例假</option>
-                            <option>公假</option>
-                            <option>外散</option>
-                            <option>外宿</option>
+                            {availableLeaves && availableLeaves.leaves.map(leave => {
+                                return <option value={leave._id}>
+                                    {getLeaveStr(leave, editLeaveDate)}
+                                </option>
+                            })}
                         </Input>
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="original-date">Original Date</Label>
-                        <Input type="date" id="original-date" 
-                        name="originalDate"
-                        value={originalDate}
-                        onChange={e => onChange(e)}
-                        ></Input>
-
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="scheduled-date">Scheduled Date</Label>
-                        <Input
-                            disabled
-                            id="scheduled-date"
-                            type="text"
-                            value={editLeaveDate.format("MM/DD")}
-                        ></Input>
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="duration">Duration</Label>
-                        <Input
-                            type="number"
-                            name="duration"
-                            id="duration"
-                            value={duration}
-                            onChange={e => onChange(e)}
-                        ></Input>
                     </FormGroup>
                 </Form>
             </ModalBody>
         );
+        
     }
+    
 
     return (
         <Fragment>
@@ -107,7 +88,9 @@ const EditLeaveModal = props => {
                 <ModalFooter>
                     {addLeave ? (
                         <Fragment>
-                            <Button color="success" onClick={toggle}>Schedule</Button>
+                            <Button color="success" onClick={toggle}>
+                                Schedule
+                            </Button>
                             <Button color="secondary" onClick={toggle}>
                                 Cancel
                             </Button>
@@ -134,11 +117,14 @@ EditLeaveModal.propTypes = {
 };
 
 const mapStateToProps = state => {
-    const { showModal, editLeaveDate, addLeave } = state.modals;
+    const { showModal, editLeaveDate, leaveToEdit, addLeave } = state.modals;
+    const { availableLeaves } = state.leaves;
     return {
         showModal,
         editLeaveDate,
-        addLeave
+        leaveToEdit,
+        addLeave,
+        availableLeaves
     };
 };
 
