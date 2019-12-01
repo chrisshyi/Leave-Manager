@@ -33,10 +33,10 @@ const MonthlyView = props => {
     month = Number.parseInt(month);
     useEffect(() => {
         props.getAllPersonnel();
-    }, [getAllPersonnel, month, year]);
+    }, [getAllPersonnel, year, month]);
     useEffect(() => {
         props.getMonthlyLeaves(year, month);
-    }, [getMonthlyLeaves, month, year]);
+    }, [getMonthlyLeaves, year, month]);
     const { personnel } = props.personnel;
     const moment = extendMoment(Moment);
 
@@ -168,6 +168,7 @@ const MonthlyView = props => {
 
 MonthlyView.propTypes = {
     personnel: PropTypes.object.isRequired,
+    monthlyLeaves: PropTypes.array,
     getAllPersonnel: PropTypes.func.isRequired,
     getMonthlyLeaves: PropTypes.func.isRequired
 };
