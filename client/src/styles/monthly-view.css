@@ -3,7 +3,8 @@
     border: 1px solid black;
 }
 
-.monthly-table .monthly-table-header {
+#monthly-table .monthly-table-header {
     text-align: center;
     border: 1px solid black;
+    vertical-align: middle;
 }

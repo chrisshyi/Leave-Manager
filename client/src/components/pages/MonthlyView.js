@@ -52,8 +52,8 @@ const MonthlyView = props => {
         .startOf("month")
         .add(1, "months")
         .subtract(1, "days");
-    console.log(`start of month ${startOfMonth}`);
-    console.log(`end of month ${endOfMonth}`);
+    //console.log(`start of month ${startOfMonth}`);
+    //console.log(`end of month ${endOfMonth}`);
     const monthRange = moment.range(startOfMonth, endOfMonth);
 
     const daysArray = Array.from(monthRange.by("day"));
@@ -73,10 +73,10 @@ const MonthlyView = props => {
             : `/monthly-view?year=${year}&month=${month + 1}`;
 
     const leaveTable = (
-        <Table className="monthly-table">
+        <Table id="monthly-table">
             <thead>
                 <tr>
-                    <th clasName="monthly-table-header border border-secondary">
+                    <th className="monthly-table-header border border-secondary">
                         Dates
                     </th>
                     {personnel.map(person => (
