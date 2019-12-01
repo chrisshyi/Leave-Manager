@@ -26,7 +26,6 @@ const EditLeaveModal = props => {
         duration: 0
     });
 
-    const [originalDate, setOriginalDate] = useState(null);
     let modalBody;
     if (!addLeave) {
         modalBody = (
@@ -68,12 +67,13 @@ const EditLeaveModal = props => {
                         </Input>
                     </FormGroup>
                     <FormGroup>
-                        <p>Original Date</p>
-                        <DatePicker
-                            id="original-date-picker"
-                            selected={originalDate}
-                            onChange={date => setOriginalDate(date)}
-                        />
+                        <Label for="original-date">Original Date</Label>
+                        <Input type="date" id="original-date" 
+                        name="originalDate"
+                        value={originalDate}
+                        onChange={e => onChange(e)}
+                        ></Input>
+
                     </FormGroup>
                     <FormGroup>
                         <Label for="scheduled-date">Scheduled Date</Label>
