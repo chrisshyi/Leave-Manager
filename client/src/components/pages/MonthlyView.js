@@ -11,6 +11,7 @@ import queryString from "query-string";
 import "../../styles/monthly-view.css";
 import { Button } from "reactstrap";
 import { Link } from "react-router-dom";
+import EditLeaveModal from './EditLeaveModal';
 
 const hashLeaves = leavesArr => {
     let leavesMap = new Map();
@@ -48,9 +49,8 @@ const MonthlyView = props => {
         .startOf("month");
     const endOfMonth = moment()
         .year(year)
-        .month(month - 1)
+        .month(month)
         .startOf("month")
-        .add(1, "months")
         .subtract(1, "days");
     //console.log(`start of month ${startOfMonth}`);
     //console.log(`end of month ${endOfMonth}`);
@@ -110,12 +110,13 @@ const MonthlyView = props => {
                                                 <MonthlyViewTableCell
                                                     key={leaveOnDate._id}
                                                     leave={leaveOnDate}
+                                                    date={day}
                                                 />
                                             );
                                         }
                                     }
                                 }
-                                return <MonthlyViewTableCell leave={null} />;
+                                return <MonthlyViewTableCell leave={null} date={day} />;
                             })}
                     </tr>
                 ))}
@@ -131,6 +132,13 @@ const MonthlyView = props => {
                 </Col>
                 <Col sm="4"></Col>
             </Row>
+            <Row>
+                <Col sm="4"></Col>
+                <Col sm="4">
+                    <EditLeaveModal />
+                </Col>
+                <Col sm="4"></Col>
+            </Row>
             <Row className="mb-4">
                 <Col
                     sm="2"
@@ -138,7 +146,7 @@ const MonthlyView = props => {
                 >
                     <Link to={prevMonthURL}>
                         <Button color="primary">
-                            <i class="fas fa-arrow-circle-left"></i> Prev
+                            <i className="fas fa-arrow-circle-left"></i> Prev
                         </Button>
                     </Link>
                 </Col>
@@ -152,7 +160,7 @@ const MonthlyView = props => {
                 >
                     <Link to={nextMonthURL}>
                         <Button color="primary">
-                            Next <i class="fas fa-arrow-circle-right"></i>
+                            Next <i className="fas fa-arrow-circle-right"></i>
                         </Button>
                     </Link>
                 </Col>
@@ -168,7 +176,7 @@ const MonthlyView = props => {
 
 MonthlyView.propTypes = {
     personnel: PropTypes.object.isRequired,
-    monthlyLeaves: PropTypes.array,
+    monthlyLeaves: PropTypes.object,
     getAllPersonnel: PropTypes.func.isRequired,
     getMonthlyLeaves: PropTypes.func.isRequired
 };

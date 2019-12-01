@@ -2,7 +2,7 @@ import { GET_MONTHLY_LEAVES, GET_TODAY_LEAVES, LEAVE_ERROR } from "../actions/ty
 
 const initialState = {
     todayLeaves: [],
-    monthlyLeaves: []
+    monthlyLeaves: [],
 };
 
 export default function(state = initialState, action) {

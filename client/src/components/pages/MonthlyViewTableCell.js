@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import moment from 'moment';
+import { toggleModal } from '../../actions/modals';
+import { connect } from 'react-redux';
 
 const MonthlyViewTableCell = props => {
     const [showEditIcon, setShowEditIcon] = useState(false);
-    const { leave } = props;
+    const { leave, toggleModal, date } = props;
 
     const toggleEditIcon = e => {
         setShowEditIcon(!showEditIcon);
@@ -16,13 +18,14 @@ const MonthlyViewTableCell = props => {
                 onMouseOver={e => toggleEditIcon(e)}
                 onMouseOut={e => toggleEditIcon(e)}
                 className="monthly-view-cell"
+                onClick={e => toggleModal(true, date, true)}
             >
                 {" "}
-                {showEditIcon && <i class="far fa-edit"></i>}
+                {showEditIcon && <i className="far fa-edit"></i>}
             </td>
         );
     }
-    
+
     let leaveDisplay = leave.leaveType;
     if (leave.leaveType === '例假') {
         const originalDate = moment(leave.originalDate);
@@ -38,14 +41,17 @@ const MonthlyViewTableCell = props => {
             onMouseOver={e => toggleEditIcon(e)}
             onMouseOut={e => toggleEditIcon(e)}
             className="monthly-view-cell"
+            onClick={e => toggleModal(true, date, false)}
+
         >
-            {leaveDisplay} {showEditIcon && <i class="far fa-edit"></i>}
+            {leaveDisplay} {showEditIcon && <i className="far fa-times-circle"></i>}
         </td>
     );
 };
 
 MonthlyViewTableCell.propTypes = {
-    leave: PropTypes.object
+    leave: PropTypes.object,
+    date: PropTypes.object.isRequired, // Moment object!
 };
 
-export default MonthlyViewTableCell;
+export default connect(null, { toggleModal })(MonthlyViewTableCell);
