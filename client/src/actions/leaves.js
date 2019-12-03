@@ -1,4 +1,5 @@
 import {
+    SCHEDULE_LEAVE,
     GET_AVAILABLE_LEAVES,
     GET_MONTHLY_LEAVES,
     GET_TODAY_LEAVES,
@@ -82,14 +83,38 @@ export const getAvailableLeaves = personnel => async dispatch => {
             payload: res.data
         });
     } catch (error) {
-        console.error(error.response);
-        dispatch({
-            type: LEAVE_ERROR
-        });
+        if (error.response.data.msg === "Token expired!") {
+            dispatch({
+                type: LOGOUT
+            });
+        } else {
+            dispatch({
+                type: LEAVE_ERROR
+            });
+        }
     }
-}
+};
 
-export const scheduleLeave = ({
-}) => async dispatch => {
-    
+export const scheduleLeave = (leaveId, scheduledDate) => async dispatch => {
+    console.log(`leaveId : ${leaveId}`);
+    if (leaveId === '' || typeof leaveId === 'undefined') return;
+    try {
+        const leaveData = {
+            scheduled: true,
+            scheduledDate
+        };
+        const res = await axios.put(`/api/leaves/${leaveId}`, leaveData);
+        getMonthlyLeaves(scheduledDate.year(), scheduledDate.month() + 1);
+    } catch (error) {
+        console.log(error);
+        if (error.response.data.msg === "Token expired!") {
+            dispatch({
+                type: LOGOUT
+            });
+        } else {
+            dispatch({
+                type: LEAVE_ERROR
+            });
+        }
+    }
 };

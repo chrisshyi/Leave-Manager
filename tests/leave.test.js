@@ -723,6 +723,18 @@ describe("Leave API endpoints", () => {
                 });
                 newLeavePromises.push(newLeave.save());
             }
+            // 6 leaves in org 1 (regUser1) scheduled in Dec 2018
+            for (let i = 0; i < 6; i++) {
+                let newLeave = new Leave({
+                    org: org1.id,
+                    leaveType: "例假",
+                    personnel: regUser.id,
+                    scheduled: true,
+                    scheduledDate: new Date("2018-12-15"),
+                    duration: 12
+                });
+                newLeavePromises.push(newLeave.save());
+            }
             // 6 leaves in org 1 scheduled in April 2018
             for (let i = 0; i < 6; i++) {
                 let newLeave = new Leave({
@@ -890,6 +902,30 @@ describe("Leave API endpoints", () => {
                 const scheduledDate = new Date(leave.scheduledDate);
                 expect(scheduledDate.getFullYear()).toBe(2018);
                 expect(scheduledDate.getMonth()).toBe(3);
+                expect(leave.org).toEqual(org.id.toString());
+            }
+        });
+        it("HR-admin can retrieve December leaves", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "brad-trav@gmail.com",
+                    password: "123456"
+                });
+            const token = res.body.token;
+            res = await request(server).get('/api/leaves?year=2018&month=12')
+                                       .set('x-auth-token', token); 
+            expect(res.statusCode).toBe(200);
+
+            let org = await Org.findOne({
+                name: "成功嶺"
+            });
+            expect(res.statusCode).toBe(200);
+            expect(res.body.leaves.length > 0);
+            for (let leave of res.body.leaves) {
+                const scheduledDate = new Date(leave.scheduledDate);
+                expect(scheduledDate.getFullYear()).toBe(2018);
+                expect(scheduledDate.getMonth()).toBe(11);
                 expect(leave.org).toEqual(org.id.toString());
             }
         });

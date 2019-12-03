@@ -1,4 +1,4 @@
-import { SHOW_MODAL, HIDE_MODAL } from './types';
+import { SET_LEAVE_TO_EDIT, SHOW_MODAL, HIDE_MODAL } from './types';
 
 export const toggleModal = (showModal, leaveToEdit, editLeaveDate, addLeave) => async dispatch => {
     // showModal is the current state of the modal
@@ -16,4 +16,10 @@ export const toggleModal = (showModal, leaveToEdit, editLeaveDate, addLeave) => 
             }
         });
     }
+}
+export const setLeaveToEdit = leaveId => async dispatch => {
+    dispatch({
+        type:  SET_LEAVE_TO_EDIT,
+        payload: leaveId
+    });
 }

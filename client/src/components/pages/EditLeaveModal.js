@@ -12,20 +12,25 @@ import {
     ModalFooter
 } from "reactstrap";
 import { connect } from "react-redux";
-import { toggleModal } from "../../actions/modals";
+import { toggleModal, setLeaveToEdit } from "../../actions/modals";
+import { scheduleLeave, getMonthlyLeaves } from '../../actions/leaves';
 import moment from 'moment';
+import uuidv4 from 'uuid';
 
 const EditLeaveModal = props => {
     const {
         toggleModal,
         showModal,
         leaveToEdit,
+        leaveToEditId,
         editLeaveDate,
         addLeave,
-        availableLeaves
+        availableLeaves,
+        getMonthlyLeaves,
+        setLeaveToEdit,
+        scheduleLeave
     } = props;
     const toggle = () => toggleModal(!showModal, null, null);
-    const [leaveToSchedule, setLeaveToSchedule] = useState({});
 
     let modalBody;
     if (!addLeave) {
@@ -59,15 +64,15 @@ const EditLeaveModal = props => {
                         <Input
                             onChange={e => {
                                 e.preventDefault();
-                                setLeaveToSchedule(e.target.value);
+                                setLeaveToEdit(e.target.value);
                             }}
-                            value={leaveToSchedule}
+                            value={leaveToEditId}
                             type="select"
                             name="availableLeave"
                             id="available-leave-select"
                         >
                             {availableLeaves && availableLeaves.leaves.map(leave => {
-                                return <option value={leave._id}>
+                                return <option key={uuidv4()} value={leave._id}>
                                     {getLeaveStr(leave, editLeaveDate)}
                                 </option>
                             })}
@@ -88,7 +93,10 @@ const EditLeaveModal = props => {
                 <ModalFooter>
                     {addLeave ? (
                         <Fragment>
-                            <Button color="success" onClick={toggle}>
+                            <Button color="success" onClick={e => {
+                                scheduleLeave(leaveToEditId, editLeaveDate);
+                                getMonthlyLeaves(editLeaveDate.year(), editLeaveDate.month());
+                            }}>
                                 Schedule
                             </Button>
                             <Button color="secondary" onClick={toggle}>
@@ -113,19 +121,27 @@ const EditLeaveModal = props => {
 
 EditLeaveModal.propTypes = {
     editLeaveDate: PropTypes.object,
-    addLeave: PropTypes.bool.isRequired
+    addLeave: PropTypes.bool.isRequired,
+    toggleModal: PropTypes.func.isRequired,
+    setLeaveToEdit: PropTypes.func.isRequired,
+    leaveToEditId: PropTypes.string.isRequired,
+    leaveToEdit: PropTypes.object.isRequired,
+    showModal: PropTypes.bool.isRequired,
+    availableLeaves: PropTypes.array,
+    scheduleLeave: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
-    const { showModal, editLeaveDate, leaveToEdit, addLeave } = state.modals;
+    const { showModal, editLeaveDate, leaveToEdit, addLeave, leaveToEditId } = state.modals;
     const { availableLeaves } = state.leaves;
     return {
         showModal,
         editLeaveDate,
         leaveToEdit,
+        leaveToEditId,
         addLeave,
         availableLeaves
     };
 };
 
-export default connect(mapStateToProps, { toggleModal })(EditLeaveModal);
+export default connect(mapStateToProps, { toggleModal, getMonthlyLeaves, setLeaveToEdit, scheduleLeave })(EditLeaveModal);

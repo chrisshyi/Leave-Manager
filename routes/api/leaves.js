@@ -9,6 +9,7 @@ const { Leave, leaveTypes } = require("../../models/Leave");
 const { check, validationResult } = require("express-validator");
 const { getLeaveInfoAuth } = require("../../middleware/leave_auth");
 const getPersonnelAuth = require('../../middleware/personnel_auth');
+const moment = require('moment');
 
 // @route POST /api/leaves
 // @desc  Adds a new leave
@@ -106,23 +107,25 @@ router.get("/", tokenAuth, async (req, res) => {
         if (queries.year) {
             // queries.year is a string!
             const year = parseInt(queries.year);
-            startDate = new Date(year, 0, 1);
-            endDate = new Date(year + 1, 0, 1);
+            startDate = moment().year(year).startOf("year"); 
+            endDate = moment().year(year).add(1, "years").startOf("year");
             if (queries.month) {
                 const month = parseInt(queries.month);
-                startDate.setMonth(month - 1);
-                endDate.setMonth(month);
-                endDate.setFullYear(year);
+                startDate.month(month - 1).startOf("month");
+                endDate.year(year).month(month - 1).add(1, "months").startOf("month");
             }
             if (queries.day) {
                 const day = parseInt(queries.day);
-                startDate.setDate(day);
-                endDate.setDate(day + 1);
+                startDate.date(day).startOf("date");
+                endDate.date(day).add(1, "days").startOf("date") 
             }
         }
     }
+
     let finalQuery = baseQuery;
     if (startDate && endDate) {
+        startDate = startDate.toDate();
+        endDate = endDate.toDate();
         finalQuery = baseQuery
             .and([
                 {
@@ -237,7 +240,9 @@ router.put(
             });
         } catch (error) {
             console.log(error);
-            return res.status(500).send("Server error");
+            return res.status(500).json({
+                msg: error
+            });
         }
     }
 );

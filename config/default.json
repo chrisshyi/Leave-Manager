@@ -4,6 +4,6 @@
     "testDBURI": "mongodb+srv://chris:nash1234@cluster0-63l6h.gcp.mongodb.net/test?retryWrites=true&w=majority",
     "localTestDBURI": "mongodb://localhost:27017/test?retryWrites=true&w=majority",
     "localDBURI": "mongodb://localhost:27017/leaveManagement?retryWrites=true&w=majority",
-    "testing": false,
+    "testing": true,
     "local": true
 }
