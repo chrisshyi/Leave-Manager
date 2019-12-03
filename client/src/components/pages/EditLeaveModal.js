@@ -78,6 +78,7 @@ const EditLeaveModal = props => {
                             name="availableLeave"
                             id="available-leave-select"
                         >
+                            <option disabled selected value> -- select a leave -- </option>
                             {availableLeaves &&
                                 availableLeaves.leaves.map(leave => {
                                     return (
