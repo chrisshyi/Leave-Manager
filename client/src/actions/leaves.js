@@ -96,7 +96,6 @@ export const getAvailableLeaves = personnel => async dispatch => {
 };
 
 export const scheduleLeave = (leaveId, scheduledDate) => async dispatch => {
-    console.log(`leaveId : ${leaveId}`);
     if (leaveId === '' || typeof leaveId === 'undefined') return;
     try {
         const leaveData = {
@@ -104,10 +103,14 @@ export const scheduleLeave = (leaveId, scheduledDate) => async dispatch => {
             scheduledDate
         };
         const res = await axios.put(`/api/leaves/${leaveId}`, leaveData);
-        getMonthlyLeaves(scheduledDate.year(), scheduledDate.month() + 1);
+        console.log(scheduledDate);
+        console.log(`Calling get monthly leaves with year ${scheduledDate.year()}
+        month ${scheduledDate.month() + 1}
+        `);
+        dispatch(getMonthlyLeaves(scheduledDate.year(), scheduledDate.month() + 1));
     } catch (error) {
         console.log(error);
-        if (error.response.data.msg === "Token expired!") {
+        if (error.response.data.msg && error.response.data.msg === "Token expired!") {
             dispatch({
                 type: LOGOUT
             });
@@ -118,3 +121,31 @@ export const scheduleLeave = (leaveId, scheduledDate) => async dispatch => {
         }
     }
 };
+
+export const unscheduleLeave = (leaveId, scheduledDate)  => async dispatch => {
+    if (leaveId === '' || typeof leaveId === 'undefined') return;
+    try {
+        const leaveData = {
+            scheduled: false,
+            scheduledDate: null
+        };
+        const res = await axios.put(`/api/leaves/${leaveId}`, leaveData);
+        console.log(scheduledDate);
+        console.log(`Calling get monthly leaves with year ${scheduledDate.year()}
+        month ${scheduledDate.month() + 1}
+        `);
+        dispatch(getMonthlyLeaves(scheduledDate.year(), scheduledDate.month() + 1));
+    } catch (error) {
+        console.log(error);
+        if (error.response.data.msg && error.response.data.msg === "Token expired!") {
+            dispatch({
+                type: LOGOUT
+            });
+        } else {
+            dispatch({
+                type: LEAVE_ERROR
+            });
+        }
+        
+    }
+}

@@ -70,9 +70,9 @@ router.post(
         leaveFields.personnel = personnel;
         leaveFields.org = org;
         leaveFields.duration = duration;
-        if (originalDate) leaveFields.originalDate = originalDate;
-        if (scheduledDate) leaveFields.scheduledDate = scheduledDate;
-        if (scheduled) leaveFields.scheduled = scheduled;
+        if (typeof originalDate !== 'undefined') leaveFields.originalDate = originalDate;
+        if (typeof scheduledDate !== 'undefined') leaveFields.scheduledDate = scheduledDate;
+        if (typeof scheduled !== 'undefined') leaveFields.scheduled = scheduled;
         try {
             let newLeave = new Leave(leaveFields);
             await newLeave.save();
@@ -191,11 +191,15 @@ router.put(
             .isNumeric()
             .toFloat(),
         check("originalDate", "Original date must be a valid date")
-            .optional()
+            .optional({
+                nullable: true
+            })
             .isISO8601({ strict: true })
             .toDate(),
         check("scheduledDate", "Scheduled date must be a valid date")
-            .optional()
+            .optional({
+                nullable: true
+            })
             .isISO8601({ strict: true })
             .toDate()
     ],
@@ -216,11 +220,11 @@ router.put(
         } = req.body;
 
         const leaveFields = {};
-        if (leaveType) leaveFields.leaveType = leaveType;
-        if (duration) leaveFields.duration = duration;
-        if (originalDate) leaveFields.originalDate = originalDate;
-        if (scheduledDate) leaveFields.scheduledDate = scheduledDate;
-        if (scheduled) leaveFields.scheduled = scheduled;
+        if (typeof leaveType !== 'undefined') leaveFields.leaveType = leaveType;
+        if (typeof duration !== 'undefined') leaveFields.duration = duration;
+        if (typeof originalDate !== 'undefined') leaveFields.originalDate = originalDate;
+        if (typeof scheduledDate !== 'undefined') leaveFields.scheduledDate = scheduledDate;
+        if (typeof scheduled !== 'undefined') leaveFields.scheduled = scheduled;
         try {
             const modifiedLeave = await Leave.findByIdAndUpdate(
                 req.params.leaveId,

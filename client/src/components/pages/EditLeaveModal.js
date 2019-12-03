@@ -13,9 +13,13 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 import { toggleModal, setLeaveToEdit } from "../../actions/modals";
-import { scheduleLeave, getMonthlyLeaves } from '../../actions/leaves';
-import moment from 'moment';
-import uuidv4 from 'uuid';
+import {
+    unscheduleLeave,
+    scheduleLeave,
+    getMonthlyLeaves
+} from "../../actions/leaves";
+import moment from "moment";
+import uuidv4 from "uuid";
 
 const EditLeaveModal = props => {
     const {
@@ -28,7 +32,8 @@ const EditLeaveModal = props => {
         availableLeaves,
         getMonthlyLeaves,
         setLeaveToEdit,
-        scheduleLeave
+        scheduleLeave,
+        unscheduleLeave
     } = props;
     const toggle = () => toggleModal(!showModal, null, null);
 
@@ -38,7 +43,9 @@ const EditLeaveModal = props => {
             <ModalBody>
                 <p>
                     Are you sure you want to unschedule the leave on{" "}
-                    {leaveToEdit && moment(leaveToEdit.scheduledDate).format("MM/DD")}?
+                    {leaveToEdit &&
+                        moment(leaveToEdit.scheduledDate).format("MM/DD")}
+                    ?
                 </p>
             </ModalBody>
         );
@@ -53,7 +60,7 @@ const EditLeaveModal = props => {
                 return "例假";
             }
         };
-        
+
         modalBody = (
             <ModalBody>
                 <Form>
@@ -71,19 +78,23 @@ const EditLeaveModal = props => {
                             name="availableLeave"
                             id="available-leave-select"
                         >
-                            {availableLeaves && availableLeaves.leaves.map(leave => {
-                                return <option key={uuidv4()} value={leave._id}>
-                                    {getLeaveStr(leave, editLeaveDate)}
-                                </option>
-                            })}
+                            {availableLeaves &&
+                                availableLeaves.leaves.map(leave => {
+                                    return (
+                                        <option
+                                            key={uuidv4()}
+                                            value={leave._id}
+                                        >
+                                            {getLeaveStr(leave, editLeaveDate)}
+                                        </option>
+                                    );
+                                })}
                         </Input>
                     </FormGroup>
                 </Form>
             </ModalBody>
         );
-        
     }
-    
 
     return (
         <Fragment>
@@ -93,10 +104,13 @@ const EditLeaveModal = props => {
                 <ModalFooter>
                     {addLeave ? (
                         <Fragment>
-                            <Button color="success" onClick={e => {
-                                scheduleLeave(leaveToEditId, editLeaveDate);
-                                getMonthlyLeaves(editLeaveDate.year(), editLeaveDate.month());
-                            }}>
+                            <Button
+                                color="success"
+                                onClick={e => {
+                                    scheduleLeave(leaveToEditId, editLeaveDate);
+                                    toggle();
+                                }}
+                            >
                                 Schedule
                             </Button>
                             <Button color="secondary" onClick={toggle}>
@@ -105,7 +119,16 @@ const EditLeaveModal = props => {
                         </Fragment>
                     ) : (
                         <Fragment>
-                            <Button color="danger" onClick={toggle}>
+                            <Button
+                                color="danger"
+                                onClick={e => {
+                                    unscheduleLeave(
+                                        leaveToEdit._id,
+                                        editLeaveDate
+                                    );
+                                    toggle();
+                                }}
+                            >
                                 Unschedule
                             </Button>{" "}
                             <Button color="secondary" onClick={toggle}>
@@ -128,11 +151,17 @@ EditLeaveModal.propTypes = {
     leaveToEdit: PropTypes.object.isRequired,
     showModal: PropTypes.bool.isRequired,
     availableLeaves: PropTypes.array,
-    scheduleLeave: PropTypes.func.isRequired,
+    scheduleLeave: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
-    const { showModal, editLeaveDate, leaveToEdit, addLeave, leaveToEditId } = state.modals;
+    const {
+        showModal,
+        editLeaveDate,
+        leaveToEdit,
+        addLeave,
+        leaveToEditId
+    } = state.modals;
     const { availableLeaves } = state.leaves;
     return {
         showModal,
@@ -144,4 +173,10 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { toggleModal, getMonthlyLeaves, setLeaveToEdit, scheduleLeave })(EditLeaveModal);
+export default connect(mapStateToProps, {
+    toggleModal,
+    getMonthlyLeaves,
+    setLeaveToEdit,
+    scheduleLeave,
+    unscheduleLeave
+})(EditLeaveModal);

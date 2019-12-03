@@ -12,7 +12,7 @@ import "../../styles/monthly-view.css";
 import { Button } from "reactstrap";
 import { Link } from "react-router-dom";
 import EditLeaveModal from "./EditLeaveModal";
-import uuidv4 from 'uuid';
+import uuidv4 from "uuid";
 
 const hashLeaves = leavesArr => {
     let leavesMap = new Map();
