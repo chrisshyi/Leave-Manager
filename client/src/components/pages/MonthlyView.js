@@ -10,7 +10,7 @@ import MonthlyViewTableCell from "./MonthlyViewTableCell";
 import queryString from "query-string";
 import "../../styles/monthly-view.css";
 import { Button } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import EditLeaveModal from "./EditLeaveModal";
 import uuidv4 from "uuid";
 
@@ -40,6 +40,9 @@ const MonthlyView = props => {
         props.getMonthlyLeaves(year, month);
     }, [getMonthlyLeaves, year, month]);
     const { personnel } = props.personnel;
+    if (!props.authPersonnel) {
+        return <Redirect to="/" />;
+    }
     const moment = extendMoment(Moment);
 
     // cannot reuse Moment objects as setting the year and month mutate the
@@ -193,7 +196,8 @@ MonthlyView.propTypes = {
 
 const mapStateToProps = state => ({
     personnel: state.personnel,
-    monthlyLeaves: state.leaves.monthlyLeaves
+    monthlyLeaves: state.leaves.monthlyLeaves,
+    authPersonnel: state.auth.personnel
 });
 
 export default connect(mapStateToProps, { getAllPersonnel, getMonthlyLeaves })(
