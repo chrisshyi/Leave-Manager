@@ -11,6 +11,8 @@ import {
     NavItem,
     NavLink
 } from "reactstrap";
+import { Link } from "react-router-dom";
+import '../../styles/navbar.css';
 
 const CustomNavbar = props => {
     const { isAuthenticated, logout } = props;
@@ -20,7 +22,9 @@ const CustomNavbar = props => {
     return (
         <div>
             <Navbar color="dark" dark expand="md">
-                <NavbarBrand href="/">reactstrap</NavbarBrand>
+                <NavbarBrand href="#">
+                    <Link to="/" className="navbar-link">reactstrap</Link>
+                </NavbarBrand>
                 <NavbarToggler onClick={toggle} />
                 <Collapse isOpen={isOpen} navbar>
                     <Nav className="mr-auto" navbar>
@@ -30,7 +34,9 @@ const CustomNavbar = props => {
                                     <NavLink href="#">Logout</NavLink>
                                 </NavItem>
                                 <NavItem>
-                                    <NavLink href="/admin">Admin</NavLink>
+                                    <NavLink to="#">
+                                        <Link to="/admin" className="navbar-link">Admin</Link>
+                                    </NavLink>
                                 </NavItem>
                             </Fragment>
                         ) : (

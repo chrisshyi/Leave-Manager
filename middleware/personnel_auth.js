@@ -4,7 +4,7 @@ const Personnel = require('../models/Personnel');
  * Checks whether or not the user has authorization to
  * access personnel information
  */
-module.exports = getPersonnelAuth = async function(req, res, next) {
+module.exports.getPersonnelAuth = async function(req, res, next) {
 
     const personnel = await Personnel.findById(req.params.personnelId);
 
@@ -31,3 +31,13 @@ module.exports = getPersonnelAuth = async function(req, res, next) {
     res.data['personnel'] = personnel;
     next();
 };
+
+module.exports.addOrEditPersonnelAuth = function(req, res, next) {
+    const role = req.personnel.role;
+    if (role !== 'site-admin' || role !== 'HR-admin') {
+        return res.status(403).json({
+            msg: "You are not authorized"
+        });
+    }
+    next();
+}

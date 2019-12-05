@@ -8,7 +8,7 @@ const {
 const { Leave, leaveTypes } = require("../../models/Leave");
 const { check, validationResult } = require("express-validator");
 const { getLeaveInfoAuth } = require("../../middleware/leave_auth");
-const getPersonnelAuth = require('../../middleware/personnel_auth');
+const { getPersonnelAuth } = require('../../middleware/personnel_auth');
 const moment = require('moment');
 
 // @route POST /api/leaves

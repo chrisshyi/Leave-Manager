@@ -10,25 +10,36 @@ import {
     Label,
     Input
 } from "reactstrap";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const PersonnelForm = props => {
-    const { nameToEdit, roleToEdit, titleToEdit, edit } = props.location.state;
+    const {
+        nameToEdit,
+        roleToEdit,
+        titleToEdit,
+        emailToEdit,
+        passwordToEdit,
+        edit
+    } = props.location.state;
     const [formData, setFormData] = useState(
         edit
             ? {
                   name: nameToEdit,
                   role: roleToEdit,
-                  title: titleToEdit
+                  title: titleToEdit,
+                  email: emailToEdit,
+                  password: passwordToEdit
               }
             : {
                   name: "",
                   role: "",
-                  title: ""
+                  title: "",
+                  email: "",
+                  password: ""
               }
     );
 
-    const { name, role, title } = formData;
+    const { name, role, title, email, password } = formData;
 
     const onChange = e => {
         setFormData({
@@ -41,7 +52,7 @@ const PersonnelForm = props => {
             <Row className="mt-5">
                 <Col sm="4"></Col>
                 <Col sm="4">
-                    <h3>{edit ? 'Edit' : 'Add'} Personnel</h3>
+                    <h3>{edit ? "Edit" : "Add"} Personnel</h3>
                     <Form>
                         <FormGroup>
                             <Label for="personnel-name">Name</Label>
@@ -52,6 +63,28 @@ const PersonnelForm = props => {
                                 name="name"
                                 id="personnel-name"
                             ></Input>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="personnel-email">Email</Label>
+                            <Input
+                                type="email"
+                                name="email"
+                                value={email}
+                                onChange={e => onChange(e)}
+                                id="personnel-email"
+                                placeholder="Enter an email"
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="personnel-password">Password</Label>
+                            <Input
+                                type="password"
+                                name="password"
+                                value={password}
+                                onChange={e => onChange(e)}
+                                id="personnel-password"
+                                placeholder="Enter password"
+                            />
                         </FormGroup>
                         <FormGroup>
                             <Label for="personnel-role">Role</Label>
@@ -78,11 +111,10 @@ const PersonnelForm = props => {
                                 id="personnel-title"
                             ></Input>
                         </FormGroup>
-                        <Button color="success">Submit</Button>{'    '}
+                        <Button color="success">Submit</Button>
+                        {"    "}
                         <Link to="/admin">
-                            <Button color="danger">
-                                Back
-                            </Button>
+                            <Button color="danger">Back</Button>
                         </Link>
                     </Form>
                 </Col>

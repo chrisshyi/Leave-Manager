@@ -7,18 +7,17 @@ const { Leave } = require("../../models/Leave");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
-const { adminAuth } = require("../../middleware/admin_auth");
 const auth = require("../../middleware/token_auth");
-const getPersonnelAuth = require("../../middleware/personnel_auth");
+const { getPersonnelAuth, addOrEditPersonnelAuth } = require("../../middleware/personnel_auth");
 
 // @route  POST api/personnel
 // @desc   Register new personnel
-// @access site-admin only
+// @access site-admin and HR-Admin only
 router.post(
     "/",
     [
         auth,
-        adminAuth,
+        addOrEditPersonnelAuth,
         check("name", "Name is required")
             .not()
             .isEmpty(),

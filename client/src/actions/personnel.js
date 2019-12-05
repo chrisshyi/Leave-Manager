@@ -1,6 +1,7 @@
-import { LOGOUT, GET_ALL_PERSONNEL } from "./types";
+import { LOGOUT, GET_ALL_PERSONNEL, ADD_OR_EDIT_PERSONNEL} from "./types";
 import axios from "axios";
 import setAuthToken from '../utils/setAuthToken';
+import PersonnelForm from "../components/pages/PersonnelForm";
 
 export const getAllPersonnel = () => async dispatch => {
     const config = {
@@ -25,3 +26,28 @@ export const getAllPersonnel = () => async dispatch => {
         }
     }
 };
+
+export const addOrEditPersonnel = (personnelId, personnelData, edit) => async dispatch => {
+
+    const config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    };
+    setAuthToken(localStorage.getItem("token"));
+    
+    try {
+        let res;
+        if (edit) {
+            res = await axios.put(`/api/personnel${personnelId}`, personnelData, config);
+        } else {
+            res = await axios.post('/api/personnel', personnelData, config);
+        }
+        dispatch({
+            type: ADD_OR_EDIT_PERSONNEL,
+            payload: res
+        })
+    } catch (error) {
+        
+    }
+}
