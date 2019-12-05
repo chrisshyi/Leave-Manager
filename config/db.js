@@ -103,9 +103,11 @@ async function seedLeaves() {
             password: "blah",
             name: `Test personnel ${i}`,
             title: "勤務",
-            role: "HR-admin",
+            role: "reg-user",
             org: org.id
         });
+
+        personnel.password = await bcrypt.hash('blah', salt);
 
         await personnel.save();
 

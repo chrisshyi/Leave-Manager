@@ -8,6 +8,7 @@ import Summary from "./components/pages/Summary";
 import MonthlyView from "./components/pages/MonthlyView";
 import AdminPage from "./components/pages/AdminPage";
 import PrivateRoute from "./components/auth/PrivateRoute";
+import AdminPrivateRoute from './components/auth/AdminPrivateRoute';
 import { loadPersonnel } from "./actions/auth";
 import PersonnelForm from "./components/pages/PersonnelForm";
 
@@ -41,11 +42,11 @@ const App = () => {
                             path="/edit-personnel/:personnelId"
                             component={PersonnelForm}
                         ></PrivateRoute>
-                        <PrivateRoute
+                        <AdminPrivateRoute
                             exact
                             path="/add-personnel"
                             component={PersonnelForm}
-                        ></PrivateRoute>
+                        ></AdminPrivateRoute>
                         <Route exact path="/">
                             <Landing />
                         </Route>

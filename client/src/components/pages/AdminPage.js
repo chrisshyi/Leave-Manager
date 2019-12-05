@@ -84,10 +84,15 @@ const AdminPage = props => {
                                         }
                                     }}
                                 >
-                                    <Button outline color="primary">
-                                        Add Personnel{" "}
-                                        <i class="fas fa-plus-circle"></i>
-                                    </Button>
+                                    {props.auth.personnel.role ===
+                                    "reg-user" ? (
+                                        " "
+                                    ) : (
+                                        <Button outline color="primary">
+                                            Add Personnel{" "}
+                                            <i class="fas fa-plus-circle"></i>
+                                        </Button>
+                                    )}
                                 </Link>
                             </Col>
                             <Col sm="2"></Col>
@@ -191,6 +196,7 @@ AdminPage.propTypes = {
 
 const mapStateToProps = state => {
     return {
+        auth: state.auth,
         personnel: state.personnel.personnel
     };
 };

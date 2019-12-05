@@ -105,7 +105,7 @@ router.post(
 router.get("/", auth, async (req, res) => {
     let query;
     if (req.personnel.role === "reg-user") {
-        query = Personnel.find({ id: req.personnel.id });
+        query = Personnel.find({ _id: req.personnel.id });
     } else if (req.personnel.role === "HR-admin") {
         query = Personnel.find({
             org: req.personnel.orgId
