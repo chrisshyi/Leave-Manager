@@ -114,6 +114,7 @@ router.get("/", auth, async (req, res) => {
     } else {
         query = Personnel.find({});
     }
+    query = query.populate('org', 'name');
     const personnelArr = await query.sort({
         name: 'asc'
     });

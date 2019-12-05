@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logout } from "../../actions/auth";
@@ -25,9 +25,14 @@ const CustomNavbar = props => {
                 <Collapse isOpen={isOpen} navbar>
                     <Nav className="mr-auto" navbar>
                         {isAuthenticated ? (
-                            <NavItem onClick={() => logout()}>
-                                <NavLink href="#">Logout</NavLink>
-                            </NavItem>
+                            <Fragment>
+                                <NavItem onClick={() => logout()}>
+                                    <NavLink href="#">Logout</NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink href="/admin">Admin</NavLink>
+                                </NavItem>
+                            </Fragment>
                         ) : (
                             ""
                         )}
