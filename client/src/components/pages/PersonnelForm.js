@@ -10,7 +10,10 @@ import {
     Label,
     Input
 } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { addOrEditPersonnel } from "../../actions/personnel";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
 
 const PersonnelForm = props => {
     const {
@@ -19,8 +22,10 @@ const PersonnelForm = props => {
         titleToEdit,
         emailToEdit,
         passwordToEdit,
-        edit
+        edit,
+        org
     } = props.location.state;
+    let { personnelId } = useParams();
     const [formData, setFormData] = useState(
         edit
             ? {
@@ -28,16 +33,19 @@ const PersonnelForm = props => {
                   role: roleToEdit,
                   title: titleToEdit,
                   email: emailToEdit,
-                  password: passwordToEdit
+                  password: passwordToEdit,
+                  org
               }
             : {
                   name: "",
                   role: "",
                   title: "",
                   email: "",
-                  password: ""
+                  password: "",
+                  org
               }
     );
+    const { addOrEditPersonnel } = props;
 
     const { name, role, title, email, password } = formData;
 
@@ -47,13 +55,19 @@ const PersonnelForm = props => {
             [e.target.name]: e.target.value
         });
     };
+
     return (
         <Container>
             <Row className="mt-5">
                 <Col sm="4"></Col>
                 <Col sm="4">
                     <h3>{edit ? "Edit" : "Add"} Personnel</h3>
-                    <Form>
+                    <Form
+                        onSubmit={e => {
+                            e.preventDefault();
+                            addOrEditPersonnel(personnelId, formData, edit, props.history);
+                        }}
+                    >
                         <FormGroup>
                             <Label for="personnel-name">Name</Label>
                             <Input
@@ -95,6 +109,7 @@ const PersonnelForm = props => {
                                 name="role"
                                 id="personnel-role"
                             >
+                                <option disabled defaultValue value> -- select a role -- </option>
                                 <option value="reg-user">Regular User</option>
                                 <option value="HR-admin">
                                     HR Administrator
@@ -124,6 +139,8 @@ const PersonnelForm = props => {
     );
 };
 
-PersonnelForm.propTypes = {};
+PersonnelForm.propTypes = {
+    addOrEditPersonnel: PropTypes.func.isRequired
+};
 
-export default PersonnelForm;
+export default connect(null, { addOrEditPersonnel })(withRouter(PersonnelForm));

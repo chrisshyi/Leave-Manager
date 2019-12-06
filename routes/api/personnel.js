@@ -150,5 +150,58 @@ router.get("/:personnelId", [auth, getPersonnelAuth], async (req, res) => {
     personnelData.leaves = personnelLeaveData;
     res.json({ personnel: personnelData });
 });
+// @route  PUT api/personnel
+// @desc   Edit existing personnel
+// @access site-admin and HR-Admin only. HR-admins may only edit personnel in their organization.
+router.put(
+    "/:personnelId",
+    [
+        auth,
+        addOrEditPersonnelAuth,
+        check("email", "please enter a proper email").optional().isEmail(),
+        check(
+            "password",
+            "please enter a password with 6 or more characters"
+        ).optional().isLength({ min: 6 }),
+        check(
+            "role",
+            "Role must be either HR-admin or site-admin or reg-user"
+        ).optional().isIn(["HR-admin", "site-admin", "reg-user"]),
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                msg: "validation failed!",
+                errors: errors.array()
+            });
+        }
+        const updateData = {};
+        const { name, email, password, title, role } = req.body;
+        if (typeof name !== 'undefined') updateData.name = name;
+        if (typeof email !== 'undefined') updateData.email = email;
+        if (typeof password !== 'undefined') updateData.password= password;
+        if (typeof title !== 'undefined') updateData.title = title;
+        if (typeof role !== 'undefined') updateData.role = role;
+
+        const { personnelId } = req.params;
+        try {
+            let personnel = await Personnel.findByIdAndUpdate(personnelId, updateData);
+            if (!personnel) {
+                return res.status(400).json({
+                    errors: [
+                        {
+                            msg: "Personnel doesn't exist"
+                        }
+                    ]
+                });
+            }
+            res.json(personnel);
+        } catch (err) {
+            console.log(err);
+            res.status(500).send("server error");
+        }
+    }
+);
 
 module.exports = router;

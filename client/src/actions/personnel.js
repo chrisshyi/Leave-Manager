@@ -1,7 +1,7 @@
-import { LOGOUT, GET_ALL_PERSONNEL, ADD_OR_EDIT_PERSONNEL} from "./types";
+import { LOGOUT, GET_ALL_PERSONNEL, ADD_OR_EDIT_PERSONNEL } from "./types";
 import axios from "axios";
-import setAuthToken from '../utils/setAuthToken';
-import PersonnelForm from "../components/pages/PersonnelForm";
+import setAuthToken from "../utils/setAuthToken";
+import { browserHistory } from 'react-router-dom'
 
 export const getAllPersonnel = () => async dispatch => {
     const config = {
@@ -27,27 +27,45 @@ export const getAllPersonnel = () => async dispatch => {
     }
 };
 
-export const addOrEditPersonnel = (personnelId, personnelData, edit) => async dispatch => {
-
+export const addOrEditPersonnel = (
+    personnelId,
+    personnelData,
+    edit,
+    history // use to navigate back to /admin after successful addition/edit
+) => async dispatch => {
     const config = {
         headers: {
             "Content-Type": "application/json"
         }
     };
     setAuthToken(localStorage.getItem("token"));
-    
+
     try {
         let res;
         if (edit) {
-            res = await axios.put(`/api/personnel${personnelId}`, personnelData, config);
+            res = await axios.put(
+                `/api/personnel${personnelId}`,
+                personnelData,
+                config
+            );
         } else {
-            res = await axios.post('/api/personnel', personnelData, config);
+            res = await axios.post("/api/personnel", personnelData, config);
         }
         dispatch({
             type: ADD_OR_EDIT_PERSONNEL,
             payload: res
-        })
+        });
+        dispatch(getAllPersonnel()); // refresh all personnel in Redux store
+        history.push('/admin');
     } catch (error) {
-        
+        console.error(error.response.status);
+        console.error(error.response.data);
+        if (error.response.data.hasOwnProperty("msg")) {
+            if (error.response.data.msg === "Token expired!") {
+                dispatch({
+                    type: LOGOUT
+                });
+            }
+        }
     }
-}
+};

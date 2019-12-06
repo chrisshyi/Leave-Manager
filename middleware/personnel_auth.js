@@ -34,10 +34,10 @@ module.exports.getPersonnelAuth = async function(req, res, next) {
 
 module.exports.addOrEditPersonnelAuth = function(req, res, next) {
     const role = req.personnel.role;
-    if (role !== 'site-admin' || role !== 'HR-admin') {
+    if (role !== 'site-admin' && role !== 'HR-admin') {
         return res.status(403).json({
             msg: "You are not authorized"
         });
     }
     next();
-}
+};

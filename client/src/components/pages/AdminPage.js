@@ -1,10 +1,9 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
 import {
     Container,
-    Table,
     Row,
     Col,
     Button,
@@ -18,8 +17,8 @@ import {
     CardText
 } from "reactstrap";
 import { getAllPersonnel } from "../../actions/personnel";
-import { Link } from "react-router-dom";
 import "../../styles/admin-page.css";
+import PersonnelAdmin from "./admin/PersonnelAdmin";
 
 const AdminPage = props => {
     const [activeTab, setActiveTab] = useState("1");
@@ -27,11 +26,6 @@ const AdminPage = props => {
     const toggle = tab => {
         if (activeTab !== tab) setActiveTab(tab);
     };
-    const { personnel, getAllPersonnel } = props;
-
-    useEffect(() => {
-        getAllPersonnel();
-    }, []);
 
     return (
         <Container className="mt-5">
@@ -69,96 +63,7 @@ const AdminPage = props => {
             </Row>
             <TabContent activeTab={activeTab}>
                 <TabPane tabId="1">
-                    <Fragment>
-                        <Row className="mt-3">
-                            <Col sm="2"></Col>
-                            <Col sm="8">
-                                <Link
-                                    to={{
-                                        pathname: `/add-personnel`,
-                                        state: {
-                                            nameToEdit: "",
-                                            titleToEdit: "",
-                                            roleToEdit: "",
-                                            edit: false
-                                        }
-                                    }}
-                                >
-                                    {props.auth.personnel.role ===
-                                    "reg-user" ? (
-                                        " "
-                                    ) : (
-                                        <Button outline color="primary">
-                                            Add Personnel{" "}
-                                            <i class="fas fa-plus-circle"></i>
-                                        </Button>
-                                    )}
-                                </Link>
-                            </Col>
-                            <Col sm="2"></Col>
-                        </Row>
-                        <Row className="mt-2 mb-4">
-                            <Col sm="2"></Col>
-                            <Col sm="8">
-                                <Table className="personnel-table">
-                                    <thead>
-                                        <tr>
-                                            <th width="25%">Org</th>
-                                            <th width="25%">Name</th>
-                                            <th width="25%"></th>
-                                            <th width="25%"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {personnel.map(person => (
-                                            <tr>
-                                                <td>{person.org.name}</td>
-                                                <td>{person.name}</td>
-                                                <td>
-                                                    <Link
-                                                        to={{
-                                                            pathname: `/edit-personnel/${person._id}`,
-                                                            state: {
-                                                                nameToEdit:
-                                                                    person.name,
-                                                                titleToEdit:
-                                                                    person.title,
-                                                                roleToEdit:
-                                                                    person.role,
-                                                                edit: true
-                                                            }
-                                                        }}
-                                                    >
-                                                        <Button
-                                                            outline
-                                                            color="success"
-                                                        >
-                                                            Edit Personnel{" "}
-                                                            <i class="far fa-edit"></i>
-                                                        </Button>
-                                                    </Link>
-                                                </td>
-                                                <td>
-                                                    <Link
-                                                        to={`/edit-personnel-leaves/${person._id}`}
-                                                    >
-                                                        <Button
-                                                            outline
-                                                            color="info"
-                                                        >
-                                                            Edit Leaves{" "}
-                                                            <i class="far fa-edit"></i>
-                                                        </Button>
-                                                    </Link>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </Table>
-                            </Col>
-                            <Col sm="2"></Col>
-                        </Row>
-                    </Fragment>
+                    <PersonnelAdmin />
                 </TabPane>
                 <TabPane tabId="2">
                     <Row>
@@ -189,16 +94,6 @@ const AdminPage = props => {
     );
 };
 
-AdminPage.propTypes = {
-    personnel: PropTypes.array.isRequired,
-    getAllPersonnel: PropTypes.func.isRequired
-};
+AdminPage.propTypes = {};
 
-const mapStateToProps = state => {
-    return {
-        auth: state.auth,
-        personnel: state.personnel.personnel
-    };
-};
-
-export default connect(mapStateToProps, { getAllPersonnel })(AdminPage);
+export default AdminPage;
