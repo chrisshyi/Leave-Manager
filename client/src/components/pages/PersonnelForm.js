@@ -98,6 +98,7 @@ const PersonnelForm = props => {
                                 onChange={e => onChange(e)}
                                 id="personnel-password"
                                 placeholder="Enter password"
+                                minLength="6"
                             />
                         </FormGroup>
                         <FormGroup>
@@ -109,7 +110,7 @@ const PersonnelForm = props => {
                                 name="role"
                                 id="personnel-role"
                             >
-                                <option disabled defaultValue value> -- select a role -- </option>
+                                <option disabled defaultValue value=''> -- select a role -- </option>
                                 <option value="reg-user">Regular User</option>
                                 <option value="HR-admin">
                                     HR Administrator
