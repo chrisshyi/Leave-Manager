@@ -12,18 +12,21 @@ import {
     NavLink
 } from "reactstrap";
 import { Link } from "react-router-dom";
-import '../../styles/navbar.css';
+import "../../styles/navbar.css";
 
 const CustomNavbar = props => {
     const { isAuthenticated, logout } = props;
     const [isOpen, setIsOpen] = useState(false);
 
     const toggle = () => setIsOpen(!isOpen);
+    const today = new Date();
     return (
         <div>
             <Navbar color="dark" dark expand="md">
                 <NavbarBrand href="#">
-                    <Link to="/" className="navbar-link">reactstrap</Link>
+                    <Link to="/" className="navbar-link">
+                        reactstrap
+                    </Link>
                 </NavbarBrand>
                 <NavbarToggler onClick={toggle} />
                 <Collapse isOpen={isOpen} navbar>
@@ -35,7 +38,23 @@ const CustomNavbar = props => {
                                 </NavItem>
                                 <NavItem>
                                     <NavLink to="#">
-                                        <Link to="/admin" className="navbar-link">Admin</Link>
+                                        <Link
+                                            to="/admin"
+                                            className="navbar-link"
+                                        >
+                                            Admin
+                                        </Link>
+                                    </NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink to="#">
+                                        <Link
+                                            className="navbar-link"
+                                            to={`/monthly-view?year=${today.getFullYear()}&month=${today.getMonth() +
+                                                1}`}
+                                        >
+                                            View Month
+                                        </Link>
                                     </NavLink>
                                 </NavItem>
                             </Fragment>

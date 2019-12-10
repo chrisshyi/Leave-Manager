@@ -143,7 +143,8 @@ router.get("/:personnelId", [auth, getPersonnelAuth], async (req, res) => {
             scheduled: leave.scheduled,
             originalDate: leave.originalDate,
             scheduledDate: leave.scheduledDate,
-            duration: leave.duration
+            duration: leave.duration,
+            id: leave.id
         };
     });
     personnelData.leaves = personnelLeaveData;

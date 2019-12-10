@@ -3,9 +3,10 @@ import { getPersonnelLeaves } from "../../../actions/personnel";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import React, { useEffect, Fragment } from "react";
-import { Table, Row, Col, Button } from "reactstrap";
+import { Table, Row, Col, Button, Container } from "reactstrap";
 import { Link } from "react-router-dom";
 import uuidv4 from "uuid";
+import moment from "moment";
 
 const PersonnelLeaveAdmin = props => {
     const { getPersonnelLeaves } = props;
@@ -13,10 +14,10 @@ const PersonnelLeaveAdmin = props => {
     useEffect(() => {
         getPersonnelLeaves(personnelId);
     }, []);
-    const { personnel, leaves } = props.personnelLeaves;
+    const { name, org, leaves } = props.personnelLeaves;
 
-    return personnel === null ? (
-        <Fragment>
+    return (typeof leaves !== 'undefined') ? (
+        <Container>
             <Row className="mt-3">
                 <Col sm="2"></Col>
                 <Col sm="8">
@@ -33,8 +34,7 @@ const PersonnelLeaveAdmin = props => {
                                     scheduledDateToEdit: "",
                                     durationToEdit: 0,
                                     edit: false,
-                                    org: personnel.org,
-                                    personnel: personnel._id
+                                    org,
                                 }
                             }}
                         >
@@ -52,48 +52,46 @@ const PersonnelLeaveAdmin = props => {
                     <Table className="personnel-table">
                         <thead>
                             <tr>
-                                <th width="25%">Org</th>
-                                <th width="25%">Name</th>
-                                <th width="25%"></th>
-                                <th width="25%"></th>
+                                <th width="20%">Leave Type</th>
+                                <th width="20%">Original Date</th>
+                                <th width="20%">Scheduled Date</th>
+                                <th width="20%">Duration(hr)</th>
+                                <th width="20%"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {personnel.map(person => (
+                            {leaves.map(leave => (
                                 <tr key={uuidv4()}>
-                                    <td>{person.org.name}</td>
-                                    <td>{person.name}</td>
+                                    <td>{leave.leaveType}</td>
                                     <td>
-                                        <Link
-                                            to={{
-                                                pathname: `/edit-personnel/${person._id}`,
-                                                state: {
-                                                    nameToEdit: person.name,
-                                                    titleToEdit: person.title,
-                                                    roleToEdit: person.role,
-                                                    edit: true,
-                                                    org:
-                                                        props.auth.personnel.org
-                                                }
-                                            }}
-                                        >
-                                            <Button outline color="success">
-                                                Edit Personnel{" "}
-                                                <i className="far fa-edit"></i>
-                                            </Button>
-                                        </Link>
+                                        {moment(leave.originalDate).format(
+                                            "YYYY/MM/DD"
+                                        )}
+                                    </td>
+                                    <td>
+                                        {moment(leave.scheduledDate).format(
+                                            "YYYY/MM/DD"
+                                        )}
+                                    </td>
+                                    <td>
+                                        {leave.duration}
                                     </td>
                                     <td>
                                         <Link
                                             to={{
-                                                pathname: `/edit-personnel-leaves/${person._id}`,
+                                                pathname: `/edit-leave/${leave.id}`,
                                                 state: {
-                                                    personnel: person
+                                                    leaveTypeToEdit: leave.leaveType,
+                                                    scheduledToEdit: leave.scheduled,
+                                                    originalDateToEdit: leave.originalDate,
+                                                    scheduledDateToEdit: leave.scheduledDate,
+                                                    durationToEdit: leave.duration,
+                                                    edit: true,
                                                 }
                                             }}
                                         >
-                                            <Button outline color="info">
-                                                Edit Leaves{" "}
+                                            <Button outline color="success">
+                                                Edit Leave{" "}
                                                 <i className="far fa-edit"></i>
                                             </Button>
                                         </Link>
@@ -105,7 +103,7 @@ const PersonnelLeaveAdmin = props => {
                 </Col>
                 <Col sm="2"></Col>
             </Row>
-        </Fragment>
+        </Container>
     ) : (
         ""
     );
