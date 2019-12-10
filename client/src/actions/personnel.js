@@ -1,7 +1,6 @@
 import { LOGOUT, GET_ALL_PERSONNEL, ADD_OR_EDIT_PERSONNEL } from "./types";
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
-import { browserHistory } from 'react-router-dom'
 
 export const getAllPersonnel = () => async dispatch => {
     const config = {
@@ -44,7 +43,7 @@ export const addOrEditPersonnel = (
         let res;
         if (edit) {
             res = await axios.put(
-                `/api/personnel${personnelId}`,
+                `/api/personnel/${personnelId}`,
                 personnelData,
                 config
             );
