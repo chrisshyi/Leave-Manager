@@ -16,7 +16,7 @@ const PersonnelLeaveAdmin = props => {
     }, []);
     const { name, org, leaves } = props.personnelLeaves;
 
-    return (typeof leaves !== 'undefined') ? (
+    return typeof leaves !== "undefined" ? (
         <Container>
             <Row className="mt-3">
                 <Col sm="2"></Col>
@@ -34,7 +34,7 @@ const PersonnelLeaveAdmin = props => {
                                     scheduledDateToEdit: "",
                                     durationToEdit: 0,
                                     edit: false,
-                                    org,
+                                    org
                                 }
                             }}
                         >
@@ -64,29 +64,38 @@ const PersonnelLeaveAdmin = props => {
                                 <tr key={uuidv4()}>
                                     <td>{leave.leaveType}</td>
                                     <td>
-                                        {moment(leave.originalDate).format(
-                                            "YYYY/MM/DD"
-                                        )}
+                                        {typeof leave.originalDate !==
+                                        "undefined"
+                                            ? moment(leave.originalDate).format(
+                                                  "YYYY/MM/DD"
+                                              )
+                                            : ""}
                                     </td>
                                     <td>
-                                        {moment(leave.scheduledDate).format(
-                                            "YYYY/MM/DD"
-                                        )}
+                                        {typeof leave.scheduledDate !==
+                                        "undefined"
+                                            ? moment(leave.scheduledDate).format(
+                                                  "YYYY/MM/DD"
+                                              )
+                                            : ""}
                                     </td>
-                                    <td>
-                                        {leave.duration}
-                                    </td>
+                                    <td>{leave.duration}</td>
                                     <td>
                                         <Link
                                             to={{
                                                 pathname: `/edit-leave/${leave.id}`,
                                                 state: {
-                                                    leaveTypeToEdit: leave.leaveType,
-                                                    scheduledToEdit: leave.scheduled,
-                                                    originalDateToEdit: leave.originalDate,
-                                                    scheduledDateToEdit: leave.scheduledDate,
-                                                    durationToEdit: leave.duration,
-                                                    edit: true,
+                                                    leaveTypeToEdit:
+                                                        leave.leaveType,
+                                                    scheduledToEdit:
+                                                        leave.scheduled,
+                                                    originalDateToEdit:
+                                                        leave.originalDate,
+                                                    scheduledDateToEdit:
+                                                        leave.scheduledDate,
+                                                    durationToEdit:
+                                                        leave.duration,
+                                                    edit: true
                                                 }
                                             }}
                                         >

@@ -134,7 +134,7 @@ router.get("/:personnelId", [auth, getPersonnelAuth], async (req, res) => {
     const ObjectId = mongoose.Types.ObjectId;
     const personnelLeaves = await Leave.find({
         personnel: new ObjectId(req.params.personnelId)
-    });
+    }).sort('scheduledDate');
     let personnelLeaveData = personnelLeaves.map(leave => {
         return {
             leaveType: leave.leaveType,
