@@ -1,5 +1,12 @@
 import axios from "axios";
-import { CLEAR_ERR_MSG ,LOGOUT, LOGIN_SUCCESS, LOAD_PERSONNEL, LOGIN_FAILURE, AUTH_FAILURE } from "./types";
+import {
+    CLEAR_ERR_MSG,
+    LOGOUT,
+    LOGIN_SUCCESS,
+    LOAD_PERSONNEL,
+    LOGIN_FAILURE,
+    AUTH_FAILURE
+} from "./types";
 import setAuthToken from "../utils/setAuthToken";
 
 const ERR_MSG_DURATION = 3000;
@@ -45,14 +52,18 @@ export const login = (email, password) => async dispatch => {
         dispatch({
             type: LOGIN_FAILURE
         });
-        setTimeout(() => dispatch({
-            type: CLEAR_ERR_MSG
-        }), ERR_MSG_DURATION);
+        setTimeout(
+            () =>
+                dispatch({
+                    type: CLEAR_ERR_MSG
+                }),
+            ERR_MSG_DURATION
+        );
     }
 };
 
 export const logout = () => async dispatch => {
     dispatch({
         type: LOGOUT
-    })
-}
+    });
+};

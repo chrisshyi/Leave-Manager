@@ -35,11 +35,11 @@ const MonthlyView = props => {
     month = Number.parseInt(month);
     useEffect(() => {
         props.getAllPersonnel();
-    }, [getAllPersonnel, year, month]);
+    }, [year, month]);
     useEffect(() => {
         props.getMonthlyLeaves(year, month);
-    }, [getMonthlyLeaves, year, month]);
-    const { personnel } = props.personnel;
+    }, [year, month]);
+    const { allPersonnel } = props.personnel;
     if (!props.authPersonnel) {
         return <Redirect to="/" />;
     }
@@ -83,7 +83,7 @@ const MonthlyView = props => {
                     <th className="monthly-table-header border border-secondary">
                         Dates
                     </th>
-                    {personnel.map(person => (
+                    {allPersonnel.map(person => (
                         <th className="monthly-table-header border border-secondary">
                             {person.name}
                         </th>
@@ -94,12 +94,12 @@ const MonthlyView = props => {
                 {daysArray.map(day => (
                     <tr>
                         <td key={day.format("MM/DD")}>{day.format("MM/DD")}</td>
-                        {// Due to the nature of useEffect(), personnel and monthlyLeaves
+                        {// Due to the nature of useEffect(), allPersonnel and monthlyLeaves
                         // may be undefined when the component is first rendered
                         // Thus a null/undefined check must be included
-                        personnel &&
-                            personnel.length > 0 &&
-                            personnel.map(person => {
+                        allPersonnel &&
+                            allPersonnel.length > 0 &&
+                            allPersonnel.map(person => {
                                 if (monthlyLeaves && monthlyLeaves.length > 0) {
                                     const dateStr = day.format("MM/DD");
                                     if (leavesMap.has(person._id)) {

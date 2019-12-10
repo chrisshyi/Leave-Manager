@@ -10,10 +10,9 @@ import {
     Label,
     Input
 } from "reactstrap";
-import { Link, useParams } from "react-router-dom";
-import { addOrEditPersonnel } from "../../actions/personnel";
+import { Link, useParams, withRouter } from "react-router-dom";
+import { addOrEditPersonnel } from "../../../actions/personnel";
 import { connect } from "react-redux";
-import { withRouter } from "react-router";
 
 const PersonnelForm = props => {
     const {
@@ -59,7 +58,7 @@ const PersonnelForm = props => {
     return (
         <Container>
             <Row className="mt-5">
-                <Col sm="4"></Col>
+                <Col sm="4" />
                 <Col sm="4">
                     <h3>{edit ? "Edit" : "Add"} Personnel</h3>
                     <Form
@@ -76,7 +75,7 @@ const PersonnelForm = props => {
                                 onChange={e => onChange(e)}
                                 name="name"
                                 id="personnel-name"
-                            ></Input>
+                            />
                         </FormGroup>
                         <FormGroup>
                             <Label for="personnel-email">Email</Label>
@@ -125,7 +124,7 @@ const PersonnelForm = props => {
                                 type="text"
                                 name="title"
                                 id="personnel-title"
-                            ></Input>
+                            />
                         </FormGroup>
                         <Button color="success">Submit</Button>
                         {"    "}
@@ -134,7 +133,7 @@ const PersonnelForm = props => {
                         </Link>
                     </Form>
                 </Col>
-                <Col sm="4"></Col>
+                <Col sm="4" />
             </Row>
         </Container>
     );

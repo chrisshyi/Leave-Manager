@@ -1,8 +1,9 @@
-import { GET_ALL_PERSONNEL } from "../actions/types";
+import { GET_PERSONNEL_LEAVES, GET_ALL_PERSONNEL } from "../actions/types";
 
 const initialState = {
-    personnel: []
-}
+    allPersonnel: [],
+    personnelLeaves: {}
+};
 
 export default function(state = initialState, action) {
     const { type, payload } = action;
@@ -11,9 +12,14 @@ export default function(state = initialState, action) {
         case GET_ALL_PERSONNEL:
             return {
                 ...state,
-                personnel: payload
-            }
+                allPersonnel: payload
+            };
+        case GET_PERSONNEL_LEAVES:
+            return {
+                ...state,
+                personnelLeaves: payload
+            };
         default:
-            return state
+            return state;
     }
 }

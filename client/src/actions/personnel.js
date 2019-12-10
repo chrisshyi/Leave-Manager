@@ -1,4 +1,9 @@
-import { LOGOUT, GET_ALL_PERSONNEL, ADD_OR_EDIT_PERSONNEL } from "./types";
+import {
+    GET_PERSONNEL_LEAVES,
+    LOGOUT,
+    GET_ALL_PERSONNEL,
+    ADD_OR_EDIT_PERSONNEL
+} from "./types";
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 
@@ -55,7 +60,33 @@ export const addOrEditPersonnel = (
             payload: res
         });
         dispatch(getAllPersonnel()); // refresh all personnel in Redux store
-        history.push('/admin');
+        history.push("/admin");
+    } catch (error) {
+        console.error(error.response.status);
+        console.error(error.response.data);
+        if (error.response.data.hasOwnProperty("msg")) {
+            if (error.response.data.msg === "Token expired!") {
+                dispatch({
+                    type: LOGOUT
+                });
+            }
+        }
+    }
+};
+
+export const getPersonnelLeaves = personnelId => async dispatch => {
+    const config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    };
+    setAuthToken(localStorage.getItem("token"));
+    try {
+        const res = await axios.get(`/api/personnel/${personnelId}`, config);
+        dispatch({
+            type: GET_PERSONNEL_LEAVES,
+            payload: res.data["personnel"]
+        });
     } catch (error) {
         console.error(error.response.status);
         console.error(error.response.data);

@@ -1,20 +1,21 @@
+import { connect } from "react-redux";
+import { getPersonnelLeaves } from "../../../actions/personnel";
+import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import React, { useEffect, Fragment } from "react";
-import { connect } from "react-redux";
 import { Table, Row, Col, Button } from "reactstrap";
-import { getAllPersonnel } from "../../../actions/personnel";
 import { Link } from "react-router-dom";
-import "../../../styles/admin-page.css";
 import uuidv4 from "uuid";
 
-const PersonnelAdmin = props => {
-    const { personnel, getAllPersonnel } = props;
-
+const PersonnelLeaveAdmin = props => {
+    const { getPersonnelLeaves } = props;
+    const { personnelId } = useParams();
     useEffect(() => {
-        getAllPersonnel();
+        getPersonnelLeaves(personnelId);
     }, []);
+    const { personnel, leaves } = props.personnelLeaves;
 
-    return (
+    return personnel === null ? (
         <Fragment>
             <Row className="mt-3">
                 <Col sm="2"></Col>
@@ -24,19 +25,21 @@ const PersonnelAdmin = props => {
                     ) : (
                         <Link
                             to={{
-                                pathname: `/add-personnel`,
+                                pathname: `/add-leave`,
                                 state: {
-                                    nameToEdit: "",
-                                    titleToEdit: "",
-                                    roleToEdit: "",
+                                    leaveTypeToEdit: "",
+                                    scheduledToEdit: "",
+                                    originalDateToEdit: "",
+                                    scheduledDateToEdit: "",
+                                    durationToEdit: 0,
                                     edit: false,
-                                    org: props.auth.personnel.org
+                                    org: personnel.org,
+                                    personnel: personnel._id
                                 }
                             }}
                         >
                             <Button outline color="primary">
-                                Add Personnel{" "}
-                                <i className="fas fa-plus-circle"></i>
+                                Add Leave <i className="fas fa-plus-circle"></i>
                             </Button>
                         </Link>
                     )}
@@ -103,19 +106,18 @@ const PersonnelAdmin = props => {
                 <Col sm="2"></Col>
             </Row>
         </Fragment>
+    ) : (
+        ""
     );
 };
 
-PersonnelAdmin.propTypes = {
-    personnel: PropTypes.array.isRequired,
-    getAllPersonnel: PropTypes.func.isRequired
-};
+PersonnelLeaveAdmin.propTypes = {};
 
-const mapStateToProps = state => {
-    return {
-        auth: state.auth,
-        personnel: state.personnel.allPersonnel
-    };
-};
+const mapStateToProps = state => ({
+    auth: state.auth,
+    personnelLeaves: state.personnel.personnelLeaves
+});
 
-export default connect(mapStateToProps, { getAllPersonnel })(PersonnelAdmin);
+export default connect(mapStateToProps, { getPersonnelLeaves })(
+    PersonnelLeaveAdmin
+);

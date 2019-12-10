@@ -10,7 +10,8 @@ import AdminPage from "./components/pages/AdminPage";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import AdminPrivateRoute from './components/auth/AdminPrivateRoute';
 import { loadPersonnel } from "./actions/auth";
-import PersonnelForm from "./components/pages/PersonnelForm";
+import PersonnelForm from "./components/pages/forms/PersonnelForm";
+import PersonnelLeaveAdmin from './components/pages/admin/PersonnelLeaveAdmin';
 
 const App = () => {
     useEffect(() => {
@@ -42,6 +43,12 @@ const App = () => {
                             path="/edit-personnel/:personnelId"
                             component={PersonnelForm}
                         ></PrivateRoute>
+                        <PrivateRoute
+                            exact
+                            path='/edit-personnel-leaves/:personnelId'
+                            component={PersonnelLeaveAdmin}
+                            >
+                        </PrivateRoute>
                         <AdminPrivateRoute
                             exact
                             path="/add-personnel"

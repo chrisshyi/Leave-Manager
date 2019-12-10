@@ -16,7 +16,6 @@ import {
     CardTitle,
     CardText
 } from "reactstrap";
-import { getAllPersonnel } from "../../actions/personnel";
 import "../../styles/admin-page.css";
 import PersonnelAdmin from "./admin/PersonnelAdmin";
 
