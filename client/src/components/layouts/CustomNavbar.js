@@ -37,25 +37,21 @@ const CustomNavbar = props => {
                                     <NavLink href="#">Logout</NavLink>
                                 </NavItem>
                                 <NavItem>
-                                    <NavLink to="#">
                                         <Link
                                             to="/admin"
-                                            className="navbar-link"
+                                            className="nav-link"
                                         >
                                             Admin
                                         </Link>
-                                    </NavLink>
                                 </NavItem>
                                 <NavItem>
-                                    <NavLink to="#">
                                         <Link
-                                            className="navbar-link"
+                                            className="nav-link"
                                             to={`/monthly-view?year=${today.getFullYear()}&month=${today.getMonth() +
                                                 1}`}
                                         >
                                             View Month
                                         </Link>
-                                    </NavLink>
                                 </NavItem>
                             </Fragment>
                         ) : (
