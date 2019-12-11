@@ -7,14 +7,16 @@ import { Table, Row, Col, Button, Container } from "reactstrap";
 import { Link } from "react-router-dom";
 import uuidv4 from "uuid";
 import moment from "moment";
+import { deleteLeave } from '../../../actions/leaves';
 
 const PersonnelLeaveAdmin = props => {
-    const { getPersonnelLeaves } = props;
+    const { getPersonnelLeaves, deleteLeave } = props;
     const { personnelId } = useParams();
     useEffect(() => {
         getPersonnelLeaves(personnelId);
     }, []);
     const { name, org, leaves } = props.personnelLeaves;
+
 
     return typeof leaves !== "undefined" ? (
         <Container>
@@ -26,8 +28,8 @@ const PersonnelLeaveAdmin = props => {
                 <Col sm="2"></Col>
             </Row>
             <Row className="mt-1">
-                <Col sm="2"></Col>
-                <Col sm="8">
+                <Col sm="1"></Col>
+                <Col sm="10">
                     {props.auth.personnel.role === "reg-user" ? (
                         " "
                     ) : (
@@ -52,19 +54,20 @@ const PersonnelLeaveAdmin = props => {
                         </Link>
                     )}
                 </Col>
-                <Col sm="2"></Col>
+                <Col sm="1"></Col>
             </Row>
             <Row className="mt-2 mb-4">
-                <Col sm="2"></Col>
-                <Col sm="8">
+                <Col sm="1"></Col>
+                <Col sm="10">
                     <Table className="personnel-table">
                         <thead>
                             <tr>
-                                <th width="20%">Leave Type</th>
-                                <th width="20%">Original Date</th>
-                                <th width="20%">Scheduled Date</th>
-                                <th width="20%">Duration(hr)</th>
-                                <th width="20%"></th>
+                                <th width="17%">Leave Type</th>
+                                <th width="17%">Original Date</th>
+                                <th width="17%">Scheduled Date</th>
+                                <th width="15%">Duration(hr)</th>
+                                <th width="17%"></th>
+                                <th width="17%"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -73,7 +76,7 @@ const PersonnelLeaveAdmin = props => {
                                     <td>{leave.leaveType}</td>
                                     <td>
                                         {typeof leave.originalDate !==
-                                        "undefined"
+                                            "undefined" && leave.originalDate
                                             ? moment(leave.originalDate).format(
                                                   "YYYY/MM/DD"
                                               )
@@ -81,7 +84,7 @@ const PersonnelLeaveAdmin = props => {
                                     </td>
                                     <td>
                                         {typeof leave.scheduledDate !==
-                                        "undefined"
+                                            "undefined" && leave.scheduledDate
                                             ? moment(
                                                   leave.scheduledDate
                                               ).format("YYYY/MM/DD")
@@ -114,12 +117,20 @@ const PersonnelLeaveAdmin = props => {
                                             </Button>
                                         </Link>
                                     </td>
+                                    <td>
+                                        <Button outline color="danger" onClick={e => {
+                                            deleteLeave(leave.id, personnelId)
+                                        }}>
+                                            Delete Leave{" "}
+                                            <i className="fas fa-times-circle"></i>
+                                        </Button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </Table>
                 </Col>
-                <Col sm="2"></Col>
+                <Col sm="1"></Col>
             </Row>
         </Container>
     ) : (
@@ -137,6 +148,6 @@ const mapStateToProps = state => ({
     personnelLeaves: state.personnel.personnelLeaves
 });
 
-export default connect(mapStateToProps, { getPersonnelLeaves })(
+export default connect(mapStateToProps, { getPersonnelLeaves, deleteLeave })(
     PersonnelLeaveAdmin
 );

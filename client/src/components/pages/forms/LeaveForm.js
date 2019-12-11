@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { useParams } from "react-router-dom";
-import addOrEditLeave from '../../../actions/leaves';
+import { Link, useParams } from "react-router-dom";
+import { addOrEditLeave } from '../../../actions/leaves';
 import { connect } from 'react-redux';
+import {
+    Row, Col, Form, Input, FormGroup, Label, Button, Container
+} from 'reactstrap'
 
 const LeaveForm = props => {
     const {
@@ -100,7 +103,7 @@ const LeaveForm = props => {
                         </FormGroup>
                         <Button color="success">Submit</Button>
                         {"    "}
-                        <Link to="/admin">
+                        <Link to={`/edit-personnel-leaves/${personnelId}`}>
                             <Button color="danger">Back</Button>
                         </Link>
                     </Form>

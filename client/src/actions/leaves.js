@@ -8,7 +8,7 @@ import {
 } from "./types";
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
-import getPersonnelLeaves from './personnel';
+import { getPersonnelLeaves } from "./personnel";
 
 export const getTodayLeaves = () => async dispatch => {
     try {
@@ -167,7 +167,6 @@ export const addOrEditLeave = (
     edit,
     history
 ) => async dispatch => {
-
     const config = {
         headers: {
             "Content-Type": "application/json"
@@ -178,11 +177,7 @@ export const addOrEditLeave = (
     try {
         let res;
         if (edit) {
-            res = await axios.put(
-                `/api/leaves/${leaveId}`,
-                leaveData,
-                config
-            );
+            res = await axios.put(`/api/leaves/${leaveId}`, leaveData, config);
         } else {
             res = await axios.post("/api/leaves", leaveData, config);
         }
@@ -192,6 +187,29 @@ export const addOrEditLeave = (
         });
         dispatch(getPersonnelLeaves(personnelId)); // refresh all personnel in Redux store
         history.push(`/edit-personnel-leaves/${personnelId}`);
+    } catch (error) {
+        console.error(error.response.status);
+        console.error(error.response.data);
+        if (error.response.data.hasOwnProperty("msg")) {
+            if (error.response.data.msg === "Token expired!") {
+                dispatch({
+                    type: LOGOUT
+                });
+            }
+        }
+    }
+};
+
+export const deleteLeave = (leaveId, personnelId) => async dispatch => {
+    const config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    };
+    setAuthToken(localStorage.getItem("token"));
+    try {
+        await axios.delete(`/api/leaves/${leaveId}`, config);
+        dispatch(getPersonnelLeaves(personnelId));
     } catch (error) {
         console.error(error.response.status);
         console.error(error.response.data);
