@@ -1,5 +1,5 @@
 import {
-    SCHEDULE_LEAVE,
+    ADD_OR_EDIT_LEAVE,
     GET_AVAILABLE_LEAVES,
     GET_MONTHLY_LEAVES,
     GET_TODAY_LEAVES,
@@ -8,6 +8,7 @@ import {
 } from "./types";
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
+import getPersonnelLeaves from './personnel';
 
 export const getTodayLeaves = () => async dispatch => {
     try {
@@ -96,7 +97,7 @@ export const getAvailableLeaves = personnel => async dispatch => {
 };
 
 export const scheduleLeave = (leaveId, scheduledDate) => async dispatch => {
-    if (leaveId === '' || typeof leaveId === 'undefined') return;
+    if (leaveId === "" || typeof leaveId === "undefined") return;
     try {
         const leaveData = {
             scheduled: true,
@@ -107,10 +108,15 @@ export const scheduleLeave = (leaveId, scheduledDate) => async dispatch => {
         console.log(`Calling get monthly leaves with year ${scheduledDate.year()}
         month ${scheduledDate.month() + 1}
         `);
-        dispatch(getMonthlyLeaves(scheduledDate.year(), scheduledDate.month() + 1));
+        dispatch(
+            getMonthlyLeaves(scheduledDate.year(), scheduledDate.month() + 1)
+        );
     } catch (error) {
         console.log(error);
-        if (error.response.data.msg && error.response.data.msg === "Token expired!") {
+        if (
+            error.response.data.msg &&
+            error.response.data.msg === "Token expired!"
+        ) {
             dispatch({
                 type: LOGOUT
             });
@@ -122,8 +128,8 @@ export const scheduleLeave = (leaveId, scheduledDate) => async dispatch => {
     }
 };
 
-export const unscheduleLeave = (leaveId, scheduledDate)  => async dispatch => {
-    if (leaveId === '' || typeof leaveId === 'undefined') return;
+export const unscheduleLeave = (leaveId, scheduledDate) => async dispatch => {
+    if (leaveId === "" || typeof leaveId === "undefined") return;
     try {
         const leaveData = {
             scheduled: false,
@@ -134,10 +140,15 @@ export const unscheduleLeave = (leaveId, scheduledDate)  => async dispatch => {
         console.log(`Calling get monthly leaves with year ${scheduledDate.year()}
         month ${scheduledDate.month() + 1}
         `);
-        dispatch(getMonthlyLeaves(scheduledDate.year(), scheduledDate.month() + 1));
+        dispatch(
+            getMonthlyLeaves(scheduledDate.year(), scheduledDate.month() + 1)
+        );
     } catch (error) {
         console.log(error);
-        if (error.response.data.msg && error.response.data.msg === "Token expired!") {
+        if (
+            error.response.data.msg &&
+            error.response.data.msg === "Token expired!"
+        ) {
             dispatch({
                 type: LOGOUT
             });
@@ -146,6 +157,50 @@ export const unscheduleLeave = (leaveId, scheduledDate)  => async dispatch => {
                 type: LEAVE_ERROR
             });
         }
-        
     }
-}
+};
+
+export const addOrEditLeave = (
+    personnelId,
+    leaveId,
+    leaveData,
+    edit,
+    history
+) => async dispatch => {
+
+    const config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    };
+    setAuthToken(localStorage.getItem("token"));
+
+    try {
+        let res;
+        if (edit) {
+            res = await axios.put(
+                `/api/leaves/${leaveId}`,
+                leaveData,
+                config
+            );
+        } else {
+            res = await axios.post("/api/leaves", leaveData, config);
+        }
+        dispatch({
+            type: ADD_OR_EDIT_LEAVE,
+            payload: res
+        });
+        dispatch(getPersonnelLeaves(personnelId)); // refresh all personnel in Redux store
+        history.push(`/edit-personnel-leaves/${personnelId}`);
+    } catch (error) {
+        console.error(error.response.status);
+        console.error(error.response.data);
+        if (error.response.data.hasOwnProperty("msg")) {
+            if (error.response.data.msg === "Token expired!") {
+                dispatch({
+                    type: LOGOUT
+                });
+            }
+        }
+    }
+};

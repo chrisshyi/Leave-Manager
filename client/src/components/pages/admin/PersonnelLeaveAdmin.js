@@ -18,7 +18,14 @@ const PersonnelLeaveAdmin = props => {
 
     return typeof leaves !== "undefined" ? (
         <Container>
-            <Row className="mt-3">
+            <Row className="mt-4">
+                <Col sm="2"></Col>
+                <Col sm="8" style={{ textAlign: "center" }}>
+                    <h2>{name}</h2>
+                </Col>
+                <Col sm="2"></Col>
+            </Row>
+            <Row className="mt-1">
                 <Col sm="2"></Col>
                 <Col sm="8">
                     {props.auth.personnel.role === "reg-user" ? (
@@ -34,6 +41,7 @@ const PersonnelLeaveAdmin = props => {
                                     scheduledDateToEdit: "",
                                     durationToEdit: 0,
                                     edit: false,
+                                    personnelId,
                                     org
                                 }
                             }}
@@ -74,9 +82,9 @@ const PersonnelLeaveAdmin = props => {
                                     <td>
                                         {typeof leave.scheduledDate !==
                                         "undefined"
-                                            ? moment(leave.scheduledDate).format(
-                                                  "YYYY/MM/DD"
-                                              )
+                                            ? moment(
+                                                  leave.scheduledDate
+                                              ).format("YYYY/MM/DD")
                                             : ""}
                                     </td>
                                     <td>{leave.duration}</td>
@@ -95,6 +103,7 @@ const PersonnelLeaveAdmin = props => {
                                                         leave.scheduledDate,
                                                     durationToEdit:
                                                         leave.duration,
+                                                    personnelId,
                                                     edit: true
                                                 }
                                             }}
@@ -118,7 +127,10 @@ const PersonnelLeaveAdmin = props => {
     );
 };
 
-PersonnelLeaveAdmin.propTypes = {};
+PersonnelLeaveAdmin.propTypes = {
+    auth: PropTypes.object,
+    personnelLeaves: PropTypes.object
+};
 
 const mapStateToProps = state => ({
     auth: state.auth,

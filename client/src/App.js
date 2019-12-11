@@ -11,6 +11,7 @@ import PrivateRoute from "./components/auth/PrivateRoute";
 import AdminPrivateRoute from './components/auth/AdminPrivateRoute';
 import { loadPersonnel } from "./actions/auth";
 import PersonnelForm from "./components/pages/forms/PersonnelForm";
+import LeaveForm from './components/pages/forms/LeaveForm';
 import PersonnelLeaveAdmin from './components/pages/admin/PersonnelLeaveAdmin';
 
 const App = () => {
@@ -33,26 +34,36 @@ const App = () => {
                             path="/monthly-view"
                             component={MonthlyView}
                         ></PrivateRoute>
-                        <PrivateRoute
+                        <AdminPrivateRoute
                             exact
                             path="/admin"
                             component={AdminPage}
-                        ></PrivateRoute>
-                        <PrivateRoute
+                        ></AdminPrivateRoute>
+                        <AdminPrivateRoute
                             exact
                             path="/edit-personnel/:personnelId"
                             component={PersonnelForm}
-                        ></PrivateRoute>
-                        <PrivateRoute
+                        ></AdminPrivateRoute>
+                        <AdminPrivateRoute
                             exact
                             path='/edit-personnel-leaves/:personnelId'
                             component={PersonnelLeaveAdmin}
                             >
-                        </PrivateRoute>
+                        </AdminPrivateRoute>
                         <AdminPrivateRoute
                             exact
                             path="/add-personnel"
                             component={PersonnelForm}
+                        ></AdminPrivateRoute>
+                        <AdminPrivateRoute
+                            exact
+                            path="/add-leave"
+                            component={LeaveForm}
+                        ></AdminPrivateRoute>
+                        <AdminPrivateRoute
+                            exact
+                            path="/edit-leave/:leaveId"
+                            component={LeaveForm}
                         ></AdminPrivateRoute>
                         <Route exact path="/">
                             <Landing />
