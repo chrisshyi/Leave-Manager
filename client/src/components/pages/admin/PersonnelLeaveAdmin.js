@@ -4,18 +4,21 @@ import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import React, { useEffect, Fragment } from "react";
 import { Table, Row, Col, Button, Container } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import uuidv4 from "uuid";
 import moment from "moment";
 import { deleteLeave } from '../../../actions/leaves';
 
 const PersonnelLeaveAdmin = props => {
-    const { getPersonnelLeaves, deleteLeave } = props;
+    const { getPersonnelLeaves, deleteLeave, auth: { isAuthenticated } } = props;
     const { personnelId } = useParams();
     useEffect(() => {
         getPersonnelLeaves(personnelId);
     }, []);
     const { name, org, leaves } = props.personnelLeaves;
+    if (!isAuthenticated) {
+        return <Redirect to="/" />;
+    }
 
 
     return typeof leaves !== "undefined" ? (

@@ -9,7 +9,7 @@ const AdminPrivateRoute = ({ component: Component, auth, ...rest }) => {
         <Route
             {...rest}
             render={props =>
-                auth.personnel.role === "reg-user" ? (
+                auth.personnel && auth.personnel.role === "reg-user" ? (
                     <Redirect to="/"></Redirect>
                 ) : (
                     <Component {...props} />

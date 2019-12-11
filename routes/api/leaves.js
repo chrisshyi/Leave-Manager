@@ -5,10 +5,10 @@ const {
     leaveAddAuth,
     leaveModDeleteAuth
 } = require("../../middleware/leave_auth");
-const { Leave, leaveTypes } = require("../../models/Leave");
-const { check, validationResult } = require("express-validator");
-const { getLeaveInfoAuth } = require("../../middleware/leave_auth");
-const { getPersonnelAuth } = require('../../middleware/personnel_auth');
+const {Leave, leaveTypes} = require("../../models/Leave");
+const {check, validationResult} = require("express-validator");
+const {getLeaveInfoAuth} = require("../../middleware/leave_auth");
+const {getPersonnelAuth} = require('../../middleware/personnel_auth');
 const moment = require('moment');
 
 // @route POST /api/leaves
@@ -31,8 +31,8 @@ router.post(
             .not()
             .isEmpty(),
         check("scheduled", "'scheduled' must be a boolean")
-            .optional()
-            .isBoolean(),
+            .isBoolean()
+            .optional(),
         check("duration", "Duration must be provided")
             .not()
             .isEmpty(),
@@ -40,13 +40,19 @@ router.post(
             .isNumeric()
             .toFloat(),
         check("originalDate", "Original date must be a valid date")
-            .optional()
-            .isISO8601({ strict: true })
-            .toDate(),
-        check("scheduledDate", "Scheduled date must be a valid date")
-            .optional()
-            .isISO8601({ strict: true })
+            .isISO8601({strict: true})
             .toDate()
+            .optional({
+                nullable: true,
+                checkFalsy: true
+            }),
+        check("scheduledDate", "Scheduled date must be a valid date")
+            .isISO8601({strict: true})
+            .toDate()
+            .optional({
+                nullable: true,
+                checkFalsy: true
+            })
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -107,7 +113,7 @@ router.get("/", tokenAuth, async (req, res) => {
         if (queries.year) {
             // queries.year is a string!
             const year = parseInt(queries.year);
-            startDate = moment().year(year).startOf("year"); 
+            startDate = moment().year(year).startOf("year");
             endDate = moment().year(year).add(1, "years").startOf("year");
             if (queries.month) {
                 const month = parseInt(queries.month);
@@ -117,7 +123,7 @@ router.get("/", tokenAuth, async (req, res) => {
             if (queries.day) {
                 const day = parseInt(queries.day);
                 startDate.date(day).startOf("date");
-                endDate.date(day).add(1, "days").startOf("date") 
+                endDate.date(day).add(1, "days").startOf("date")
             }
         }
     }
@@ -143,7 +149,7 @@ router.get("/", tokenAuth, async (req, res) => {
             .populate("personnel", "name role");
     }
     const queryResult = await finalQuery;
-    res.json({ leaves: queryResult });
+    res.json({leaves: queryResult});
 });
 // @route PUT /api/leaves/:leaveId
 // @desc  Modifies an existing leave
@@ -155,30 +161,35 @@ router.put(
         tokenAuth,
         leaveModDeleteAuth,
         check("leaveType", "Leave type not allowed")
-            .optional()
-            .isIn(leaveTypes),
+
+            .isIn(leaveTypes)
+            .optional(),
         check("personnel", "Cannot modify the personnel")
             .not()
             .exists(),
         check("scheduled", "'scheduled' must be a boolean")
-            .optional()
-            .isBoolean(),
+
+            .isBoolean()
+            .optional(),
         check("duration", "Duration must be a number between 4.5 and 24")
-            .optional()
+
             .isNumeric()
-            .toFloat(),
+            .toFloat()
+            .optional(),
         check("originalDate", "Original date must be a valid date")
-            .optional({
-                nullable: true
-            })
-            .isISO8601({ strict: true })
-            .toDate(),
-        check("scheduledDate", "Scheduled date must be a valid date")
-            .optional({
-                nullable: true
-            })
-            .isISO8601({ strict: true })
+            .isISO8601({strict: true})
             .toDate()
+            .optional({
+                nullable: true,
+                checkFalsy: true
+            }),
+        check("scheduledDate", "Scheduled date must be a valid date")
+            .isISO8601({strict: true})
+            .toDate()
+            .optional({
+                nullable: true,
+                checkFalsy: true
+            })
     ],
     async (req, res) => {
         const errors = validationResult(req);

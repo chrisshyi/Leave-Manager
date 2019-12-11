@@ -203,5 +203,38 @@ router.put(
         }
     }
 );
+// @route  DELETE api/personnel
+// @desc   Edit existing personnel
+// @access site-admin and HR-Admin only. HR-admins may only edit personnel in their organization.
+router.delete(
+    "/:personnelId",
+    [
+        auth,
+        addOrEditPersonnelAuth,
+    ],
+    async (req, res) => {
+        const { personnelId } = req.params;
+        try {
+            let personnel = await Personnel.findByIdAndDelete(personnelId);
+            const ObjectId = mongoose.Types.ObjectId;
+            await Leave.deleteMany({
+                personnel: new ObjectId(personnelId)
+            });
+            if (!personnel) {
+                return res.status(400).json({
+                    errors: [
+                        {
+                            msg: "Personnel doesn't exist"
+                        }
+                    ]
+                });
+            }
+            res.json(personnel);
+        } catch (err) {
+            console.log(err);
+            res.status(500).send("server error");
+        }
+    }
+);
 
 module.exports = router;

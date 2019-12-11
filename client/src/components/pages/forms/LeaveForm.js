@@ -27,7 +27,7 @@ const LeaveForm = props => {
                   scheduledDate: scheduledDateToEdit,
                   originalDate: originalDateToEdit,
                   duration: durationToEdit,
-                  personnelId,
+                  personnel: personnelId,
                   org
               }
             : {
@@ -35,7 +35,7 @@ const LeaveForm = props => {
                   scheduledDate: "",
                   originalDate: "",
                   duration: '',
-                  personnelId,
+                  personnel: personnelId,
                   org
               }
     );
@@ -76,6 +76,16 @@ const LeaveForm = props => {
                             </Input>
                         </FormGroup>
                         <FormGroup>
+                            <Label for="original-date">Original Date</Label>
+                            <Input
+                                type="date"
+                                name="originalDate"
+                                value={originalDate}
+                                onChange={e => onChange(e)}
+                                id="original-date"
+                            />
+                        </FormGroup>
+                        <FormGroup>
                             <Label for="scheduled-date">Scheduled Date</Label>
                             <Input
                                 type="date"
@@ -83,16 +93,6 @@ const LeaveForm = props => {
                                 value={scheduledDate}
                                 onChange={e => onChange(e)}
                                 id="scheduled-date"
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="original-date">Scheduled Date</Label>
-                            <Input
-                                type="date"
-                                name="originalDate"
-                                value={originalDate}
-                                onChange={e => onChange(e)}
-                                id="original-date"
                             />
                         </FormGroup>
                         <FormGroup>

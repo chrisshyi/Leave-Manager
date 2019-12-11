@@ -40,7 +40,7 @@ const MonthlyView = props => {
         props.getMonthlyLeaves(year, month);
     }, [year, month]);
     const { allPersonnel } = props.personnel;
-    if (!props.authPersonnel) {
+    if (!props.isAuthenticated) {
         return <Redirect to="/" />;
     }
     const moment = extendMoment(Moment);
@@ -197,7 +197,8 @@ MonthlyView.propTypes = {
 const mapStateToProps = state => ({
     personnel: state.personnel,
     monthlyLeaves: state.leaves.monthlyLeaves,
-    authPersonnel: state.auth.personnel
+    authPersonnel: state.auth.personnel,
+    isAuthenticated: state.auth.isAuthenticated
 });
 
 export default connect(mapStateToProps, { getAllPersonnel, getMonthlyLeaves })(

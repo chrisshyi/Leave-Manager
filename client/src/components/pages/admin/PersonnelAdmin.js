@@ -3,23 +3,26 @@ import React, { useEffect, Fragment } from "react";
 import { connect } from "react-redux";
 import { Table, Row, Col, Button } from "reactstrap";
 import { getAllPersonnel, deletePersonnel } from "../../../actions/personnel";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import "../../../styles/admin-page.css";
 import uuidv4 from "uuid";
 
 const PersonnelAdmin = props => {
-    const { personnel, getAllPersonnel, deletePersonnel } = props;
+    const { personnel, getAllPersonnel, deletePersonnel, auth: { isAuthenticated } } = props;
 
     useEffect(() => {
         getAllPersonnel();
     }, []);
+    if (!isAuthenticated) {
+        return <Redirect to="/" />;
+    }
 
     return (
         <Fragment>
             <Row className="mt-5">
                 <Col sm="1"></Col>
                 <Col sm="10">
-                    {props.auth.personnel.role === "reg-user" ? (
+                    {props.auth.personnel && props.auth.personnel.role === "reg-user" ? (
                         " "
                     ) : (
                         <Link
