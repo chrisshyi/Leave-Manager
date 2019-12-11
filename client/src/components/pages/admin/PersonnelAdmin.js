@@ -2,13 +2,13 @@ import PropTypes from "prop-types";
 import React, { useEffect, Fragment } from "react";
 import { connect } from "react-redux";
 import { Table, Row, Col, Button } from "reactstrap";
-import { getAllPersonnel } from "../../../actions/personnel";
+import { getAllPersonnel, deletePersonnel } from "../../../actions/personnel";
 import { Link } from "react-router-dom";
 import "../../../styles/admin-page.css";
 import uuidv4 from "uuid";
 
 const PersonnelAdmin = props => {
-    const { personnel, getAllPersonnel } = props;
+    const { personnel, getAllPersonnel, deletePersonnel } = props;
 
     useEffect(() => {
         getAllPersonnel();
@@ -16,9 +16,9 @@ const PersonnelAdmin = props => {
 
     return (
         <Fragment>
-            <Row className="mt-3">
-                <Col sm="2"></Col>
-                <Col sm="8">
+            <Row className="mt-5">
+                <Col sm="1"></Col>
+                <Col sm="10">
                     {props.auth.personnel.role === "reg-user" ? (
                         " "
                     ) : (
@@ -41,18 +41,19 @@ const PersonnelAdmin = props => {
                         </Link>
                     )}
                 </Col>
-                <Col sm="2"></Col>
+                <Col sm="1"></Col>
             </Row>
             <Row className="mt-2 mb-4">
-                <Col sm="2"></Col>
-                <Col sm="8">
+                <Col sm="1"></Col>
+                <Col sm="10">
                     <Table className="personnel-table">
                         <thead>
                             <tr>
-                                <th width="25%">Org</th>
-                                <th width="25%">Name</th>
-                                <th width="25%"></th>
-                                <th width="25%"></th>
+                                <th width="20%">Org</th>
+                                <th width="20%">Name</th>
+                                <th width="20%"></th>
+                                <th width="20%"></th>
+                                <th width="20%"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -95,12 +96,24 @@ const PersonnelAdmin = props => {
                                             </Button>
                                         </Link>
                                     </td>
+                                    <td>
+                                        <Button
+                                            outline
+                                            color="danger"
+                                            onClick={e => {
+                                                deletePersonnel(person._id);
+                                            }}
+                                        >
+                                            Delete Personnel{" "}
+                                            <i className="fas fa-times-circle"></i>
+                                        </Button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </Table>
                 </Col>
-                <Col sm="2"></Col>
+                <Col sm="1"></Col>
             </Row>
         </Fragment>
     );
@@ -118,4 +131,6 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { getAllPersonnel })(PersonnelAdmin);
+export default connect(mapStateToProps, { getAllPersonnel, deletePersonnel })(
+    PersonnelAdmin
+);

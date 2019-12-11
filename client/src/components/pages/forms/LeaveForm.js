@@ -8,6 +8,7 @@ import {
 } from 'reactstrap'
 
 const LeaveForm = props => {
+    const leaveTypes = ["慰假", "預假", "補假", "例假", "公假", "外散", "外宿"];
     const {
         leaveTypeToEdit,
         scheduledDateToEdit,
@@ -33,7 +34,7 @@ const LeaveForm = props => {
                   leaveType: "",
                   scheduledDate: "",
                   originalDate: "",
-                  duration: 0,
+                  duration: '',
                   personnelId,
                   org
               }
@@ -62,12 +63,17 @@ const LeaveForm = props => {
                         <FormGroup>
                             <Label for="leave-type">Leave Type</Label>
                             <Input
-                                type="text"
+                                type="select"
                                 value={leaveType}
                                 onChange={e => onChange(e)}
                                 name="leaveType"
                                 id="leave-type"
-                            />
+                            >
+                                <option disabled defaultValue value=''> -- select leave type -- </option>
+                                {leaveTypes.map(leaveType => (
+                                    <option value={leaveType}>{leaveType}</option>
+                                ))}
+                            </Input>
                         </FormGroup>
                         <FormGroup>
                             <Label for="scheduled-date">Scheduled Date</Label>
@@ -99,6 +105,8 @@ const LeaveForm = props => {
                                 id="duration"
                                 min="4.5"
                                 max="24"
+                                step="0.5"
+                                placeholder="24"
                             />
                         </FormGroup>
                         <Button color="success">Submit</Button>

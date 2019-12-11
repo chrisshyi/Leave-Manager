@@ -6,13 +6,13 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Landing from "./components/pages/Landing";
 import Summary from "./components/pages/Summary";
 import MonthlyView from "./components/pages/MonthlyView";
-import AdminPage from "./components/pages/AdminPage";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import AdminPrivateRoute from './components/auth/AdminPrivateRoute';
 import { loadPersonnel } from "./actions/auth";
 import PersonnelForm from "./components/pages/forms/PersonnelForm";
 import LeaveForm from './components/pages/forms/LeaveForm';
 import PersonnelLeaveAdmin from './components/pages/admin/PersonnelLeaveAdmin';
+import PersonnelAdmin from './components/pages/admin/PersonnelAdmin';
 
 const App = () => {
     useEffect(() => {
@@ -37,7 +37,7 @@ const App = () => {
                         <AdminPrivateRoute
                             exact
                             path="/admin"
-                            component={AdminPage}
+                            component={PersonnelAdmin}
                         ></AdminPrivateRoute>
                         <AdminPrivateRoute
                             exact

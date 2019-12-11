@@ -99,3 +99,26 @@ export const getPersonnelLeaves = personnelId => async dispatch => {
         }
     }
 };
+
+export const deletePersonnel = personnelId => async dispatch => {
+    const config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    };
+    setAuthToken(localStorage.getItem("token"));
+    try {
+        await axios.delete(`/api/personnel/${personnelId}`, config);
+        dispatch(getAllPersonnel());
+    } catch (error) {
+        console.error(error.response.status);
+        console.error(error.response.data);
+        if (error.response.data.hasOwnProperty("msg")) {
+            if (error.response.data.msg === "Token expired!") {
+                dispatch({
+                    type: LOGOUT
+                });
+            }
+        }
+    }
+};
