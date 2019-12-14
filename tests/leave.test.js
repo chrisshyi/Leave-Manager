@@ -929,6 +929,31 @@ describe("Leave API endpoints", () => {
                 expect(leave.org).toEqual(org.id.toString());
             }
         });
+        it("HR-admin can retrieve leave on a day in December", async () => {
+            let res = await request(server)
+                .post("/api/auth/")
+                .send({
+                    email: "brad-trav@gmail.com",
+                    password: "123456"
+                });
+            const token = res.body.token;
+            res = await request(server).get('/api/leaves?year=2018&month=12&day=15')
+                                       .set('x-auth-token', token); 
+            expect(res.statusCode).toBe(200);
+
+            let org = await Org.findOne({
+                name: "成功嶺"
+            });
+            expect(res.statusCode).toBe(200);
+            expect(res.body.leaves.length > 0);
+            for (let leave of res.body.leaves) {
+                const scheduledDate = new Date(leave.scheduledDate);
+                expect(scheduledDate.getFullYear()).toBe(2018);
+                expect(scheduledDate.getMonth()).toBe(11);
+                expect(scheduledDate.getDate()).toBe(15);
+                expect(leave.org).toEqual(org.id.toString());
+            }
+        });
         it("HR-admin can filter by year, month and day", async () => {
             let res = await request(server)
                 .post("/api/auth/")

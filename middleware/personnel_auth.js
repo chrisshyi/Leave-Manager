@@ -34,7 +34,17 @@ module.exports.getPersonnelAuth = async function(req, res, next) {
 
 module.exports.addOrEditPersonnelAuth = function(req, res, next) {
     const role = req.personnel.role;
-    if (role !== 'site-admin' && role !== 'HR-admin') {
+    if (role === 'HR-admin') {
+        if (req.body.role === 'site-admin') {
+            return res.status(403).json({
+                msg: "You are not authorized"
+            })
+        } else if (req.body.role === 'HR-admin' && req.body.org !== req.personnel.orgId) {
+            return res.status(403).json({
+                msg: "You are not authorized"
+            })
+        }
+    } else if (role === 'reg-user') {
         return res.status(403).json({
             msg: "You are not authorized"
         });

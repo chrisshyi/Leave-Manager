@@ -64,6 +64,23 @@ const dropTestDB = async () => {
         console.log(error);
     }
 };
+
+const dropTestTable = async tableName => {
+    try {
+
+        let conn;
+        if (local) {
+            conn = await mongoose.createConnection(localTestDBURI);
+        } else {
+            conn = await mongoose.createConnection(testDBURI);
+        }
+        await conn.dropCollection(tableName);
+        await conn.close();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 async function seedLeaves() {
     const dropConn = await mongoose.createConnection(localDBURI, {
         useNewUrlParser: true
@@ -149,7 +166,10 @@ async function seedLeaves() {
     await mongoose.disconnect();
 }
 
-module.exports.connectDB = connectDB;
-module.exports.connectTestDB = connectTestDB;
-module.exports.dropTestDB = dropTestDB;
-module.exports.seedLeaves = seedLeaves;
+module.exports = {
+    connectDB,
+    connectTestDB,
+    dropTestDB,
+    seedLeaves,
+    dropTestTable
+}

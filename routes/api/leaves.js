@@ -110,20 +110,21 @@ router.get("/", tokenAuth, async (req, res) => {
     const queries = req.query;
     let startDate, endDate;
     if (Object.keys(queries).length !== 0) {
+        let year, month, day;
         if (queries.year) {
             // queries.year is a string!
-            const year = parseInt(queries.year);
+            year = parseInt(queries.year);
             startDate = moment().year(year).startOf("year");
-            endDate = moment().year(year).add(1, "years").startOf("year");
+            endDate = moment(startDate).add(1, "years").startOf("year");
             if (queries.month) {
-                const month = parseInt(queries.month);
+                month = parseInt(queries.month);
                 startDate.month(month - 1).startOf("month");
-                endDate.year(year).month(month - 1).add(1, "months").startOf("month");
+                endDate = moment(startDate).add(1, "months").startOf("month");
             }
             if (queries.day) {
-                const day = parseInt(queries.day);
+                day = parseInt(queries.day);
                 startDate.date(day).startOf("date");
-                endDate.date(day).add(1, "days").startOf("date")
+                endDate = moment(startDate).add(1, "days").startOf('day');
             }
         }
     }

@@ -15,7 +15,7 @@ const {
 } = require("../../middleware/personnel_auth");
 
 const extractDateString = date => {
-    if (date === null) {
+    if (date === null || typeof date === 'undefined') {
         return ""
     } else {
         let dateStr = date.getDate();
