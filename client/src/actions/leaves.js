@@ -173,6 +173,9 @@ export const addOrEditLeave = (
         }
     };
     setAuthToken(localStorage.getItem("token"));
+    if (leaveData.hasOwnProperty("personnel")) {
+        delete leaveData.personnel
+    }
 
     try {
         let res;

@@ -161,7 +161,6 @@ router.put(
         tokenAuth,
         leaveModDeleteAuth,
         check("leaveType", "Leave type not allowed")
-
             .isIn(leaveTypes)
             .optional(),
         check("personnel", "Cannot modify the personnel")

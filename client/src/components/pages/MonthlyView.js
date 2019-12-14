@@ -68,11 +68,11 @@ const MonthlyView = props => {
     }
 
     const prevMonthURL =
-        month == 1
+        month === 1
             ? `/monthly-view?year=${year - 1}&month=12`
             : `/monthly-view?year=${year}&month=${month - 1}`;
     const nextMonthURL =
-        month == 12
+        month === 12
             ? `/monthly-view?year=${year + 1}&month=1`
             : `/monthly-view?year=${year}&month=${month + 1}`;
 

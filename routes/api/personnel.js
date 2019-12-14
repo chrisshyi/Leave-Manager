@@ -8,8 +8,21 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const auth = require("../../middleware/token_auth");
-const { getPersonnelAuth, addOrEditPersonnelAuth } = require("../../middleware/personnel_auth");
 
+const {
+    getPersonnelAuth,
+    addOrEditPersonnelAuth
+} = require("../../middleware/personnel_auth");
+
+const extractDateString = date => {
+    if (date === null) {
+        return ""
+    } else {
+        let dateStr = date.getDate();
+        dateStr = dateStr >= 10 ? dateStr : `0${dateStr}`;
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${dateStr}`;
+    }
+}
 // @route  POST api/personnel
 // @desc   Register new personnel
 // @access site-admin and HR-Admin only
@@ -113,9 +126,9 @@ router.get("/", auth, async (req, res) => {
     } else {
         query = Personnel.find({});
     }
-    query = query.populate('org', 'name');
+    query = query.populate("org", "name");
     const personnelArr = await query.sort({
-        name: 'asc'
+        name: "asc"
     });
     res.json({ personnel: personnelArr });
 });
@@ -129,20 +142,20 @@ router.get("/:personnelId", [auth, getPersonnelAuth], async (req, res) => {
         name: personnel.name,
         title: personnel.title,
         role: personnel.role,
-        org: personnel.org.toString(),
+        org: personnel.org.toString()
     };
     const ObjectId = mongoose.Types.ObjectId;
     const personnelLeaves = await Leave.find({
         personnel: new ObjectId(req.params.personnelId)
-    }).sort('scheduledDate');
+    }).sort("scheduledDate");
     let personnelLeaveData = personnelLeaves.map(leave => {
         return {
             leaveType: leave.leaveType,
             leaveURL: `/api/leaves/${leave.id}`,
             personnel: leave.personnel.toString(),
             scheduled: leave.scheduled,
-            originalDate: leave.originalDate,
-            scheduledDate: leave.scheduledDate,
+            originalDate: extractDateString(leave.originalDate),
+            scheduledDate: extractDateString(leave.scheduledDate),
             duration: leave.duration,
             id: leave.id
         };
@@ -158,15 +171,15 @@ router.put(
     [
         auth,
         addOrEditPersonnelAuth,
-        check("email", "please enter a proper email").optional().isEmail(),
-        check(
-            "password",
-            "please enter a password with 6 or more characters"
-        ).optional().isLength({ min: 6 }),
-        check(
-            "role",
-            "Role must be either HR-admin or site-admin or reg-user"
-        ).optional().isIn(["HR-admin", "site-admin", "reg-user"]),
+        check("email", "please enter a proper email")
+            .optional()
+            .isEmail(),
+        check("password", "please enter a password with 6 or more characters")
+            .optional()
+            .isLength({ min: 6 }),
+        check("role", "Role must be either HR-admin or site-admin or reg-user")
+            .optional()
+            .isIn(["HR-admin", "site-admin", "reg-user"])
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -178,15 +191,18 @@ router.put(
         }
         const updateData = {};
         const { name, email, password, title, role } = req.body;
-        if (typeof name !== 'undefined') updateData.name = name;
-        if (typeof email !== 'undefined') updateData.email = email;
-        if (typeof password !== 'undefined') updateData.password= password;
-        if (typeof title !== 'undefined') updateData.title = title;
-        if (typeof role !== 'undefined') updateData.role = role;
+        if (typeof name !== "undefined") updateData.name = name;
+        if (typeof email !== "undefined") updateData.email = email;
+        if (typeof password !== "undefined") updateData.password = password;
+        if (typeof title !== "undefined") updateData.title = title;
+        if (typeof role !== "undefined") updateData.role = role;
 
         const { personnelId } = req.params;
         try {
-            let personnel = await Personnel.findByIdAndUpdate(personnelId, updateData);
+            let personnel = await Personnel.findByIdAndUpdate(
+                personnelId,
+                updateData
+            );
             if (!personnel) {
                 return res.status(400).json({
                     errors: [
@@ -208,10 +224,7 @@ router.put(
 // @access site-admin and HR-Admin only. HR-admins may only edit personnel in their organization.
 router.delete(
     "/:personnelId",
-    [
-        auth,
-        addOrEditPersonnelAuth,
-    ],
+    [auth, addOrEditPersonnelAuth],
     async (req, res) => {
         const { personnelId } = req.params;
         try {

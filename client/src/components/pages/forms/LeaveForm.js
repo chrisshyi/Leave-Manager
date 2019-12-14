@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Link, useParams } from "react-router-dom";
-import { addOrEditLeave } from '../../../actions/leaves';
-import { connect } from 'react-redux';
+import { addOrEditLeave } from "../../../actions/leaves";
+import { connect } from "react-redux";
 import {
-    Row, Col, Form, Input, FormGroup, Label, Button, Container
-} from 'reactstrap'
+    Row,
+    Col,
+    Form,
+    Input,
+    FormGroup,
+    Label,
+    Button,
+    Container
+} from "reactstrap";
 
 const LeaveForm = props => {
-    const leaveTypes = ["慰假", "預假", "補假", "例假", "公假", "外散", "外宿"];
+    const leaveTypes = ["慰假", "例假", "公假", "外散", "外宿"];
     const {
         leaveTypeToEdit,
         scheduledDateToEdit,
@@ -34,7 +41,7 @@ const LeaveForm = props => {
                   leaveType: "",
                   scheduledDate: "",
                   originalDate: "",
-                  duration: '',
+                  duration: "",
                   personnel: personnelId,
                   org
               }
@@ -57,7 +64,13 @@ const LeaveForm = props => {
                     <Form
                         onSubmit={e => {
                             e.preventDefault();
-                            addOrEditLeave(personnelId, leaveId, formData, edit, props.history);
+                            addOrEditLeave(
+                                personnelId,
+                                leaveId,
+                                formData,
+                                edit,
+                                props.history
+                            );
                         }}
                     >
                         <FormGroup>
@@ -68,10 +81,16 @@ const LeaveForm = props => {
                                 onChange={e => onChange(e)}
                                 name="leaveType"
                                 id="leave-type"
+                                required
                             >
-                                <option disabled defaultValue value=''> -- select leave type -- </option>
+                                <option disabled defaultValue value="">
+                                    {" "}
+                                    -- select leave type --{" "}
+                                </option>
                                 {leaveTypes.map(leaveType => (
-                                    <option value={leaveType}>{leaveType}</option>
+                                    <option value={leaveType}>
+                                        {leaveType}
+                                    </option>
                                 ))}
                             </Input>
                         </FormGroup>
@@ -107,6 +126,7 @@ const LeaveForm = props => {
                                 max="24"
                                 step="0.5"
                                 placeholder="24"
+                                required
                             />
                         </FormGroup>
                         <Button color="success">Submit</Button>
@@ -123,7 +143,7 @@ const LeaveForm = props => {
 };
 
 LeaveForm.propTypes = {
-    addOrEditLeave: PropTypes.func.isRequired,
+    addOrEditLeave: PropTypes.func.isRequired
 };
 
 export default connect(null, { addOrEditLeave })(LeaveForm);
