@@ -51,14 +51,17 @@ const EditLeaveModal = props => {
         );
     } else {
         const getLeaveStr = (leave, date) => {
-            const leaveOriginalDate = moment(leave.originalDate);
-            if (date.isBefore(leaveOriginalDate)) {
-                return `預${leaveOriginalDate.format("MM/DD")}`;
-            } else if (date.isAfter(leaveOriginalDate)) {
-                return `補${leaveOriginalDate.format("MM/DD")}`;
-            } else {
-                return "例假";
+            if (leave.leaveType === "例假") {
+                const leaveOriginalDate = moment(leave.originalDate);
+                if (date.isBefore(leaveOriginalDate)) {
+                    return `預${leaveOriginalDate.format("MM/DD")}`;
+                } else if (date.isAfter(leaveOriginalDate)) {
+                    return `補${leaveOriginalDate.format("MM/DD")}`;
+                } else {
+                    return "例假";
+                }
             }
+            return leave.leaveType;
         };
 
         modalBody = (
