@@ -29,6 +29,13 @@ const hashLeaves = leavesArr => {
     return leavesMap;
 };
 
+const getDayOfWeekString = index => {
+    const daysOfWeek = ["Sun", "Mon", "Tues", "Wed", "Thurs"
+    , "Fri", "Sat"];
+
+    return daysOfWeek[index];
+}
+
 const MonthlyView = props => {
     let { year, month } = queryString.parse(props.location.search);
     year = Number.parseInt(year);
@@ -56,8 +63,6 @@ const MonthlyView = props => {
         .month(month)
         .startOf("month")
         .subtract(1, "days");
-    //console.log(`start of month ${startOfMonth}`);
-    //console.log(`end of month ${endOfMonth}`);
     const monthRange = moment.range(startOfMonth, endOfMonth);
 
     const daysArray = Array.from(monthRange.by("day"));
@@ -83,6 +88,9 @@ const MonthlyView = props => {
                     <th className="monthly-table-header border border-secondary">
                         Dates
                     </th>
+                    <th>
+                        {" "}
+                    </th>
                     {allPersonnel.map(person => (
                         <th className="monthly-table-header border border-secondary">
                             {person.name}
@@ -93,7 +101,8 @@ const MonthlyView = props => {
             <tbody>
                 {daysArray.map(day => (
                     <tr>
-                        <td key={day.format("MM/DD")}>{day.format("MM/DD")}</td>
+                        <td key={uuidv4()}>{day.format("MM/DD")}</td>
+                        <td key={uuidv4()}>{getDayOfWeekString(day.day())}</td>
                         {// Due to the nature of useEffect(), allPersonnel and monthlyLeaves
                         // may be undefined when the component is first rendered
                         // Thus a null/undefined check must be included
