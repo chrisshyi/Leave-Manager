@@ -12,10 +12,9 @@ import {
     Input,
     Alert
 } from "reactstrap";
-import { login } from '../../actions/auth';
-import { connect } from 'react-redux';
+import { login } from "../../actions/auth";
+import { connect } from "react-redux";
 const LoginModal = props => {
-
     const { auth, login, buttonLabel } = props;
 
     const [modal, setModal] = useState(false);
@@ -41,15 +40,13 @@ const LoginModal = props => {
         if (auth.isAuthenticated) {
             toggle();
         }
-    }
+    };
 
     return (
         <div className="mt-3">
             <div>
                 <h1 className="display-3">Welcome!</h1>
-                <p className="lead">
-                    Please log in with your credentials
-                </p>
+                <p className="lead">Please log in with your credentials</p>
                 <hr className="my-2" />
                 <p className="lead">
                     <Button color="primary" onClick={toggle}>
@@ -60,7 +57,11 @@ const LoginModal = props => {
             <Modal isOpen={modal} toggle={toggle}>
                 <ModalHeader toggle={toggle}>Login</ModalHeader>
                 <ModalBody>
-                    { auth.errorMsg !== '' ? <Alert color="danger">{auth.errorMsg}</Alert> : ''}
+                    {auth.errorMsg !== "" ? (
+                        <Alert color="danger">{auth.errorMsg}</Alert>
+                    ) : (
+                        ""
+                    )}
                     <Form id="login-form" onSubmit={e => onSubmit(e)}>
                         <FormGroup>
                             <Label for="email">Email</Label>
@@ -85,7 +86,7 @@ const LoginModal = props => {
                     </Form>
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="primary" type="submit" form='login-form'>
+                    <Button color="primary" type="submit" form="login-form">
                         Submit
                     </Button>
                     <Button color="secondary" onClick={toggle}>
@@ -99,11 +100,11 @@ const LoginModal = props => {
 
 LoginModal.propTypes = {
     buttonLabel: PropTypes.string.isRequired,
-    auth: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
     auth: state.auth
-})
+});
 
 export default connect(mapStateToProps, { login })(LoginModal);
