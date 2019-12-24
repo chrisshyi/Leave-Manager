@@ -1,6 +1,8 @@
 /// <reference types="Cypress" />
 
+
 describe("Tests authentication functionality", function() {
+
     it("User can log in properly", () => {
         cy.visit('/');
 
