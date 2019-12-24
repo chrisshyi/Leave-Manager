@@ -4,3 +4,4 @@ personnel.txt
 *.xml
 *.iml
 coverage_data/
+client/cypress/integration/examples/*
