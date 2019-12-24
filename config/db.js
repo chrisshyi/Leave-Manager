@@ -103,13 +103,13 @@ async function seedLeaves() {
         console.log(`Org id: ${org.id}`);
     }
     let adminUser = new Personnel({
-        email: "chrisshyi13@gmail.com",
-        name: "Chris Shyi",
+        email: "testAdmin@gmail.com",
+        name: "Test Admin",
         role: "site-admin",
         title: "勤務",
         org: org.id
     });
-    adminUser.password = await bcrypt.hash("Nash1234@", salt);
+    adminUser.password = await bcrypt.hash("123456", salt);
     await adminUser.save();
 
     let newLeavePromises = [];
