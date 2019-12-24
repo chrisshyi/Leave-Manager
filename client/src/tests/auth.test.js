@@ -16,7 +16,6 @@ test('User can log in using the LoginModal component', async () => {
     fireEvent.change(getByLabelText('Email'), { target: { value: 'testUser@gmail.com' } });
     fireEvent.change(getByLabelText('Password'), { target: { value: 'somePassWord' } });
 
-    expect(getByLabelText('Email').value).toBe('testUser@gmail.com');
     axios.post.mockResolvedValueOnce({
         data: {
             token: "mockToken"
@@ -24,7 +23,6 @@ test('User can log in using the LoginModal component', async () => {
     });
     fireEvent.click(getByText('Submit'));
 
-    await waitForElementToBeRemoved(() => getByLabelText('Email'));
     expect(axios.post).toHaveBeenCalledTimes(1)
     expect(axios.post).toHaveBeenCalledWith(authURL);
     const currentState = store.getState();
