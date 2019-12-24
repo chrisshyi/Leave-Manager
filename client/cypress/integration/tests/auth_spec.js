@@ -1,4 +1,5 @@
 /// <reference types="Cypress" />
+
 describe("Tests authentication functionality", function() {
     it("User can log in properly", () => {
         cy.visit('/');
@@ -21,5 +22,16 @@ describe("Tests authentication functionality", function() {
 
         cy.contains('Submit').click();
         cy.contains('Login failure');
+    });
+    it("User can log out properly", () => {
+        cy.request('POST', '/api/auth', {
+            email: 'testAdmin@gmail.com',
+            password: '123456'
+        }).then(res => {
+            localStorage.setItem('token', res.body.token);
+        });
+        cy.visit('/');
+        cy.contains('Logout').click();
+        cy.contains('Login');
     });
 });
