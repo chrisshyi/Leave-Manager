@@ -150,7 +150,7 @@ async function seedLeaves() {
 
         let newLeave2 = new Leave({
             org: org.id,
-            leaveType: "例假",
+            leaveType: "慰假",
             personnel: personnel._id,
             scheduled: true,
             originalDate: new Date(),
@@ -161,7 +161,7 @@ async function seedLeaves() {
         for (let j = 1; j < 11; j++) {
             let newUnscheduledLeave = new Leave({
                 org: org.id,
-                leaveType: "例假",
+                leaveType: "慰假",
                 personnel: personnel._id,
                 scheduled: false,
                 originalDate: new Date(2019, 11, j),

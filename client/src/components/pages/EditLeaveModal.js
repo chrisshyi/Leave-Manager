@@ -51,8 +51,8 @@ const EditLeaveModal = props => {
         );
     } else {
         const getLeaveStr = (leave, date) => {
+            const leaveOriginalDate = moment(leave.originalDate);
             if (leave.leaveType === "例假") {
-                const leaveOriginalDate = moment(leave.originalDate);
                 if (date.isBefore(leaveOriginalDate)) {
                     return `預${leaveOriginalDate.format("MM/DD")}`;
                 } else if (date.isAfter(leaveOriginalDate)) {
@@ -61,7 +61,7 @@ const EditLeaveModal = props => {
                     return "例假";
                 }
             }
-            return leave.leaveType;
+            return `${leave.leaveType} ${leaveOriginalDate.format("MM/DD")}`;
         };
 
         modalBody = (
