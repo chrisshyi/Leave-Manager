@@ -1,6 +1,6 @@
 /// <reference types="Cypress" />
 import { testUserLogin } from "./utils";
-import moment from 'moment';
+import moment from "moment";
 
 before(() => {
     cy.exec("node scripts/seedLeaves.js");
@@ -41,7 +41,8 @@ describe("Test users' interaction with the monthly view", () => {
             .siblings()
             .as("leaveCells");
         cy.get("@leaveCells")
-            .eq(2).click();
+            .eq(2)
+            .click();
         cy.contains("Add Leave");
         cy.contains("Available Leaves")
             .next()
@@ -51,7 +52,9 @@ describe("Test users' interaction with the monthly view", () => {
         cy.contains(`${today.getMonth() + 1}/${today.getDate() + 1}`)
             .siblings()
             .as("leaveCells");
-        cy.get("@leaveCells").eq(2).should("contain", "慰假") 
+        cy.get("@leaveCells")
+            .eq(2)
+            .should("contain", "慰假");
     });
     it("User can unschedule a leave", () => {
         const today = new Date();
@@ -62,16 +65,27 @@ describe("Test users' interaction with the monthly view", () => {
             .siblings()
             .as("leaveCells");
         cy.get("@leaveCells")
-            .eq(2).click();
+            .eq(2)
+            .click();
         cy.contains("Remove Leave");
         cy.server(); // start a server so we can wait on the following requests
-        cy.route("PUT", '/api/leaves/*').as("modifyLeave");
-        cy.route('GET', '/api/leaves/*').as("requestLeaves"); 
+        cy.route("PUT", "/api/leaves/*").as("modifyLeave");
+        cy.route("GET", "/api/leaves/*").as("requestLeaves");
         cy.contains("Unschedule").click();
         cy.wait("@modifyLeave");
         cy.wait("@requestLeaves");
+        
         cy.contains(`${today.getMonth() + 1}/${today.getDate()}`)
-            .siblings().eq(2).should("not.contain", "例假"); 
+            .siblings()
+            .eq(2)
+            .should("not.contain", "例假");
+        cy.contains(`${today.getMonth() + 1}/${today.getDate()}`)
+            .siblings()
+            .eq(2)
+            .click();
+        cy.contains("Available Leaves")
+            .next()
+            .select("例假");
     });
     it("User can view the current month and navigate to the next and previous months", () => {
         const today = moment();
@@ -83,7 +97,9 @@ describe("Test users' interaction with the monthly view", () => {
                 1}`
         );
         cy.contains("Next").click();
-        const nextMonth = moment().startOf("month").add(1, "months");
+        const nextMonth = moment()
+            .startOf("month")
+            .add(1, "months");
         cy.url().should(
             "equal",
             `http://localhost:3000/monthly-view?year=${nextMonth.year()}&month=${nextMonth.month() +
@@ -92,7 +108,9 @@ describe("Test users' interaction with the monthly view", () => {
         cy.visit("/");
         cy.contains("View Month").click();
         cy.contains("Prev").click();
-        const lastMonth = moment().startOf("month").subtract(1, "months");
+        const lastMonth = moment()
+            .startOf("month")
+            .subtract(1, "months");
         cy.url().should(
             "equal",
             `http://localhost:3000/monthly-view?year=${lastMonth.year()}&month=${lastMonth.month() +
