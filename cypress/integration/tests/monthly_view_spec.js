@@ -31,7 +31,7 @@ describe("Test users' interaction with the monthly view", () => {
         });
     });
 
-    it("User can add a leave", () => {
+    it("User can schedule a leave", () => {
         const today = new Date();
         cy.visit("/");
         cy.contains("View Month").click();
@@ -41,7 +41,7 @@ describe("Test users' interaction with the monthly view", () => {
             .as("leaveCells");
         cy.get("@leaveCells")
             .eq(2).click();
-        cy.contains("Add/Edit Leave");
+        cy.contains("Add Leave");
         cy.contains("Available Leaves")
             .next()
             .select("慰假 12/01");
@@ -51,5 +51,25 @@ describe("Test users' interaction with the monthly view", () => {
             .siblings()
             .as("leaveCells");
         cy.get("@leaveCells").eq(2).should("contain", "慰假") 
+    });
+    it("User can unschedule a leave", () => {
+        const today = new Date();
+        cy.visit("/");
+        cy.contains("View Month").click();
+        cy.contains("例假");
+        cy.contains(`${today.getMonth() + 1}/${today.getDate()}`)
+            .siblings()
+            .as("leaveCells");
+        cy.get("@leaveCells")
+            .eq(2).click();
+        cy.contains("Remove Leave");
+        cy.server(); // start a server so we can wait on the following requests
+        cy.route("PUT", '/api/leaves/*').as("modifyLeave");
+        cy.route('GET', '/api/leaves/*').as("requestLeaves"); 
+        cy.contains("Unschedule").click();
+        cy.wait("@modifyLeave");
+        cy.wait("@requestLeaves");
+        cy.contains(`${today.getMonth() + 1}/${today.getDate()}`)
+            .siblings().eq(2).should("not.contain", "例假"); 
     });
 });

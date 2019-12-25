@@ -103,7 +103,7 @@ const EditLeaveModal = props => {
     return (
         <Fragment>
             <Modal isOpen={showModal} toggle={toggle}>
-                <ModalHeader toggle={toggle}>Add/Edit Leave</ModalHeader>
+                <ModalHeader toggle={toggle}>{addLeave ? "Add Leave" : "Remove Leave"}</ModalHeader>
                 {modalBody}
                 <ModalFooter>
                     {addLeave ? (
