@@ -1,5 +1,6 @@
 /// <reference types="Cypress" />
 import { testUserLogin } from "./utils";
+import moment from 'moment';
 
 before(() => {
     cy.exec("node scripts/seedLeaves.js");
@@ -71,5 +72,31 @@ describe("Test users' interaction with the monthly view", () => {
         cy.wait("@requestLeaves");
         cy.contains(`${today.getMonth() + 1}/${today.getDate()}`)
             .siblings().eq(2).should("not.contain", "例假"); 
+    });
+    it("User can view the current month and navigate to the next and previous months", () => {
+        const today = moment();
+        cy.visit("/");
+        cy.contains("View Month").click();
+        cy.url().should(
+            "equal",
+            `http://localhost:3000/monthly-view?year=${today.year()}&month=${today.month() +
+                1}`
+        );
+        cy.contains("Next").click();
+        const nextMonth = moment().startOf("month").add(1, "months");
+        cy.url().should(
+            "equal",
+            `http://localhost:3000/monthly-view?year=${nextMonth.year()}&month=${nextMonth.month() +
+                1}`
+        );
+        cy.visit("/");
+        cy.contains("View Month").click();
+        cy.contains("Prev").click();
+        const lastMonth = moment().startOf("month").subtract(1, "months");
+        cy.url().should(
+            "equal",
+            `http://localhost:3000/monthly-view?year=${lastMonth.year()}&month=${lastMonth.month() +
+                1}`
+        );
     });
 });
