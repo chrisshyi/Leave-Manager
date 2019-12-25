@@ -1,6 +1,6 @@
 /// <reference types="Cypress" />
 
-
+import { testUserLogin } from './utils';
 describe("Tests authentication functionality", function() {
 
     it("User can log in properly", () => {
@@ -26,12 +26,7 @@ describe("Tests authentication functionality", function() {
         cy.contains('Login failure');
     });
     it("User can log out properly", () => {
-        cy.request('POST', '/api/auth', {
-            email: 'testAdmin@gmail.com',
-            password: '123456'
-        }).then(res => {
-            localStorage.setItem('token', res.body.token);
-        });
+        testUserLogin();
         cy.visit('/');
         cy.contains('Logout').click();
         cy.contains('Login');

@@ -7,6 +7,7 @@
     "server": "nodemon server.js",
     "start": "node server.js",
     "test": "export NODE_ENV=testing && jest --detectOpenHandles",
+    "cypress:open": "cypress open",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "concurrently": "^5.0.0",
+    "cypress": "^3.8.0",
     "jest": "^24.9.0",
     "nodemon": "^1.19.4",
     "supertest": "^4.0.2"
