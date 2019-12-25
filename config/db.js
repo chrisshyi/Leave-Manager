@@ -111,9 +111,19 @@ async function seedLeaves() {
     });
     adminUser.password = await bcrypt.hash("123456", salt);
     await adminUser.save();
+    let newLeave = new Leave({
+        org: org.id,
+        leaveType: "例假",
+        personnel: adminUser._id,
+        scheduled: true,
+        originalDate: new Date(),
+        scheduledDate: new Date(),
+        duration: 24
+    });
 
     let newLeavePromises = [];
 
+    newLeavePromises.push(newLeave.save());
     for (let i = 0; i < 6; i++) {
         let personnel = new Personnel({
             email: `test${i}@gmail.com`,
@@ -128,7 +138,7 @@ async function seedLeaves() {
 
         await personnel.save();
 
-        let newLeave = new Leave({
+        newLeave = new Leave({
             org: org.id,
             leaveType: "例假",
             personnel: personnel._id,
