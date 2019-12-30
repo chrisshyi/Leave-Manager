@@ -1,3 +1,4 @@
+/*
 import React from 'react';
 import { renderWithRedux } from "./test_utils";
 import axios from 'axios';
@@ -7,7 +8,6 @@ import '@testing-library/jest-dom/extend-expect'
 
 jest.mock('axios');
 
-/*
 test('User can log in using the LoginModal component', async () => {
     const authURL = '/api/auth';
     const { container, store, getByLabelText, getByText } = renderWithRedux(<LoginModal buttonLabel={"Login"} />);

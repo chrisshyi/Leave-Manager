@@ -32,7 +32,8 @@ export const getTodayLeaves = () => async dispatch => {
             payload: res.data
         });
     } catch (error) {
-        if (error.response.data.msg === "Token expired!") {
+        if (error.response.data.hasOwnProperty("msg") &&
+            error.response.data.msg === "Token expired!") {
             dispatch({
                 type: LOGOUT
             });
@@ -64,7 +65,8 @@ export const getMonthlyLeaves = (year, month) => async dispatch => {
             payload: res.data
         });
     } catch (error) {
-        if (error.response.data.msg === "Token expired!") {
+        if (error.response.data.hasOwnProperty("msg") &&
+            error.response.data.msg === "Token expired!") {
             dispatch({
                 type: LOGOUT
             });
@@ -84,7 +86,10 @@ export const getAvailableLeaves = personnel => async dispatch => {
             payload: res.data
         });
     } catch (error) {
-        if (error.response.data.msg === "Token expired!") {
+        if (
+            error.response.data.hasOwnProperty("msg") &&
+            error.response.data.msg === "Token expired!"
+        ) {
             dispatch({
                 type: LOGOUT
             });
@@ -114,7 +119,7 @@ export const scheduleLeave = (leaveId, scheduledDate) => async dispatch => {
     } catch (error) {
         console.log(error);
         if (
-            error.response.data.msg &&
+            error.response.data.hasOwnProperty("msg") &&
             error.response.data.msg === "Token expired!"
         ) {
             dispatch({
@@ -146,7 +151,7 @@ export const unscheduleLeave = (leaveId, scheduledDate) => async dispatch => {
     } catch (error) {
         console.log(error);
         if (
-            error.response.data.msg &&
+            error.response.data.hasOwnProperty("msg") &&
             error.response.data.msg === "Token expired!"
         ) {
             dispatch({
@@ -174,7 +179,7 @@ export const addOrEditLeave = (
     };
     setAuthToken(localStorage.getItem("token"));
     if (leaveData.hasOwnProperty("personnel") && edit) {
-        delete leaveData.personnel
+        delete leaveData.personnel;
     }
 
     try {

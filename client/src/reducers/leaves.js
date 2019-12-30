@@ -8,7 +8,7 @@ import {
 
 const initialState = {
     todayLeaves: {},
-    monthlyLeaves: [],
+    monthlyLeaves: {},
     availableLeaves: {
         personnel: null,
         leaves: []

@@ -23,7 +23,8 @@ export const getAllPersonnel = () => async dispatch => {
     } catch (error) {
         console.error(error.response.status);
         console.error(error.response.data);
-        if (error.response.data.msg === "Token expired!") {
+        if (error.response.data.msg.hasOwnProperty("msg") &&
+            error.response.data.msg === "Token expired!") {
             dispatch({
                 type: LOGOUT
             });
@@ -35,7 +36,7 @@ export const addOrEditPersonnel = (
     personnelId,
     personnelData,
     edit,
-    history // use to navigate back to /admin after successful addition/edit
+    history // used to navigate back to /admin after successful addition/edit
 ) => async dispatch => {
     const config = {
         headers: {
@@ -43,7 +44,6 @@ export const addOrEditPersonnel = (
         }
     };
     setAuthToken(localStorage.getItem("token"));
-
     try {
         let res;
         if (edit) {
@@ -64,8 +64,8 @@ export const addOrEditPersonnel = (
     } catch (error) {
         console.error(error.response.status);
         console.error(error.response.data);
-        if (error.response.data.hasOwnProperty("msg")) {
-            if (error.response.data.msg === "Token expired!") {
+        if (error.response.data.hasOwnProperty("msg") &&
+            error.response.data.msg === "Token expired!") {
                 dispatch({
                     type: LOGOUT
                 });
