@@ -7,7 +7,7 @@ import {
 } from "../actions/types";
 
 const initialState = {
-    todayLeaves: [],
+    todayLeaves: {},
     monthlyLeaves: [],
     availableLeaves: {
         personnel: null,

@@ -13,7 +13,7 @@ import { getPersonnelLeaves } from "./personnel";
 export const getTodayLeaves = () => async dispatch => {
     try {
         const token = localStorage.getItem("token");
-        console.log(`Token: ${token}`);
+        // console.log(`Token: ${token}`);
         if (token === null) {
             return;
         }
@@ -26,7 +26,7 @@ export const getTodayLeaves = () => async dispatch => {
             &month=${today.getMonth() + 1}
             &day=${today.getDate()}`
         );
-        console.log(res.data);
+        // console.log(res.data);
         dispatch({
             type: GET_TODAY_LEAVES,
             payload: res.data
@@ -47,7 +47,7 @@ export const getTodayLeaves = () => async dispatch => {
 export const getMonthlyLeaves = (year, month) => async dispatch => {
     try {
         const token = localStorage.getItem("token");
-        console.log(`Token: ${token}`);
+        // console.log(`Token: ${token}`);
         if (token === null) {
             return;
         }
@@ -58,7 +58,7 @@ export const getMonthlyLeaves = (year, month) => async dispatch => {
             `/api/leaves/?year=${year}
             &month=${month}`
         );
-        console.log(res.data);
+        // console.log(res.data);
         dispatch({
             type: GET_MONTHLY_LEAVES,
             payload: res.data
@@ -104,10 +104,10 @@ export const scheduleLeave = (leaveId, scheduledDate) => async dispatch => {
             scheduledDate
         };
         const res = await axios.put(`/api/leaves/${leaveId}`, leaveData);
-        console.log(scheduledDate);
-        console.log(`Calling get monthly leaves with year ${scheduledDate.year()}
-        month ${scheduledDate.month() + 1}
-        `);
+        // console.log(scheduledDate);
+        // console.log(`Calling get monthly leaves with year ${scheduledDate.year()}
+        // month ${scheduledDate.month() + 1}
+        // `);
         dispatch(
             getMonthlyLeaves(scheduledDate.year(), scheduledDate.month() + 1)
         );
@@ -136,10 +136,10 @@ export const unscheduleLeave = (leaveId, scheduledDate) => async dispatch => {
             scheduledDate: null
         };
         const res = await axios.put(`/api/leaves/${leaveId}`, leaveData);
-        console.log(scheduledDate);
-        console.log(`Calling get monthly leaves with year ${scheduledDate.year()}
-        month ${scheduledDate.month() + 1}
-        `);
+        //console.log(scheduledDate);
+        //console.log(`Calling get monthly leaves with year ${scheduledDate.year()}
+        //month ${scheduledDate.month() + 1}
+        //`);
         dispatch(
             getMonthlyLeaves(scheduledDate.year(), scheduledDate.month() + 1)
         );
