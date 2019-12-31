@@ -193,7 +193,10 @@ router.put(
         const { name, email, password, title, role } = req.body;
         if (typeof name !== "undefined") updateData.name = name;
         if (typeof email !== "undefined") updateData.email = email;
-        if (typeof password !== "undefined") updateData.password = password;
+        if (typeof password !== "undefined") {
+            const salt = await bcrypt.genSalt(10);
+            updateData.password = await bcrypt.hash(password, salt);
+        }
         if (typeof title !== "undefined") updateData.title = title;
         if (typeof role !== "undefined") updateData.role = role;
 

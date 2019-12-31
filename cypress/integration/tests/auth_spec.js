@@ -30,5 +30,6 @@ describe("Tests authentication functionality", function() {
         cy.visit('/');
         cy.contains('Logout').click();
         cy.contains('Login');
+        cy.contains('Logout').should('not.visible');
     });
 });
