@@ -34,7 +34,7 @@ describe("Tests the administration of personnel in an organization", () => {
         cy.contains("Admin").click();
         cy.contains("Test personnel 0").siblings().eq(3).contains("Delete Personnel").click();
         cy.url().should("equal", "http://localhost:3000/admin");
-        cy.contains("Test personnel 0").should('not.visible');
+        cy.contains("Test personnel 0").should('not.be.visible');
     });
 
     it("Admin can edit personnel name", () => {
@@ -46,20 +46,12 @@ describe("Tests the administration of personnel in an organization", () => {
         cy.url().should("equal", "http://localhost:3000/admin");
         cy.contains("Test personnel 12");
     });
-    it("Admin can edit personnel email", () => {
+    it("Admin cannot edit personnel email", () => {
         cy.visit("/");
         cy.contains("Admin").click();
-        cy.contains("Test personnel 3").siblings().eq(1).contains("Edit Personnel").click();
-        cy.contains("Email").next().type("test122@gmail.com");
-        cy.contains("Submit").click();
-        cy.contains("Logout").click();
-        cy.contains("Login").click();
-        cy.contains("Email").next().type("test122@gmail.com");
-        cy.contains("Password").next().type("blah");
-        cy.contains("Submit").click();
-        cy.contains("Welcome Test personnel 3");
-        cy.contains("Logout");
-    })
+        cy.contains("Test personnel 1").siblings().eq(1).contains("Edit Personnel").click();
+        cy.contains("Email").should('not.be.visible');
+    });
     it("Admin can edit personnel password", () => {
         cy.visit("/");
         cy.contains("Admin").click();

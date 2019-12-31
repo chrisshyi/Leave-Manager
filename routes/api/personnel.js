@@ -15,14 +15,14 @@ const {
 } = require("../../middleware/personnel_auth");
 
 const extractDateString = date => {
-    if (date === null || typeof date === 'undefined') {
-        return ""
+    if (date === null || typeof date === "undefined") {
+        return "";
     } else {
         let dateStr = date.getDate();
         dateStr = dateStr >= 10 ? dateStr : `0${dateStr}`;
         return `${date.getFullYear()}-${date.getMonth() + 1}-${dateStr}`;
     }
-}
+};
 // @route  POST api/personnel
 // @desc   Register new personnel
 // @access site-admin and HR-Admin only
@@ -67,11 +67,9 @@ router.post(
             });
             if (personnel) {
                 return res.status(400).json({
-                    errors: [
-                        {
-                            msg: "Personnel email already exists"
-                        }
-                    ]
+                    error: {
+                        msg: "Personnel email already exists"
+                    }
                 });
             }
 
@@ -171,11 +169,14 @@ router.put(
     [
         auth,
         addOrEditPersonnelAuth,
-        check("email", "please enter a proper email")
-            .optional()
-            .isEmail(),
+        check("email", "Cannot modify email")
+            .not()
+            .exists(),
         check("password", "please enter a password with 6 or more characters")
-            .optional()
+            .optional({
+                nullable: true,
+                checkFalsy: true
+            })
             .isLength({ min: 6 }),
         check("role", "Role must be either HR-admin or site-admin or reg-user")
             .optional()
@@ -190,24 +191,9 @@ router.put(
             });
         }
         const updateData = {};
-        const { name, email, password, title, role } = req.body;
+        const { name, password, title, role } = req.body;
         const { personnelId } = req.params;
         if (typeof name !== "undefined") updateData.name = name;
-        if (typeof email !== "undefined")  {
-            let personnel = await Personnel.find({
-                email
-            });
-            if (!personnel) {
-                return res.status(400).json({
-                    errors: [
-                        {
-                            msg: "Personnel email already exists"
-                        }
-                    ]
-                })
-            }
-            updateData.email = email;
-        }
         if (typeof password !== "undefined") {
             const salt = await bcrypt.genSalt(10);
             updateData.password = await bcrypt.hash(password, salt);
@@ -222,11 +208,9 @@ router.put(
             );
             if (!personnel) {
                 return res.status(400).json({
-                    errors: [
-                        {
-                            msg: "Personnel doesn't exist"
-                        }
-                    ]
+                    error: {
+                        msg: "Personnel doesn't exist"
+                    }
                 });
             }
             res.json(personnel);

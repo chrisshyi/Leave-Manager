@@ -70,6 +70,7 @@ const PersonnelAdmin = props => {
                                                 pathname: `/edit-personnel/${person._id}`,
                                                 state: {
                                                     nameToEdit: person.name,
+                                                    emailToEdit: person.email,
                                                     titleToEdit: person.title,
                                                     roleToEdit: person.role,
                                                     edit: true,

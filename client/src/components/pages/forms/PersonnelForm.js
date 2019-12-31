@@ -8,7 +8,8 @@ import {
     Form,
     FormGroup,
     Label,
-    Input
+    Input,
+    Alert
 } from "reactstrap";
 import { Link, useParams, withRouter } from "react-router-dom";
 import { addOrEditPersonnel } from "../../../actions/personnel";
@@ -19,7 +20,6 @@ const PersonnelForm = props => {
         nameToEdit,
         roleToEdit,
         titleToEdit,
-        emailToEdit,
         passwordToEdit,
         edit,
         org
@@ -31,7 +31,6 @@ const PersonnelForm = props => {
                   name: nameToEdit,
                   role: roleToEdit,
                   title: titleToEdit,
-                  email: emailToEdit,
                   password: passwordToEdit,
                   org
               }
@@ -39,12 +38,11 @@ const PersonnelForm = props => {
                   name: "",
                   role: "",
                   title: "",
-                  email: "",
                   password: "",
                   org
               }
     );
-    const { addOrEditPersonnel } = props;
+    const { errors, addOrEditPersonnel } = props;
 
     const { name, role, title, email, password } = formData;
 
@@ -61,10 +59,20 @@ const PersonnelForm = props => {
                 <Col sm="4" />
                 <Col sm="4">
                     <h3>{edit ? "Edit" : "Add"} Personnel</h3>
+                    {errors.errMsg !== "" ? (
+                        <Alert color="danger">{errors.errMsg}</Alert>
+                    ) : (
+                        ""
+                    )}
                     <Form
                         onSubmit={e => {
                             e.preventDefault();
-                            addOrEditPersonnel(personnelId, formData, edit, props.history);
+                            addOrEditPersonnel(
+                                personnelId,
+                                formData,
+                                edit,
+                                props.history
+                            );
                         }}
                     >
                         <FormGroup>
@@ -77,17 +85,21 @@ const PersonnelForm = props => {
                                 id="personnel-name"
                             />
                         </FormGroup>
-                        <FormGroup>
-                            <Label for="personnel-email">Email</Label>
-                            <Input
-                                type="email"
-                                name="email"
-                                value={email}
-                                onChange={e => onChange(e)}
-                                id="personnel-email"
-                                placeholder="Enter an email"
-                            />
-                        </FormGroup>
+                        {edit ? (
+                            ""
+                        ) : (
+                            <FormGroup>
+                                <Label for="personnel-email">Email</Label>
+                                <Input
+                                    type="email"
+                                    name="email"
+                                    value={email}
+                                    onChange={e => onChange(e)}
+                                    id="personnel-email"
+                                    placeholder="Enter an email"
+                                />
+                            </FormGroup>
+                        )}
                         <FormGroup>
                             <Label for="personnel-password">Password</Label>
                             <Input
@@ -109,7 +121,10 @@ const PersonnelForm = props => {
                                 name="role"
                                 id="personnel-role"
                             >
-                                <option disabled defaultValue value=''> -- select a role -- </option>
+                                <option disabled defaultValue value="">
+                                    {" "}
+                                    -- select a role --{" "}
+                                </option>
                                 <option value="reg-user">Regular User</option>
                                 <option value="HR-admin">
                                     HR Administrator
@@ -126,7 +141,9 @@ const PersonnelForm = props => {
                                 id="personnel-title"
                             />
                         </FormGroup>
-                        <Button color="success">Submit</Button>
+                        <Button color="success" type="submit">
+                            Submit
+                        </Button>
                         {"    "}
                         <Link to="/admin">
                             <Button color="danger">Back</Button>
@@ -143,4 +160,10 @@ PersonnelForm.propTypes = {
     addOrEditPersonnel: PropTypes.func.isRequired
 };
 
-export default connect(null, { addOrEditPersonnel })(withRouter(PersonnelForm));
+const mapStateToProps = state => ({
+    errors: state.errors
+});
+
+export default connect(mapStateToProps, { addOrEditPersonnel })(
+    withRouter(PersonnelForm)
+);
