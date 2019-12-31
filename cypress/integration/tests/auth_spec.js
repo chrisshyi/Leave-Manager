@@ -23,7 +23,7 @@ describe("Tests authentication functionality", function() {
         cy.contains('Password').next().type("123456");
 
         cy.contains('Submit').click();
-        cy.contains('Login failure');
+        cy.contains('Invalid credentials');
     });
     it("User can log out properly", () => {
         testUserLogin();

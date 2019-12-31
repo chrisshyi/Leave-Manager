@@ -1,11 +1,15 @@
 /// <reference types="Cypress" />
 import { testUserLogin } from "./utils";
-import moment from "moment";
 before(() => {
     cy.exec("node dropDB.js");
     cy.exec("node scripts/seedLeaves.js");
     testUserLogin();
 });
+
+after(() => {
+    cy.exec("node dropDB.js");
+    cy.exec("node scripts/seedLeaves.js");
+})
 
 beforeEach(() => {
     testUserLogin();

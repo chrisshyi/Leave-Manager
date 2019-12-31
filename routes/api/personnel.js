@@ -69,7 +69,7 @@ router.post(
                 return res.status(400).json({
                     errors: [
                         {
-                            msg: "Personnel already exists"
+                            msg: "Personnel email already exists"
                         }
                     ]
                 });
@@ -191,8 +191,23 @@ router.put(
         }
         const updateData = {};
         const { name, email, password, title, role } = req.body;
+        const { personnelId } = req.params;
         if (typeof name !== "undefined") updateData.name = name;
-        if (typeof email !== "undefined") updateData.email = email;
+        if (typeof email !== "undefined")  {
+            let personnel = await Personnel.find({
+                email
+            });
+            if (!personnel) {
+                return res.status(400).json({
+                    errors: [
+                        {
+                            msg: "Personnel email already exists"
+                        }
+                    ]
+                })
+            }
+            updateData.email = email;
+        }
         if (typeof password !== "undefined") {
             const salt = await bcrypt.genSalt(10);
             updateData.password = await bcrypt.hash(password, salt);
@@ -200,7 +215,6 @@ router.put(
         if (typeof title !== "undefined") updateData.title = title;
         if (typeof role !== "undefined") updateData.role = role;
 
-        const { personnelId } = req.params;
         try {
             let personnel = await Personnel.findByIdAndUpdate(
                 personnelId,

@@ -30,22 +30,18 @@ router.post(
             });
             if (!personnel) {
                 return res.status(400).json({
-                    errors: [
-                        {
-                            msg: "Invalid credentials"
-                        }
-                    ]
+                    error: {
+                        msg: "Invalid credentials"
+                    }
                 });
             }
             const isMatch = await bcrypt.compare(password, personnel.password);
 
             if (!isMatch) {
                 return res.status(400).json({
-                    errors: [
-                        {
-                            msg: "Invalid credentials"
-                        }
-                    ]
+                    error: {
+                        msg: "Invalid credentials"
+                    }
                 });
             }
 

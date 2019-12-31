@@ -4,10 +4,10 @@ import {
     LOGOUT,
     LOGIN_SUCCESS,
     LOAD_PERSONNEL,
-    LOGIN_FAILURE,
-    AUTH_FAILURE
+    LOGIN_FAILURE
 } from "./types";
 import setAuthToken from "../utils/setAuthToken";
+import { setErrMsg } from "./errors";
 
 const ERR_MSG_DURATION = 3000;
 
@@ -52,13 +52,12 @@ export const login = (email, password) => async dispatch => {
         dispatch({
             type: LOGIN_FAILURE
         });
-        setTimeout(
-            () =>
-                dispatch({
-                    type: CLEAR_ERR_MSG
-                }),
-            ERR_MSG_DURATION
-        );
+        console.log(error.response);
+        if (error.response) {
+            if (error.response.data.hasOwnProperty("error")) {
+                dispatch(setErrMsg(error.response.data.error.msg));
+            }
+        }
     }
 };
 

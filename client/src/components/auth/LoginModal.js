@@ -12,10 +12,11 @@ import {
     Input,
     Alert
 } from "reactstrap";
+import { Link } from 'react-router-dom';
 import { login } from "../../actions/auth";
 import { connect } from "react-redux";
 const LoginModal = props => {
-    const { auth, login, buttonLabel } = props;
+    const { auth, login, buttonLabel, errors } = props;
 
     const [modal, setModal] = useState(false);
 
@@ -46,19 +47,24 @@ const LoginModal = props => {
         <div className="mt-3">
             <div>
                 <h1 className="display-3">Welcome!</h1>
-                <p className="lead">Please log in with your credentials</p>
+                <p className="lead">Log in, or create a new organization</p>
                 <hr className="my-2" />
                 <p className="lead">
-                    <Button color="primary" onClick={toggle}>
+                    <Button color="primary" onClick={toggle} className="mr-3">
                         {buttonLabel}
                     </Button>
+                    <Link to="/sign-up">
+                        <Button outline color="success">
+                            Sign Up{" "}
+                        </Button>
+                    </Link>
                 </p>
             </div>
             <Modal isOpen={modal} toggle={toggle}>
                 <ModalHeader toggle={toggle}>Login</ModalHeader>
                 <ModalBody>
-                    {auth.errorMsg !== "" ? (
-                        <Alert color="danger">{auth.errorMsg}</Alert>
+                    {errors.errMsg !== "" ? (
+                        <Alert color="danger">{errors.errMsg}</Alert>
                     ) : (
                         ""
                     )}
@@ -66,7 +72,7 @@ const LoginModal = props => {
                         <FormGroup>
                             <Label for="email">Email</Label>
                             <Input
-                                type="text"
+                                type="email"
                                 name="email"
                                 id="email"
                                 placeholder="Email"
@@ -100,11 +106,13 @@ const LoginModal = props => {
 
 LoginModal.propTypes = {
     buttonLabel: PropTypes.string.isRequired,
-    auth: PropTypes.object.isRequired
+    auth: PropTypes.object.isRequired,
+    errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-    auth: state.auth
+    auth: state.auth,
+    errors: state.errors
 });
 
 export default connect(mapStateToProps, { login })(LoginModal);

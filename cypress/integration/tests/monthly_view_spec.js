@@ -8,6 +8,11 @@ before(() => {
     testUserLogin();
 });
 
+after(() => {
+    cy.exec("node dropDB.js");
+    cy.exec("node scripts/seedLeaves.js");
+})
+
 beforeEach(() => {
     testUserLogin();
 });
@@ -34,11 +39,17 @@ describe("Test users' interaction with the monthly view", () => {
     });
 
     it("User can schedule a leave", () => {
-        const today = new Date();
+        const today = moment();
         cy.visit("/");
         cy.contains("View Month").click();
         cy.contains("例假");
-        cy.contains(`${today.getMonth() + 1}/${today.getDate() + 1}`)
+        let dateStr;
+        if (today.date() == 1) {
+            dateStr = `${today.month() + 1}/2`;
+        } else {
+            dateStr = `${today.month() + 1}/1`;
+        }
+        cy.contains(dateStr)
             .siblings()
             .as("leaveCells");
         cy.get("@leaveCells")
@@ -47,10 +58,11 @@ describe("Test users' interaction with the monthly view", () => {
         cy.contains("Add Leave");
         cy.contains("Available Leaves")
             .next()
-            .select("慰假 12/01");
+            .select("慰假 19/12/01");
         cy.contains("Schedule").click();
         cy.contains("慰假");
-        cy.contains(`${today.getMonth() + 1}/${today.getDate() + 1}`)
+        
+        cy.contains(dateStr)
             .siblings()
             .as("leaveCells");
         cy.get("@leaveCells")

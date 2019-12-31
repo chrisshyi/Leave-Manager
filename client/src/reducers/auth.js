@@ -4,7 +4,6 @@ import {
     LOGIN_FAILURE,
     LOAD_PERSONNEL,
     AUTH_FAILURE,
-    CLEAR_ERR_MSG
 } from "../actions/types";
 
 const initialState = {
@@ -12,10 +11,9 @@ const initialState = {
     isAuthenticated: false,
     loading: true,
     personnel: null,
-    errorMsg: ""
 };
 
-const resetState = (state, errorMsg) => {
+const resetState = state => {
     localStorage.removeItem("token");
     return {
         ...state,
@@ -23,7 +21,6 @@ const resetState = (state, errorMsg) => {
         token: null,
         isAuthenticated: false,
         personnel: null,
-        errorMsg
     };
 };
 
@@ -47,16 +44,9 @@ export default function(state = initialState, action) {
                 isAuthenticated: true
             };
         case AUTH_FAILURE:
-            return resetState(state, 'Authentication failure');
         case LOGIN_FAILURE:
-            return resetState(state, 'Login failure');
         case LOGOUT:
             return resetState(state, '');
-        case CLEAR_ERR_MSG:
-            return {
-                ...state,
-                errorMsg: ''
-            }
         default:
             return state;
     }

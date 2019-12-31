@@ -1,15 +1,16 @@
 import React, { Fragment } from "react";
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Container, Row, Col } from "reactstrap";
-import LoginModal from '../auth/LoginModal';
-import { connect } from 'react-redux';
+import LoginModal from "../auth/LoginModal";
+import { connect } from "react-redux";
+import { Button } from "reactstrap";
 
 const Landing = props => {
     const { isAuthenticated } = props;
 
     if (isAuthenticated) {
-        return <Redirect to="/summary"/>
+        return <Redirect to="/summary" />;
     }
     return (
         <Fragment>
@@ -27,12 +28,12 @@ const Landing = props => {
 };
 
 Landing.propTypes = {
-    isAuthenticated: PropTypes.bool.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated
-})
+});
 
 export default connect(mapStateToProps)(Landing);
 export { Landing }; // export undecorated component for testing

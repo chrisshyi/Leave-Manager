@@ -11,6 +11,7 @@ import AdminPrivateRoute from './components/auth/AdminPrivateRoute';
 import { loadPersonnel } from "./actions/auth";
 import PersonnelForm from "./components/pages/forms/PersonnelForm";
 import LeaveForm from './components/pages/forms/LeaveForm';
+import OrgForm from './components/pages/forms/OrgForm';
 import PersonnelLeaveAdmin from './components/pages/admin/PersonnelLeaveAdmin';
 import PersonnelAdmin from './components/pages/admin/PersonnelAdmin';
 
@@ -67,6 +68,9 @@ const App = () => {
                         ></AdminPrivateRoute>
                         <Route exact path="/">
                             <Landing />
+                        </Route>
+                        <Route exact path="/sign-up">
+                            <OrgForm />
                         </Route>
                     </Switch>
                 </Fragment>

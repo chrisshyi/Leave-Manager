@@ -55,14 +55,14 @@ const EditLeaveModal = props => {
             const leaveScheduledDate = moment(leave.scheduledDate);
             if (leave.leaveType === "例假") {
                 if (leaveScheduledDate.isBefore(leaveOriginalDate)) {
-                    return `預${leaveOriginalDate.format("MM/DD")}`;
+                    return `預${leaveOriginalDate.format("YY/MM/DD")}`;
                 } else if (leaveScheduledDate.isAfter(leaveOriginalDate)) {
-                    return `補${leaveOriginalDate.format("MM/DD")}`;
+                    return `補${leaveOriginalDate.format("YY/MM/DD")}`;
                 } else {
                     return "例假";
                 }
             }
-            return `${leave.leaveType} ${leaveOriginalDate.format("MM/DD")}`;
+            return `${leave.leaveType} ${leaveOriginalDate.format("YY/MM/DD")}`;
         };
 
         modalBody = (

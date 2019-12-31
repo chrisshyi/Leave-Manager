@@ -6,6 +6,7 @@ import {
 } from "./types";
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
+import { setErrMsg } from "./errors";
 
 export const getAllPersonnel = () => async dispatch => {
     const config = {
@@ -23,8 +24,10 @@ export const getAllPersonnel = () => async dispatch => {
     } catch (error) {
         console.error(error.response.status);
         console.error(error.response.data);
-        if (error.response.data.msg.hasOwnProperty("msg") &&
-            error.response.data.msg === "Token expired!") {
+        if (
+            error.response.data.msg.hasOwnProperty("msg") &&
+            error.response.data.msg === "Token expired!"
+        ) {
             dispatch({
                 type: LOGOUT
             });
@@ -64,14 +67,21 @@ export const addOrEditPersonnel = (
     } catch (error) {
         console.error(error.response.status);
         console.error(error.response.data);
-        if (error.response.data.hasOwnProperty("msg") &&
-            error.response.data.msg === "Token expired!") {
-                dispatch({
-                    type: LOGOUT
-                });
+        if (
+            error.response.data.hasOwnProperty("msg") &&
+            error.response.data.msg === "Token expired!"
+        ) {
+            dispatch({
+                type: LOGOUT
+            });
+        }
+        if (error.response.data.hasOwnProperty("error")) {
+            if (error.response.data.error.hasOwnProperty("msg")) {
+                dispatch(setErrMsg(error.response.data.error.msg));
             }
         }
     }
+};
 
 export const getPersonnelLeaves = personnelId => async dispatch => {
     const config = {
@@ -94,6 +104,11 @@ export const getPersonnelLeaves = personnelId => async dispatch => {
                 dispatch({
                     type: LOGOUT
                 });
+            }
+        }
+        if (error.response.data.hasOwnProperty("error")) {
+            if (error.response.data.error.hasOwnProperty("msg")) {
+                dispatch(setErrMsg(error.response.data.error.msg));
             }
         }
     }
