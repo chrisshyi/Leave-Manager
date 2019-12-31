@@ -35,3 +35,4 @@ const mapStateToProps = state => ({
 })
 
 export default connect(mapStateToProps)(Landing);
+export { Landing }; // export undecorated component for testing

@@ -91,3 +91,4 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, { getTodayLeaves })(Summary);
+export { Summary };

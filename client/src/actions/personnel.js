@@ -72,7 +72,6 @@ export const addOrEditPersonnel = (
             }
         }
     }
-};
 
 export const getPersonnelLeaves = personnelId => async dispatch => {
     const config = {
