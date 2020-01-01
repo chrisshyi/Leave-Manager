@@ -69,8 +69,11 @@ const App = () => {
                         <Route exact path="/">
                             <Landing />
                         </Route>
-                        <Route exact path="/sign-up">
+                        <Route exact path="/sign-up-org">
                             <OrgForm />
+                        </Route>
+                        <Route exact path="/sign-up-personnel">
+                            <PersonnelForm />
                         </Route>
                     </Switch>
                 </Fragment>

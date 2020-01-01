@@ -53,7 +53,7 @@ const LoginModal = props => {
                     <Button color="primary" onClick={toggle} className="mr-3">
                         {buttonLabel}
                     </Button>
-                    <Link to="/sign-up">
+                    <Link to="/sign-up-org">
                         <Button outline color="success">
                             Sign Up{" "}
                         </Button>

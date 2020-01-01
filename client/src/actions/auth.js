@@ -34,6 +34,26 @@ export const loadPersonnel = () => async dispatch => {
     }
 };
 
+
+export const signUp = (orgName, personnelName, email, password, title, history) => async dispatch => {
+    try {
+        await axios.post("/api/orgs", { orgName, personnelName, password, email, title });
+        dispatch(login(email, password));
+        history.push('/');
+    } catch (error) {
+        console.error(error);
+        if (error.hasOwnProperty("response")) {
+            console.error(error.response);
+            if (error.response.hasOwnProperty("errors")) {
+                console.error(error.response.errors);
+            }
+            if (error.response.data.hasOwnProperty("error")) {
+                dispatch(setErrMsg(error.response.data.error.msg));
+            }
+        }
+    }
+}
+
 export const login = (email, password) => async dispatch => {
     try {
         const config = {

@@ -1,24 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require('mongoose');
-const { adminAuth } = require("../../middleware/admin_auth");
 const { check, validationResult } = require("express-validator");
 const Org = require('../../models/Org');
 const Personnel = require("../../models/Personnel");
 const tokenAuth = require('../../middleware/token_auth');
 const orgAuth = require('../../middleware/org_auth');
+const bcrypt = require('bcryptjs');
 
 //@route  POST /api/orgs
 //@desc   Adds a new organization
-//@access site-admin only
+//@access Public 
 router.post(
     "/",
     [
-        tokenAuth,
-        adminAuth,
-        check("name", "Organization must have a name")
+        check("orgName", "Organization must have a name")
             .not()
-            .isEmpty()
+            .isEmpty(),
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -27,16 +25,54 @@ router.post(
                 errors: errors.array()
             })
         }
+        const { orgName, personnelName, email, password, title } = req.body;
+        /*
+        let orgLookUp = await Org.find({
+            name: req.body.orgName
+        });
+        
+        if (!orgLookUp) {
+            return res.status(400).json({
+                msg: "Organization name already exists!"
+            });
+        }
+        */
         try {
             let newOrg = new Org({
-                name: req.body.name
+                name: orgName
             });
 
             await newOrg.save();
+            if (typeof personnelName !== 'undefined') {
+                // create new administrator along with new organization
+                let personnelLookup = await Personnel.find({
+                    email
+                });
+                if (!personnelLookup) {
+                    return res.status(400).json({
+                        error: {
+                            msg: "Email already exists!"
+                        }
+                    });
+                }
+                let newAdmin = new Personnel({
+                    name: personnelName,
+                    email: email,
+                    org: newOrg.id,
+                    role: "HR-admin",
+                    title
+                });
+
+                const salt = await bcrypt.genSalt(10);
+                newAdmin.password = await bcrypt.hash(password, salt);
+                await newAdmin.save();
+            }
+
             res.json({
                 org: {
-                    name: newOrg.name
-                }
+                    name: newOrg.name,
+                    orgId: newOrg.id
+                },
             });
         } catch (error) {
             console.log(error);

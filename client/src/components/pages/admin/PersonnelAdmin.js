@@ -27,7 +27,7 @@ const PersonnelAdmin = props => {
                     ) : (
                         <Link
                             to={{
-                                pathname: `/add-personnel`,
+                                pathname: "/add-personnel",
                                 state: {
                                     nameToEdit: "",
                                     titleToEdit: "",

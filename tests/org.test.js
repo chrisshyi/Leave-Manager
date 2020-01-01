@@ -106,12 +106,12 @@ describe("Org API endpoints", () => {
             const token = res.body.token;
             res = await request(server).post('/api/orgs').set('x-auth-token', token)
                                        .send({
-                                           name: "成功之路"
+                                           orgName: "成功之路"
                                        }); 
             expect(res.statusCode).toBe(200);
             expect(res.body.org.name).toBe("成功之路");
         });
-        it("Creating an org with a name results in an error", async () => {
+        it("Creating an org without a name results in an error", async () => {
             let res = await request(server)
                 .post("/api/auth/")
                 .send({

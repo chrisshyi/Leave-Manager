@@ -11,7 +11,7 @@ import {
     Input,
     Alert
 } from "reactstrap";
-import { Link, useParams, withRouter } from "react-router-dom";
+import { Link, useParams, withRouter, Redirect } from "react-router-dom";
 import { addOrEditPersonnel } from "../../../actions/personnel";
 import { connect } from "react-redux";
 
@@ -42,6 +42,9 @@ const PersonnelForm = props => {
                   org
               }
     );
+    if (!org) {
+        return <Redirect to="/" />
+    }
     const { errors, addOrEditPersonnel } = props;
 
     const { name, role, title, email, password } = formData;
@@ -83,6 +86,7 @@ const PersonnelForm = props => {
                                 onChange={e => onChange(e)}
                                 name="name"
                                 id="personnel-name"
+                                required
                             />
                         </FormGroup>
                         {edit ? (
@@ -97,6 +101,7 @@ const PersonnelForm = props => {
                                     onChange={e => onChange(e)}
                                     id="personnel-email"
                                     placeholder="Enter an email"
+                                    required
                                 />
                             </FormGroup>
                         )}
@@ -110,6 +115,7 @@ const PersonnelForm = props => {
                                 id="personnel-password"
                                 placeholder="Enter password"
                                 minLength="6"
+                                required
                             />
                         </FormGroup>
                         <FormGroup>
@@ -120,6 +126,7 @@ const PersonnelForm = props => {
                                 onChange={e => onChange(e)}
                                 name="role"
                                 id="personnel-role"
+                                required
                             >
                                 <option disabled defaultValue value="">
                                     {" "}
@@ -139,6 +146,7 @@ const PersonnelForm = props => {
                                 type="text"
                                 name="title"
                                 id="personnel-title"
+                                required
                             />
                         </FormGroup>
                         <Button color="success" type="submit">
