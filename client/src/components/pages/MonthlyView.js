@@ -52,6 +52,8 @@ const MonthlyView = props => {
     }
     const moment = extendMoment(Moment);
 
+    const tableCellHeight = '48px';
+
     // cannot reuse Moment objects as setting the year and month mutate the
     // original object, instead of creating a new one
     const startOfMonth = moment()
@@ -84,7 +86,7 @@ const MonthlyView = props => {
     const dateTable = (
         <Table id="date-table">
             <thead>
-                <tr>
+                <tr height={tableCellHeight}>
                     <th colSpan="2" className="monthly-table-header border border-secondary head-col date-table-cell">
                         Dates
                     </th>
@@ -92,7 +94,7 @@ const MonthlyView = props => {
             </thead>
             <tbody>
                 {daysArray.map(day => (
-                    <tr>
+                    <tr height={tableCellHeight}>
                         <td key={uuidv4()} className="head-col date-table-cell">{day.format("MM/DD")}</td>
                         <td key={uuidv4()} className="head-col date-table-cell">{getDayOfWeekString(day.day())}</td>
                     </tr>
@@ -103,7 +105,7 @@ const MonthlyView = props => {
     const leaveTable = (
         <Table id="leave-table">
             <thead>
-                <tr>
+                <tr height={tableCellHeight}> 
                     {allPersonnel.map(person => (
                         <th className="monthly-table-header border border-secondary leave-table-cell">
                             {person.name}
@@ -113,7 +115,7 @@ const MonthlyView = props => {
             </thead>
             <tbody>
                 {daysArray.map(day => (
-                    <tr>
+                    <tr height={tableCellHeight}>
                         {// Due to the nature of useEffect(), allPersonnel and monthlyLeaves
                         // may be undefined when the component is first rendered
                         // Thus a null/undefined check must be included
