@@ -81,18 +81,31 @@ const MonthlyView = props => {
             ? `/monthly-view?year=${year + 1}&month=1`
             : `/monthly-view?year=${year}&month=${month + 1}`;
 
-    const leaveTable = (
-        <Table id="monthly-table">
+    const dateTable = (
+        <Table id="date-table">
             <thead>
                 <tr>
-                    <th className="monthly-table-header border border-secondary">
+                    <th colSpan="2" className="monthly-table-header border border-secondary head-col date-table-cell">
                         Dates
                     </th>
-                    <th>
-                        {" "}
-                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {daysArray.map(day => (
+                    <tr>
+                        <td key={uuidv4()} className="head-col date-table-cell">{day.format("MM/DD")}</td>
+                        <td key={uuidv4()} className="head-col date-table-cell">{getDayOfWeekString(day.day())}</td>
+                    </tr>
+                ))}
+            </tbody>
+        </Table>
+    );
+    const leaveTable = (
+        <Table id="leave-table">
+            <thead>
+                <tr>
                     {allPersonnel.map(person => (
-                        <th className="monthly-table-header border border-secondary">
+                        <th className="monthly-table-header border border-secondary leave-table-cell">
                             {person.name}
                         </th>
                     ))}
@@ -101,8 +114,6 @@ const MonthlyView = props => {
             <tbody>
                 {daysArray.map(day => (
                     <tr>
-                        <td key={uuidv4()}>{day.format("MM/DD")}</td>
-                        <td key={uuidv4()}>{getDayOfWeekString(day.day())}</td>
                         {// Due to the nature of useEffect(), allPersonnel and monthlyLeaves
                         // may be undefined when the component is first rendered
                         // Thus a null/undefined check must be included
@@ -121,7 +132,6 @@ const MonthlyView = props => {
                                             );
                                             return (
                                                 <MonthlyViewTableCell
-                                                    // key={leaveOnDate._id}
                                                     key={uuidv4()}
                                                     leave={leaveOnDate}
                                                     date={day}
@@ -188,9 +198,10 @@ const MonthlyView = props => {
                 </Col>
             </Row>
             <Row>
-                <Col sm="1"></Col>
-                <Col sm="10">{leaveTable}</Col>
-                <Col sm="1"></Col>
+                <Col md="1"></Col>
+                <Col md="2">{dateTable}</Col>
+                <Col md="8" sm="8" xs="8" id="leave-table-container">{leaveTable}</Col>
+                <Col md="1"></Col>
             </Row>
         </Container>
     );

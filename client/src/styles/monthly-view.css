@@ -1,10 +1,80 @@
-.monthly-view-cell {
+#leave-table .leave-table-cell {
     text-align: center;
     border: 1px solid black;
+    height: 5vh;
 }
 
-#monthly-table .monthly-table-header {
+#leave-table .monthly-table-header {
     text-align: center;
+    height: 70px;
     border: 1px solid black;
     vertical-align: middle;
+    overflow-x: hidden;
+    white-space: nowrap;
 }
+
+#date-table .monthly-table-header {
+    text-align: center;
+    border: 1px solid black;
+    height: 70px !important;
+    vertical-align: middle;
+    overflow-x: clip;
+}
+
+#date-table tr {
+    height: 5vh;
+    overflow: hidden;
+}
+@media screen and (max-width: 658px) {
+    #leave-table {
+        margin-left: 80px;
+    }
+}
+
+#leave-table tr {
+    height: 48px;
+    overflow: hidden;
+}
+
+#date-table-container {
+    width: 30vw;
+}
+
+#leave-table-container {
+    overflow-x: scroll;
+    overflow-y: visible;
+}
+
+@media screen and (max-width: 990px) {
+}
+
+@media screen and (max-width: 767px) {
+    #date-table-container {
+        position: absolute;
+        left: 10vw;
+    }
+}
+
+@media screen and (max-width: 739px) {
+    #date-table-container {
+        position: absolute;
+        left: 5vw;
+    }
+}
+
+@media screen and (max-width: 677px) {
+    #date-table-container {
+        position: absolute;
+        left: 1vw;
+    }
+}
+
+.head-col {
+    left: 0;
+    width: 5em;
+}
+
+#date-table .date-table-cell {
+    height: 5vh;
+}
+

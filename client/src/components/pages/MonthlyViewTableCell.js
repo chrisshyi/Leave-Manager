@@ -18,11 +18,12 @@ const MonthlyViewTableCell = props => {
             <td
                 onMouseOver={e => toggleEditIcon(e)}
                 onMouseOut={e => toggleEditIcon(e)}
-                className="monthly-view-cell"
+                className="leave-table-cell"
                 onClick={e => {
                     getAvailableLeaves(personnel);
                     toggleModal(true, null, date, true);
                 }}
+
             >
                 {" "}
                 {showEditIcon && <i className="far fa-edit"></i>}
@@ -44,7 +45,7 @@ const MonthlyViewTableCell = props => {
         <td
             onMouseOver={e => toggleEditIcon(e)}
             onMouseOut={e => toggleEditIcon(e)}
-            className="monthly-view-cell"
+            className="leave-table-cell"
                 onClick={e => {
                     toggleModal(true, leave, date, false);
                 }}
