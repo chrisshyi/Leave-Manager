@@ -14,6 +14,11 @@ import { Link, Redirect } from "react-router-dom";
 import EditLeaveModal from "./EditLeaveModal";
 import uuidv4 from "uuid";
 
+/** @function
+ * Takes in an array of Leave objects and returns a mapping of 
+ * personnel ids to a mapping of dates to leaves 
+ * @param {array} leavesArr 
+ */
 const hashLeaves = leavesArr => {
     let leavesMap = new Map();
 
@@ -36,6 +41,11 @@ const getDayOfWeekString = index => {
     return daysOfWeek[index];
 }
 
+/** @function
+ *  Renders all leaves within an organization in a given month in 
+ *  table format 
+ * @param {*} props 
+ */
 const MonthlyView = props => {
     let { year, month } = queryString.parse(props.location.search);
     year = Number.parseInt(year);
@@ -50,7 +60,7 @@ const MonthlyView = props => {
     if (!props.isAuthenticated) {
         return <Redirect to="/" />;
     }
-    const moment = extendMoment(Moment);
+    const moment = extendMoment(Moment); // extend Moment with date ranges
 
     const tableCellHeight = '48px';
 
@@ -175,6 +185,7 @@ const MonthlyView = props => {
             </Row>
             <Row className="mb-4">
                 <Col
+                    xs="2"
                     sm="2"
                     style={{ display: "flex", "justify-content": "center" }}
                 >
@@ -184,11 +195,12 @@ const MonthlyView = props => {
                         </Button>
                     </Link>
                 </Col>
-                <Col sm="2"></Col>
-                <Col sm="2"></Col>
-                <Col sm="2"></Col>
-                <Col sm="2"></Col>
+                <Col xs="2" sm="2"></Col>
+                <Col xs="2" sm="2"></Col>
+                <Col xs="2" sm="2"></Col>
+                <Col xs="2" sm="2"></Col>
                 <Col
+                    xs="2"
                     sm="2"
                     style={{ display: "flex", "justify-content": "center" }}
                 >
@@ -201,8 +213,8 @@ const MonthlyView = props => {
             </Row>
             <Row>
                 <Col md="1"></Col>
-                <Col md="2">{dateTable}</Col>
-                <Col md="8" sm="8" xs="8" id="leave-table-container">{leaveTable}</Col>
+                <Col md="2" sm="2" xs="2" id="date-table-container">{dateTable}</Col>
+                <Col md="8" sm="10" xs="10" id="leave-table-container">{leaveTable}</Col>
                 <Col md="1"></Col>
             </Row>
         </Container>

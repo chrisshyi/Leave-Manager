@@ -7,6 +7,10 @@ import { Container, Row, Col, Table } from "reactstrap";
 import { getTodayLeaves } from "../../actions/leaves";
 import setAuthToken from "../../utils/setAuthToken";
 
+/** @function
+ *  Renders a summary of the people on leave within 
+ *  the organization on the current day 
+ */
 const Summary = props => {
     useEffect(() => {
         setAuthToken(localStorage.getItem("token"));

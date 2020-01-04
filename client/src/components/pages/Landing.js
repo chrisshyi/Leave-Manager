@@ -4,8 +4,11 @@ import PropTypes from "prop-types";
 import { Container, Row, Col } from "reactstrap";
 import LoginModal from "../auth/LoginModal";
 import { connect } from "react-redux";
-import { Button } from "reactstrap";
 
+/** @function
+ *  Renders the landing page of the application 
+ * @param {*} props 
+ */
 const Landing = props => {
     const { isAuthenticated } = props;
 

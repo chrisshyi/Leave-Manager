@@ -25,9 +25,61 @@
     height: 5vh;
     overflow: hidden;
 }
-@media screen and (max-width: 658px) {
+@media screen and (max-width: 991px) {
     #leave-table {
-        margin-left: 80px;
+        margin-left: 30px;
+    }
+}
+@media screen and (max-width: 766px) {
+    #date-table-container {
+        left: 10px;
+    }
+    #leave-table-container {
+        min-width: 400px;
+        width: 550px;
+        margin-left: 110px;
+    }
+}
+@media screen and (max-width: 625px) {
+    #date-table-container {
+        left: 10px;
+    }
+    #leave-table-container {
+        min-width: 400px;
+        width: 550px;
+        margin-left: 120px;
+    }
+}
+@media screen and (max-width: 600px) {
+    #date-table-container {
+        left: 10px;
+    }
+    #leave-table-container {
+        max-width: 400px;
+        width: 350px;
+        margin-left: 125px;
+    }
+    #leave-table {
+        margin-left: 40px;
+    }
+}
+@media screen and (max-width: 575px) {
+    #date-table-container {
+        left: 5px;
+    }
+    #leave-table-container {
+        max-width: 400px;
+        width: 350px;
+        margin-left: 155px;
+    }
+    #leave-table {
+        margin-left: 40px;
+    }
+}
+@media screen and (max-width: 554px) {
+    #leave-table-container {
+        max-width: 200px;
+        margin-left: 150px;
     }
 }
 
@@ -43,8 +95,8 @@
     overflow-x: scroll;
     overflow-y: visible;
 }
-
-@media screen and (max-width: 990px) {
+#leave-table {
+    overflow-x: scroll;
 }
 
 @media screen and (max-width: 767px) {

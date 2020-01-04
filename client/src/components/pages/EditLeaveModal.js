@@ -21,6 +21,11 @@ import {
 import moment from "moment";
 import uuidv4 from "uuid";
 
+/** @function
+ *  Renders a modal that allows the user to 
+ *  schedule or unschedule a leave 
+ * @param {*} props 
+ */
 const EditLeaveModal = props => {
     const {
         toggleModal,
@@ -30,7 +35,6 @@ const EditLeaveModal = props => {
         editLeaveDate,
         addLeave,
         availableLeaves,
-        getMonthlyLeaves,
         setLeaveToEdit,
         scheduleLeave,
         unscheduleLeave

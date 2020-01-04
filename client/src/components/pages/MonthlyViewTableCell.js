@@ -5,6 +5,11 @@ import { toggleModal } from "../../actions/modals";
 import { getAvailableLeaves } from "../../actions/leaves";
 import { connect } from "react-redux";
 
+/** @function
+ * Renders a cell in the monthly view table. Has a reference 
+ * to a particular leave
+ * @param {object} props 
+ */
 const MonthlyViewTableCell = props => {
     const [showEditIcon, setShowEditIcon] = useState(false);
     const { leave, toggleModal, getAvailableLeaves, date, personnel } = props;
