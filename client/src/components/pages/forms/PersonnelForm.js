@@ -115,7 +115,7 @@ const PersonnelForm = props => {
                                 id="personnel-password"
                                 placeholder="Enter password"
                                 minLength="6"
-                                required
+                                required={!edit}
                             />
                         </FormGroup>
                         <FormGroup>

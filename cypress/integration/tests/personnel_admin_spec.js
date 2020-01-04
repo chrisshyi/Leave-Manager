@@ -77,6 +77,8 @@ describe("Tests the administration of personnel in an organization", () => {
         cy.contains("Password").next().type("blah");
         cy.contains("Submit").click();
         cy.contains("View Month").click();
-        cy.contains("Dates").siblings().should("have.length.gte", 3);
+        cy.get('#leave-table').within(() => {
+            cy.get('th').siblings().should('have.length.gte', 3);
+        })
     });
 })
