@@ -8,6 +8,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const auth = require("../../middleware/token_auth");
+const moment = require('moment');
 
 const {
     getPersonnelAuth,
@@ -18,9 +19,7 @@ const extractDateString = date => {
     if (date === null || typeof date === "undefined") {
         return "";
     } else {
-        let dateStr = date.getDate();
-        dateStr = dateStr >= 10 ? dateStr : `0${dateStr}`;
-        return `${date.getFullYear()}-${date.getMonth() + 1}-${dateStr}`;
+        return moment(date).format('YYYY-MM-DD');
     }
 };
 // @route  POST api/personnel
