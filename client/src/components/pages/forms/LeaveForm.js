@@ -11,7 +11,8 @@ import {
     FormGroup,
     Label,
     Button,
-    Container
+    Container,
+    Alert
 } from "reactstrap";
 
 const LeaveForm = props => {
@@ -47,7 +48,7 @@ const LeaveForm = props => {
               }
     );
 
-    const { addOrEditLeave } = props;
+    const { addOrEditLeave, errors } = props;
     const { leaveType, scheduledDate, originalDate, duration } = formData;
     const onChange = e => {
         setFormData({
@@ -61,6 +62,11 @@ const LeaveForm = props => {
                 <Col sm="4" />
                 <Col sm="4">
                     <h3>{edit ? "Edit" : "Add"} Leave</h3>
+                    {errors.errMsg !== "" ? (
+                        <Alert color="danger">{errors.errMsg}</Alert>
+                    ) : (
+                        ""
+                    )}
                     <Form
                         onSubmit={e => {
                             e.preventDefault();
@@ -146,4 +152,8 @@ LeaveForm.propTypes = {
     addOrEditLeave: PropTypes.func.isRequired
 };
 
-export default connect(null, { addOrEditLeave })(LeaveForm);
+const mapStateToProps = state => ({
+    errors: state.errors
+});
+
+export default connect(mapStateToProps, { addOrEditLeave })(LeaveForm);

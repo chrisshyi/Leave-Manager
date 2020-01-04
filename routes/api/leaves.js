@@ -76,9 +76,35 @@ router.post(
         leaveFields.personnel = personnel;
         leaveFields.org = org;
         leaveFields.duration = duration;
-        if (typeof originalDate !== 'undefined') leaveFields.originalDate = originalDate;
-        if (typeof scheduledDate !== 'undefined') leaveFields.scheduledDate = scheduledDate;
-        if (typeof scheduled !== 'undefined') leaveFields.scheduled = scheduled;
+        if (originalDate !== null && typeof originalDate !== 'undefined' && originalDate !== '') leaveFields.originalDate = originalDate;
+        if (scheduledDate !== null && typeof scheduledDate !== 'undefined' && scheduledDate !== '') {
+            const startOfDay = moment(scheduledDate).startOf("day");
+            const endOfDay = moment(scheduledDate).endOf("day");
+            const existingLeave = await Leave.findOne({
+                personnel,
+            }).and([
+                {
+                    scheduledDate: {
+                        $exists: true
+                    }
+                },
+                {
+                    scheduledDate: {
+                        $gte: startOfDay,
+                        $lte: endOfDay
+                    }
+                }
+            ]);
+            if (existingLeave) {
+                return res.status(400).json({
+                    error: {
+                        msg: "A leave is already scheduled on this date!"
+                    }
+                })
+            }
+            leaveFields.scheduledDate = scheduledDate;
+        }
+        if (scheduled !== null && typeof scheduled !== 'undefined') leaveFields.scheduled = scheduled;
         try {
             let newLeave = new Leave(leaveFields);
             await newLeave.save();
@@ -207,28 +233,53 @@ router.put(
             duration
         } = req.body;
 
+        const leaveObj = await Leave.findById(req.params.leaveId);
         const leaveFields = {};
-        if (typeof leaveType !== 'undefined') leaveFields.leaveType = leaveType;
-        if (typeof duration !== 'undefined') leaveFields.duration = duration;
-        if (typeof originalDate !== 'undefined') leaveFields.originalDate = originalDate;
-        if (typeof scheduledDate !== 'undefined') leaveFields.scheduledDate = scheduledDate;
-        if (typeof scheduled !== 'undefined') leaveFields.scheduled = scheduled;
+        if (leaveType !== null && typeof leaveType !== 'undefined') leaveFields.leaveType = leaveType;
+        if (duration !== null && typeof duration !== 'undefined') leaveFields.duration = duration;
+        if (originalDate !== null && typeof originalDate !== 'undefined' && originalDate !== '') leaveFields.originalDate = originalDate;
+        if (scheduledDate !== null && typeof scheduledDate !== 'undefined' && scheduledDate !== '') {
+            const startOfDay = moment(scheduledDate).startOf('day');
+            const endOfDay = moment(scheduledDate).endOf('day');
+            const existingLeave = await Leave.findOne({
+                personnel: leaveObj.personnel,
+            }).and([
+                {
+                    scheduledDate: {
+                        $exists: true
+                    }
+                },
+                {
+                    scheduledDate: {
+                        $gte: startOfDay,
+                        $lte: endOfDay
+                    }
+                }
+            ]);
+            if (existingLeave) {
+                return res.status(400).json({
+                    error: {
+                        msg: "A leave is already scheduled on this date!"
+                    }
+                })
+            }
+            leaveFields.scheduledDate = scheduledDate;
+        }
+        if (scheduled !== null && typeof scheduled !== 'undefined') leaveFields.scheduled = scheduled;
         try {
-            const modifiedLeave = await Leave.findByIdAndUpdate(
-                req.params.leaveId,
+            await leaveObj.update(
                 leaveFields,
                 {
-                    new: true,
                     runValidators: true
                 }
             );
             return res.json({
-                leaveType: modifiedLeave.leaveType,
-                duration: modifiedLeave.duration,
-                originalDate: modifiedLeave.originalDate,
-                scheduledDate: modifiedLeave.scheduledDate,
-                scheduled: modifiedLeave.scheduled,
-                personnel: modifiedLeave.personnel.toString()
+                leaveType: leaveObj.leaveType,
+                duration: leaveObj.duration,
+                originalDate: leaveObj.originalDate,
+                scheduledDate: leaveObj.scheduledDate,
+                scheduled: leaveObj.scheduled,
+                personnel: leaveObj.personnel.toString()
             });
         } catch (error) {
             console.log(error);

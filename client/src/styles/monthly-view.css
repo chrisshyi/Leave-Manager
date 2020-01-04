@@ -22,7 +22,6 @@
 }
 
 #date-table tr {
-    height: 5vh;
     overflow: hidden;
 }
 @media screen and (max-width: 991px) {

@@ -9,6 +9,7 @@ import {
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import { getPersonnelLeaves } from "./personnel";
+import { setErrMsg } from './errors';
 
 export const getTodayLeaves = () => async dispatch => {
     try {
@@ -203,6 +204,11 @@ export const addOrEditLeave = (
                 dispatch({
                     type: LOGOUT
                 });
+            }
+        }
+        if (error.response.data.hasOwnProperty("error")) {
+            if (error.response.data.error.hasOwnProperty("msg")) {
+                dispatch(setErrMsg(error.response.data.error.msg));
             }
         }
     }
