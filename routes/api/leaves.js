@@ -194,11 +194,9 @@ router.put(
             .not()
             .exists(),
         check("scheduled", "'scheduled' must be a boolean")
-
             .isBoolean()
             .optional(),
         check("duration", "Duration must be a number between 4.5 and 24")
-
             .isNumeric()
             .toFloat()
             .optional(),
@@ -237,7 +235,9 @@ router.put(
         const leaveFields = {};
         if (leaveType !== null && typeof leaveType !== 'undefined') leaveFields.leaveType = leaveType;
         if (duration !== null && typeof duration !== 'undefined') leaveFields.duration = duration;
-        if (originalDate !== null && typeof originalDate !== 'undefined' && originalDate !== '') leaveFields.originalDate = originalDate;
+        if (originalDate !== null && typeof originalDate !== 'undefined' && originalDate !== '')  {
+            leaveFields.originalDate = originalDate;
+        }
         if (scheduledDate !== null && typeof scheduledDate !== 'undefined' && scheduledDate !== '') {
             const startOfDay = moment(scheduledDate).startOf('day');
             const endOfDay = moment(scheduledDate).endOf('day');
@@ -264,22 +264,26 @@ router.put(
                 })
             }
             leaveFields.scheduledDate = scheduledDate;
+        } else if (scheduledDate === null) {
+            leaveFields.scheduledDate = undefined;
         }
         if (scheduled !== null && typeof scheduled !== 'undefined') leaveFields.scheduled = scheduled;
         try {
-            await leaveObj.update(
+            const modifiedLeave = await Leave.findByIdAndUpdate(
+                req.params.leaveId,
                 leaveFields,
                 {
-                    runValidators: true
+                    runValidators: true,
+                    new: true
                 }
             );
             return res.json({
-                leaveType: leaveObj.leaveType,
-                duration: leaveObj.duration,
-                originalDate: leaveObj.originalDate,
-                scheduledDate: leaveObj.scheduledDate,
-                scheduled: leaveObj.scheduled,
-                personnel: leaveObj.personnel.toString()
+                leaveType: modifiedLeave.leaveType,
+                duration: modifiedLeave.duration,
+                originalDate: modifiedLeave.originalDate,
+                scheduledDate: modifiedLeave.scheduledDate,
+                scheduled: modifiedLeave.scheduled,
+                personnel: modifiedLeave.personnel.toString()
             });
         } catch (error) {
             console.log(error);
@@ -290,7 +294,7 @@ router.put(
     }
 );
 // @route GET /api/leaves/{leave_id}
-// @desc  Retrives information about an existing leave
+// @desc  Retrieves information about an existing leave
 // @access private to site-admin, the personnel to which the leave belongs, and the HR-admin of the same organization
 router.get("/:leaveId", [tokenAuth, getLeaveInfoAuth], async (req, res) => {
     const leave = await Leave.findById(req.params.leaveId);
@@ -312,7 +316,7 @@ router.get("/:leaveId", [tokenAuth, getLeaveInfoAuth], async (req, res) => {
     });
 });
 // @route GET /api/leaves/available/{personnel_id}
-// @desc  Retrives unscheduled leaves for a given personnel
+// @desc  Retrieves unscheduled leaves for a given personnel
 // @access private to site-admins and HR-admins of the same organization
 router.get("/available/:personnelId", [tokenAuth, getPersonnelAuth], async (req, res) => {
     const leaves = await Leave.find({

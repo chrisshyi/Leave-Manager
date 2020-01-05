@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { getPersonnelLeaves } from "../../../actions/personnel";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect } from "react";
 import { Table, Row, Col, Button, Container } from "reactstrap";
 import { Link, Redirect } from "react-router-dom";
 import uuidv4 from "uuid";
