@@ -25,7 +25,7 @@ const CustomNavbar = props => {
             <Navbar color="dark" dark expand="md">
                 <NavbarBrand href="#">
                     <Link to="/" className="navbar-link">
-                        reactstrap
+                        Leave Manager
                     </Link>
                 </NavbarBrand>
                 <NavbarToggler onClick={toggle} />
