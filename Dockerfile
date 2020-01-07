@@ -8,11 +8,11 @@ COPY package*.json ./
 
 USER node
 
-RUN npm install
+RUN npm install --production
 
 COPY --chown=node:node . .
 
-EXPOSE port 8080
+EXPOSE 8080
 
 ENV NODE_ENV="production"
 
