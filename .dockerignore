@@ -1,6 +1,9 @@
-.git/*
-node_modules/*
-coverage_data/*
+.git/**
+node_modules/**
+coverage_data/**
 cypress.json
-cypress/*
-tests/*
+cypress/**
+tests/**
+client/**
+
+!client/build/**
