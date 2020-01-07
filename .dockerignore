@@ -1,0 +1,6 @@
+.git/*
+node_modules/*
+coverage_data/*
+cypress.json
+cypress/*
+tests/*

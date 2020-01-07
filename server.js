@@ -20,7 +20,7 @@ app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/leaves', require('./routes/api/leaves'));
 app.use('/api/orgs', require('./routes/api/orgs'));
 
-// Server React file if in production mode
+// Serve React file if in production mode
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('client/build'));
     app.get('*', (req, res) => {
