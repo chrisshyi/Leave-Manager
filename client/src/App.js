@@ -8,9 +8,11 @@ import Summary from "./components/pages/Summary";
 import MonthlyView from "./components/pages/MonthlyView";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import AdminPrivateRoute from './components/auth/AdminPrivateRoute';
+import SiteAdminPrivateRoute from './components/auth/SiteAdminPrivateRoute';
 import { loadPersonnel } from "./actions/auth";
 import PersonnelForm from "./components/pages/forms/PersonnelForm";
 import LeaveForm from './components/pages/forms/LeaveForm';
+import ResetPasswordEmailForm from './components/pages/forms/ResetPasswordEmailForm';
 import OrgForm from './components/pages/forms/OrgForm';
 import PersonnelLeaveAdmin from './components/pages/admin/PersonnelLeaveAdmin';
 import PersonnelAdmin from './components/pages/admin/PersonnelAdmin';
@@ -74,6 +76,9 @@ const App = () => {
                         </Route>
                         <Route exact path="/sign-up-personnel">
                             <PersonnelForm />
+                        </Route>
+                        <Route exact path="/reset-password">
+                            <ResetPasswordEmailForm />
                         </Route>
                     </Switch>
                 </Fragment>

@@ -86,4 +86,92 @@ router.get("/", token_auth, async (req, res) => {
         res.status(500).send("server error");
     }
 });
+
+// @route POST api/auth/reset_pw
+// @desc Allows the resetting of a user's password
+// @access Public
+router.post("/reset_pw", async (req, res) => {
+    const { email } = req.body;
+    try {
+        let personnel = await Personnel.findOne({
+            email
+        });
+        if (!personnel) {
+            res.json({}); // don't let user know whether or not the email exists
+        }
+        const payload = {
+            personnel: {
+                id: personnel.id,
+                password: personnel.password // use old password
+            }
+        };
+
+        jwt.sign(
+            payload,
+            config.get("jwtSecret"),
+            { expiresIn: 3600 },
+            (err, token) => {
+                if (err) {
+                    throw err;
+                }
+                const resetLink = getPasswordResetURL(token);
+                const sgMail = require('@sendgrid/mail');
+                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                const msg = {
+                    to: email,
+                    from: 'password-reset@em1455.hr-manager.co',
+                    subject: 'Reset Your Password',
+                    text: 'Reset your password using the following link',
+                    html: `Reset your password using the following <a href=${resetLink}>link</a>`,
+                };
+                sgMail
+                    .send(msg)
+                    .then(() => { }, error => {
+                        console.error(error);
+
+                        if (error.response) {
+                            console.error("SendGrid email error\n");
+                            console.error(error.response.body);
+                        }
+                    });
+            }
+        );
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("server error");
+    }
+});
+
+router.post("/reset_pw/set_new/token=:token", async (req, res) => {
+    const { newPassword } = req.body;
+    const { token } = req.params; 
+    try {
+        const decoded = jwt.verify(token, config.get('jwtSecret'));
+        const { id } = decoded.personnel;
+        let personnel = await Personnel.findById(id); 
+        const salt = await bcrypt.genSalt(10);
+        const newPasswordHash = await bcrypt.hash(newPassword, salt);
+        personnel.password = newPasswordHash;
+        await personnel.save();
+        res.json({
+            msg: "Reset successful!"
+        });
+    } catch (err) {
+       if (err.name === 'TokenExpiredError') {
+           return res.status(401).json({
+               msg: 'Token expired!'
+           });
+       }
+       res.status(401).json({
+           msg: 'Token is invalid'
+       });
+    }
+});
+
+function getPasswordResetURL(token) {
+    // TODO: Change the link to hr-manager.co/... in production
+    // const resetLink = `https://www.hr-manager.co/api/auth/pw_reset/set_new/token=${token}`;
+    return `http://localhost:3000/api/auth/pw_reset/set_new/token=${token}`;   
+}
+
 module.exports = router;
