@@ -80,7 +80,7 @@ router.get("/", token_auth, async (req, res) => {
         const personnel = await Personnel.findById(req.personnel.id).select(
             "-password"
         );
-        res.json(personnel);
+        return res.json(personnel);
     } catch (err) {
         console.log(err);
         res.status(500).send("server error");
@@ -97,7 +97,7 @@ router.post("/reset_pw", async (req, res) => {
             email
         });
         if (!personnel) {
-            res.json({}); // don't let user know whether or not the email exists
+            return res.json({}); // don't let user know whether or not the email exists
         }
         const payload = {
             personnel: {
@@ -126,7 +126,9 @@ router.post("/reset_pw", async (req, res) => {
                 };
                 sgMail
                     .send(msg)
-                    .then(() => { }, error => {
+                    .then(() => { 
+                        console.log(`Reset email sent to ${email}`)
+                    }, error => {
                         console.error(error);
 
                         if (error.response) {
@@ -142,7 +144,7 @@ router.post("/reset_pw", async (req, res) => {
     }
 });
 
-router.post("/reset_pw/set_new/token=:token", async (req, res) => {
+router.post("/pw_reset/set_new/token=:token", async (req, res) => {
     const { newPassword } = req.body;
     const { token } = req.params; 
     try {
@@ -169,9 +171,11 @@ router.post("/reset_pw/set_new/token=:token", async (req, res) => {
 });
 
 function getPasswordResetURL(token) {
-    // TODO: Change the link to hr-manager.co/... in production
-    // const resetLink = `https://www.hr-manager.co/api/auth/pw_reset/set_new/token=${token}`;
-    return `http://localhost:3000/api/auth/pw_reset/set_new/token=${token}`;   
+    const urlSuffix = `/api/auth/pw_reset/set_new/token=${token}`;
+    if (process.env.NODE_ENV === 'production') {
+        return 'https://www.hr-manager.co' + urlSuffix;
+    }
+    return 'http://localhost:3000' + urlSuffix; 
 }
 
 module.exports = router;
