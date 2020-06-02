@@ -5,3 +5,4 @@ personnel.txt
 *.iml
 coverage_data/
 client/cypress/integration/examples/*
+.env

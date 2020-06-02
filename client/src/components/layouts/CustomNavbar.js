@@ -57,6 +57,14 @@ const CustomNavbar = props => {
                         ) : (
                             ""
                         )}
+                        <NavItem>
+                            <Link
+                                className="nav-link"
+                                to="reset-password"
+                            >
+                                Reset Password
+                            </Link>
+                        </NavItem>
                     </Nav>
                 </Collapse>
             </Navbar>

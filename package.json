@@ -22,20 +22,22 @@
   },
   "homepage": "https://github.com/chrisshyi/leave_management#readme",
   "dependencies": {
+    "@sendgrid/mail": "^7.1.0",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^4.3.1",
     "config": "^3.2.4",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-validator": "^6.2.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
-    "mongoose": "^5.7.7"
+    "mongoose": "^5.7.7",
+    "nodemon": "^1.19.4"
   },
   "devDependencies": {
     "concurrently": "^5.0.0",
     "cypress": "^3.8.1",
     "jest": "^24.9.0",
-    "nodemon": "^1.19.4",
     "supertest": "^4.0.2"
   },
   "jest": {
@@ -46,8 +48,8 @@
     "collectCoverage": true,
     "coverageDirectory": "/home/chris/workspace/javascript/leave_management/coverage_data",
     "testPathIgnorePatterns": [
-        ".*\\.spec\\.js",
-        "<rootDir>/client/src/tests/.*"
+      ".*\\.spec\\.js",
+      "<rootDir>/client/src/tests/.*"
     ]
   }
 }

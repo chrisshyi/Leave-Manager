@@ -5,7 +5,7 @@ const config = require('config');
 const PORT = process.env.PORT || 5000;
 const testing = config.get("testing"); 
 const local = config.get('local');
-// const path = require('path');
+require('dotenv').config();
 
 if (testing) {
     connectTestDB(local);
