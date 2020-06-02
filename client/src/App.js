@@ -16,6 +16,7 @@ import ResetPasswordEmailForm from './components/pages/forms/ResetPasswordEmailF
 import OrgForm from './components/pages/forms/OrgForm';
 import PersonnelLeaveAdmin from './components/pages/admin/PersonnelLeaveAdmin';
 import PersonnelAdmin from './components/pages/admin/PersonnelAdmin';
+import NewPasswordForm from "./components/pages/forms/NewPasswordForm";
 
 const App = () => {
     useEffect(() => {
@@ -79,6 +80,9 @@ const App = () => {
                         </Route>
                         <Route exact path="/reset-password">
                             <ResetPasswordEmailForm />
+                        </Route>
+                        <Route exact path="/api/auth/pw_reset/set_new/token=:token">
+                            <NewPasswordForm />
                         </Route>
                     </Switch>
                 </Fragment>

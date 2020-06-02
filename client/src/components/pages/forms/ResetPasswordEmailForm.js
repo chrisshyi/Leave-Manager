@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
     useState,
     Fragment
@@ -17,7 +16,11 @@ import {
 import axios from 'axios';
 
 const sendResetEmail = async email => {
-    const res = await axios.post("/api/auth/reset_pw", { email });
+    try {
+        const res = await axios.post("/api/auth/reset_pw", { email });
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 const ResetPasswordEmailForm = props => {
